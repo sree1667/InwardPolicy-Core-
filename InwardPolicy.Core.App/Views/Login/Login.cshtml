@@ -1,0 +1,76 @@
+﻿@model UsermasterModel
+@{ 
+    Layout = null;
+}
+<style>
+    
+    .logingrid {
+        height: 100vh;
+        width: 100%;
+        align-content: center;
+    }
+
+    body {
+        font-family: 'Oswald', sans-serif;
+        background-color: #87E0E0;
+    }
+
+    .card {
+        border-radius: 10px;
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    h3 {
+        font-weight: bold;
+    }
+
+    .form-label {
+        font-weight: 500;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transition: background-color 0.3s;
+        }
+
+    #Heading {
+        margin-bottom: 10%;
+        background-color: #87E0E0;
+        padding: 20px;
+        transition: transform 0.3s;
+    }
+
+        #Heading:hover {
+            transform: scale(1.05);
+        }
+</style>
+
+
+
+<h1 id="Heading" class=" shadow  text-center mt-5 text-white">INWARD POLICY ENTRY SYSTEM</h1>
+<form id="form1" runat="server">
+    <div class="container d-flex justify-content-center">
+        <div class="card shadow" style="width: 400px;">
+            <div class="card-body">
+                <h3 class="text-center mb-4">Login</h3>
+                <div class="mb-3">
+                    @Html.Label("txtUserName", "User Id:", new { @id = "lblUserName", @class = "form-label col-form-label mb-0" })
+                    @Html.TextBoxFor(m => m.UserMaster.UserId, new { @id = "txtUserName", @maxlength="12", @class = "form-control form-control" })
+                </div>
+                <div class="mb-3">
+                    @Html.Label("txtPassword", "Password:", new { @id = "lblPassword", @class = "form-label col-form-label mb-0" })
+                    @Html.PasswordFor(m => m.UserMaster.Password, new { @id = "txtPassword", @maxlength = "30", @class = "form-control form-control" })
+                </div>
+                <asp:Button runat="server" OnClick="btnLogin_Click" ID="btnLogin" type="submit" class="btn btn-primary w-100" Text="Log In" />
+            </div>
+        </div>
+    </div>
+</form>
