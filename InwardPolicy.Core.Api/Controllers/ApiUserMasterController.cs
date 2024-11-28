@@ -3,19 +3,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BusinessLayer;
+using BusinessEntity;
 using System.Threading.Tasks;
 
 namespace InwardPolicy.Core.Api.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("Api/[controller]")]
     [ApiController]
     public class ApiUserMasterController : Controller
     {
-        [HttpGet]
-        public IActionResult CheckLogin(string userId,string password)
+        [HttpPost]
+        [Route("CheckLogin")]
+        public IActionResult CheckLogin(UserMaster objUserMaster)
         {
             UserMasterManager objUserMasterManager = new UserMasterManager();
-            bool loginStatus = objUserMasterManager.CheckLogin(userId, password);
+            bool loginStatus = objUserMasterManager.CheckLogin(objUserMaster.UserId, objUserMaster.Password);
             return Ok(loginStatus);
         }
     }

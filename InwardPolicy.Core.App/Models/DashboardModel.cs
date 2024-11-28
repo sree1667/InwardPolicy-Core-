@@ -1,13 +1,13 @@
 ﻿using System;
-using BusinessEntity;
 using System.Collections.Generic;
 using System.Linq;
+using BusinessEntity;
 using System.Threading.Tasks;
 
 namespace InwardPolicy.Models
 {
-    public class UsermasterModel
+    public class DashboardModel
     {
-        public UserMaster UserMaster { get; set; }
+        public FirePolicy FirePolicy { get; set; }
     }
 }
