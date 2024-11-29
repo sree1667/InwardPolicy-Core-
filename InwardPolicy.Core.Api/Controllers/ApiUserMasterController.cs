@@ -10,14 +10,14 @@ namespace InwardPolicy.Core.Api.Controllers
 {
     [Route("Api/[controller]")]
     [ApiController]
-    public class ApiUserMasterController : Controller
+    public class ApiUserMasterController : ControllerBase
     {
         [HttpPost]
-        [Route("CheckLogin")]
-        public IActionResult CheckLogin(UserMaster objUserMaster)
+        [Route("CheckLogin/{UserId?}/{Password?}")]
+        public IActionResult CheckLogin(string UserId, string Password)
         {
             UserMasterManager objUserMasterManager = new UserMasterManager();
-            bool loginStatus = objUserMasterManager.CheckLogin(objUserMaster.UserId, objUserMaster.Password);
+            bool loginStatus = objUserMasterManager.CheckLogin(UserId, Password);
             return Ok(loginStatus);
         }
     }

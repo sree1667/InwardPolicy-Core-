@@ -45,8 +45,16 @@ namespace InwardPolicy.Core.App
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                  name: "Admin",
+                  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id1?}/{id2?}/{id3?}"
+                );
+                endpoints.MapControllerRoute(
+                 name: "Taransaction",
+                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id1?}/{id2?}/{id3?}"
+               );
+                endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Login}/{action=Login}/{id?}");
+                    pattern: "{controller=Login}/{action=Login}/{id1?}/{id2?}/{id3?}");
             });
         }
     }

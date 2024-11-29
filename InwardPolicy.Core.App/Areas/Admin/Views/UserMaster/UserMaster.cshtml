@@ -1,0 +1,67 @@
+﻿@model InwardPolicy.Admin.Models.UserMasterModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container mt-2">
+    <h1>User Master</h1><br />
+    <div class="row justify-content-center mb-3">
+
+        @*<div class="col">*@
+        <div class="container bg-light p-4 border rounded shadow mt-2">
+            @*Row1*@
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    @Html.Label("txtUserId", "UserId:", new { @class = "form-label col-form-label mb-0" })
+                    @Html.TextBoxFor(m => m.UserMaster.UserId, new { @id = "txtUserId", @maxlength = "12", @class = "form-control form-control" })
+                </div>
+                <div class="col-md-3">
+                    @Html.Label("txtUserName", "Name:", new { @class = "form-label col-form-label mb-0" })
+                    @Html.TextBoxFor(m => m.UserMaster.UserName, new { @id = "txtUserName", @maxlength = "30", @class = "form-control form-control" })
+                </div>
+                <div class="col-md-3">
+                    @Html.Label("txtPassword", "Password:", new { @class = "form-label col-form-label mb-0" })
+                    @Html.PasswordFor(m => m.UserMaster.Password, new { @id = "txtPassword", @maxlength = "30", @class = "form-control form-control" })
+                </div>
+                <div class="col-md-3 form-check form-switch">
+                    <br />
+                    <input asp-for="IsActive" class="form-check-input" type="checkbox" id="chkActive" role="switch" />
+                    <label class="form-label col-form-label mb-0">Active</label>
+                </div>
+            </div>
+            <!-- Submit -->
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <center>
+                        <asp:Button OnClick="btnSubmit_Click" ID="btnSubmit" runat="server" CssClass="btn btn-primary" Text="Submit" />
+                        <asp:Button OnClick="btnAddNew_Click" runat="server" ID="btnAddNew" CssClass="btn btn-primary" Visible="false" Text="Add New" CausesValidation="false" />
+                    </center>
+                </div>
+
+            </div>
+        </div>
+        @*</div>*@
+    </div>
+    @* Row 2 *@
+    @*<div class="row justify-content-center">
+            <div class="col">
+                <div class="table-responsive p-4 border bg-light rounded shadow">
+                    <asp:GridView ID="GridViewUserMaster" AllowPaging="true" PageSize="7" OnPageIndexChanging="GridViewUserMaster_PageIndexChanging" CssClass="table table-bordered table-striped table-hover" runat="server" AutoGenerateColumns="False" AllowSorting="True">
+                        <Columns>
+                            <asp:BoundField DataField="USER_ID" HeaderText="User Id" ItemStyle-CssClass="text-start" />
+                            <asp:BoundField DataField="USER_NAME" HeaderText="Name" ItemStyle-CssClass="text-start" />
+                            <asp:BoundField DataField="USER_ACTIVE_YN" HeaderText="Active_YN" ItemStyle-CssClass="text-start" />
+                            <asp:TemplateField>
+                                <ItemTemplate>
+                                    <asp:Button ID="btnEdit" runat="server" Text="Edit" CommandArgument='<%# Eval("USER_ID") %>' CausesValidation="false" OnClick="btnEdit_Click" aria-label="Edit" CssClass="btn me-2 btn-success btn-sm" />
+                                    <asp:Button ID="btnDelete" runat="server" CausesValidation="false" Text="Delete" CommandArgument='<%# Eval("USER_ID") %>' OnClick="btnDelete_Click" aria-label="Delete" CssClass="btn btn-danger btn-sm" OnClientClick="return confirm('Are you sure you want to delete this?');" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                        <HeaderStyle CssClass="text-center bg-primary text-white" />
+                        <RowStyle CssClass="text-center" />
+                        <PagerStyle CssClass="gridview-pager" />
+                    </asp:GridView>
+                </div>
+            </div>
+        </div>*@
+</div>

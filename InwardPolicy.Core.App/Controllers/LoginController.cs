@@ -25,8 +25,7 @@ namespace InwardPolicy.Core.App.Controllers
             {
                 BaseAddress = new System.Uri("http://localhost:26317/")
             };
-            using HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync($"/Api/ApiUserMaster/CheckLogin", objUserMasterModel.UserMaster);
-            //using HttpResponseMessage httpResponseMessage = await client.GetAsync($"api/ApiTest/ApiTest");
+            using HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync($"/Api/ApiUserMaster/CheckLogin/{objUserMasterModel.UserId}/{objUserMasterModel.Password}", objUserMasterModel);           
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 var result = await httpResponseMessage.Content.ReadAsStringAsync();
@@ -39,7 +38,6 @@ namespace InwardPolicy.Core.App.Controllers
                 {
                     return View("Login");
                 }
-                //bool Login = httpResponseMessage.Content.ReadAsb ReadAsBoolAsync().Result;
             }
             else
             {

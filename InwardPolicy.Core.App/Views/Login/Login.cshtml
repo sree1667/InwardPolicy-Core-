@@ -77,11 +77,11 @@
                     <h3 class="text-center mb-4">Login</h3>
                     <div class="mb-3">
                         @Html.Label("txtUserName", "User Id:", new { @id = "lblUserName", @class = "form-label col-form-label mb-0" })
-                        @Html.TextBoxFor(m => m.UserMaster.UserId, new { @id = "txtUserName", @maxlength = "12", @class = "form-control form-control" })
+                        @Html.TextBoxFor(m => m.UserId, new { @id = "txtUserName", @maxlength = "12", @class = "form-control form-control" })
                     </div>
                     <div class="mb-3">
                         @Html.Label("txtPassword", "Password:", new { @id = "lblPassword", @class = "form-label col-form-label mb-0" })
-                        @Html.PasswordFor(m => m.UserMaster.Password, new { @id = "txtPassword", @maxlength = "30", @class = "form-control form-control" })
+                        @Html.PasswordFor(m => m.Password, new { @id = "txtPassword", @maxlength = "30", @class = "form-control form-control" })
                     </div>
                     <button ID="btnLogin" type="submit" class="btn btn-primary w-100">Login</button>
                 </div>
