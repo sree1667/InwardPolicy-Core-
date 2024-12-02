@@ -9,31 +9,42 @@
         @*<div class="col">*@
         <div class="container bg-light p-4 border rounded shadow mt-2">
             @*Row1*@
-            <div class="row mb-3">
-                <div class="col-md-3">
-                    @Html.Label("txtUserId", "UserId:", new { @class = "form-label col-form-label mb-0" })
-                    @Html.TextBoxFor(m => m.UserMaster.UserId, new { @id = "txtUserId", @maxlength = "12", @class = "form-control form-control" })
+            <form autocomplete="off" id="frmUserMaster" method="post" asp-action="UserMasterAdd">
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        @Html.Label("txtUserId", "UserId:", new { @class = "form-label col-form-label mb-0" })
+                        @Html.TextBoxFor(m => m.UserMaster.UserId, new { @id = "txtUserId", @maxlength = "12", @class = "form-control form-control" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.Label("txtUserName", "Name:", new { @class = "form-label col-form-label mb-0" })
+                        @Html.TextBoxFor(m => m.UserMaster.UserName, new { @id = "txtUserName", @maxlength = "30", @class = "form-control form-control", @autocomplete = "new-name" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.Label("txtPassword", "Password:", new { @class = "form-label col-form-label mb-0" })
+                        @Html.PasswordFor(m => m.UserMaster.Password, new { @id = "txtPassword", @maxlength = "30", @class = "form-control form-control", @autocomplete = "new-password" })
+                    </div>
+                    <div class="col-md-3 form-check form-switch">
+                        <br />
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
+                        @*<input  class="form-check-input" type="checkbox" id="chkActive" role="switch" />*@
+                        <label class="form-label col-form-label mb-0">Active</label>
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    @Html.Label("txtUserName", "Name:", new { @class = "form-label col-form-label mb-0" })
-                    @Html.TextBoxFor(m => m.UserMaster.UserName, new { @id = "txtUserName", @maxlength = "30", @class = "form-control form-control" })
-                </div>
-                <div class="col-md-3">
-                    @Html.Label("txtPassword", "Password:", new { @class = "form-label col-form-label mb-0" })
-                    @Html.PasswordFor(m => m.UserMaster.Password, new { @id = "txtPassword", @maxlength = "30", @class = "form-control form-control" })
-                </div>
-                <div class="col-md-3 form-check form-switch">
-                    <br />
-                    <input asp-for="IsActive" class="form-check-input" type="checkbox" id="chkActive" role="switch" />
-                    <label class="form-label col-form-label mb-0">Active</label>
-                </div>
-            </div>
+            </form>
             <!-- Submit -->
             <div class="row mb-3">
                 <div class="col-md-12">
                     <center>
-                        <asp:Button OnClick="btnSubmit_Click" ID="btnSubmit" runat="server" CssClass="btn btn-primary" Text="Submit" />
-                        <asp:Button OnClick="btnAddNew_Click" runat="server" ID="btnAddNew" CssClass="btn btn-primary" Visible="false" Text="Add New" CausesValidation="false" />
+                        @if (!string.IsNullOrEmpty(Model.UserMaster.UserId))
+                        {
+                            <Button ID="btnSubmit" type="submit" Class="btn btn-primary">Update</Button>
+                            <Button ID="btnAddNew" type="button" Class="btn btn-primary" ><i class="bi bi-plus-circle"></i> Add New</Button>
+                        }
+                        else
+                        {
+                            <Button ID="btnSubmit" type="submit" Class="btn btn-primary"><i class="bi bi-floppy"></i> Save</Button>
+                        }
+
                     </center>
                 </div>
 
@@ -41,27 +52,118 @@
         </div>
         @*</div>*@
     </div>
-    @* Row 2 *@
-    @*<div class="row justify-content-center">
-            <div class="col">
-                <div class="table-responsive p-4 border bg-light rounded shadow">
-                    <asp:GridView ID="GridViewUserMaster" AllowPaging="true" PageSize="7" OnPageIndexChanging="GridViewUserMaster_PageIndexChanging" CssClass="table table-bordered table-striped table-hover" runat="server" AutoGenerateColumns="False" AllowSorting="True">
-                        <Columns>
-                            <asp:BoundField DataField="USER_ID" HeaderText="User Id" ItemStyle-CssClass="text-start" />
-                            <asp:BoundField DataField="USER_NAME" HeaderText="Name" ItemStyle-CssClass="text-start" />
-                            <asp:BoundField DataField="USER_ACTIVE_YN" HeaderText="Active_YN" ItemStyle-CssClass="text-start" />
-                            <asp:TemplateField>
-                                <ItemTemplate>
-                                    <asp:Button ID="btnEdit" runat="server" Text="Edit" CommandArgument='<%# Eval("USER_ID") %>' CausesValidation="false" OnClick="btnEdit_Click" aria-label="Edit" CssClass="btn me-2 btn-success btn-sm" />
-                                    <asp:Button ID="btnDelete" runat="server" CausesValidation="false" Text="Delete" CommandArgument='<%# Eval("USER_ID") %>' OnClick="btnDelete_Click" aria-label="Delete" CssClass="btn btn-danger btn-sm" OnClientClick="return confirm('Are you sure you want to delete this?');" />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                        </Columns>
-                        <HeaderStyle CssClass="text-center bg-primary text-white" />
-                        <RowStyle CssClass="text-center" />
-                        <PagerStyle CssClass="gridview-pager" />
-                    </asp:GridView>
-                </div>
-            </div>
-        </div>*@
+    <div class="row justify-content-center mb-3">
+        <div class="container bg-light p-4 border rounded shadow mt-2">
+
+            <table class="table table-hover" id="tblUserMaster">
+                <thead>
+                    <tr class="table-info">
+                        <th scope="col">User Id</th>
+                        <th scope="col">Name</th>
+                        @*<th scope="col"></th>*@
+                        <th scope="col">Active</th>
+                        </trclass="">
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+
+@section Scripts{
+    <script>
+
+        @*$(document).ready(function () {
+
+            $('#tblUserMaster').DataTable(
+                {
+                    //dom: 'Bfrtip', // Define where buttons appear
+                    //buttons: ['copy', 'excel', 'pdf'],
+                      ajax: {
+                          url: '@Url.Action("UserMasterBind", "UserMaster", new { area = "Admin" })',
+                          type: "POST",
+                      },
+                      processing: true,
+                      serverSide: true,
+                      ordering:false,
+                      filter: true,
+                      orderMulti: false,
+                      info: true,
+
+                      columns: [
+                          { data: "USER_ID", name: "USER_ID", autoWidth: true },
+                          { data: "USER_NAME", name: "USER_NAME", autoWidth: true },
+                          { data: "USER_ACTIVE_YN", name: "USER_ACTIVE_YN", autoWidth: true }
+                      ]
+                  }
+            );
+
+
+        });*@
+
+        $(document).ready(function () {
+            $('#tblUserMaster').DataTable({
+                dom: 'Bfrtip', // Define layout for plugins
+                buttons: [
+                    'copy', 'excel', 'pdf', 'csv', 'print' // Add more buttons if needed
+                ],
+                ajax: {
+                    url: '@Url.Action("UserMasterBind", "UserMaster", new { area = "Admin" })',
+                    type: "POST"
+                },
+                processing: true,
+                colReorder: true,
+                serverSide: true,
+                //ordering: true, // Enable ordering
+                searching: true, // Enable search
+                paging: true, // Enable pagination
+                //orderMulti: true, // Single column sorting
+                pageLength: 10, // Default number of rows per page
+                lengthMenu: [5, 10, 20, 50, 100], // Options for rows per page
+                columns: [
+                    { data: "USER_ID", name: "USER_ID", autoWidth: true },
+                    { data: "USER_NAME", name: "USER_NAME", autoWidth: true },
+                    { data: "USER_ACTIVE_YN", name: "USER_ACTIVE_YN", autoWidth: true }
+                ],
+
+            });
+        });
+        @*$(document).ready(function () {
+    $('#tblUserMaster').DataTable({
+        dom: 'Bfrtip', // Include Buttons in the layout
+        buttons: [
+            'copy', 'excel', 'pdf', 'csv', 'print' // Export options
+        ],
+        ajax: {
+            url: '@Url.Action("UserMasterBind", "UserMaster", new { area = "Admin" })',
+            type: "POST"
+        },
+        processing: true,
+        serverSide: true,
+        colReorder: true, // Enable column reordering
+        ordering: true, // Enable sorting
+        searching: true, // Enable search
+        paging: true, // Enable pagination
+        orderMulti: false, // Single column sorting
+        pageLength: 10, // Default number of rows per page
+        lengthMenu: [5, 10, 20, 50, 100], // Options for rows per page
+        responsive: true, // Makes the table responsive
+        fixedHeader: true, // Freeze the header while scrolling
+        columnDefs: [
+            { targets: '_all', className: 'dt-center' } // Center align all columns
+        ],
+        columns: [
+            { data: "USER_ID", name: "USER_ID", autoWidth: true },
+            { data: "USER_NAME", name: "USER_NAME", autoWidth: true },
+            { data: "USER_ACTIVE_YN", name: "USER_ACTIVE_YN", autoWidth: true }
+        ]
+    });
+});*@
+
+
+
+    </script>
+
+}
+

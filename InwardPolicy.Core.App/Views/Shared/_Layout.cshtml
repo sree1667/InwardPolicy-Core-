@@ -3,18 +3,26 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - InwardPolicy.Core.App</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>InwardPolicy</title>
+    <link rel="icon" type="image/x-icon" href="https://img.icons8.com/?size=100&id=QiwSMfboPt2R&format=png&color=000000">
+    <!-- CSS -->
+    <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/v/ju/dt-2.1.8/datatables.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" />
+    <link href="~/css/Layout.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
-    <link href="~/css/Layout.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet" />
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- JS -->
+    <script src="~/lib/jquery/jquery.min.js"></script> <!-- jQuery -->
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script> <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js -->
+    <script src="https://cdn.datatables.net/v/ju/dt-2.1.8/datatables.min.js"></script> <!-- DataTables -->
+    <script src="https://cdn.datatables.net/colreorder/1.6.2/js/dataTables.colReorder.min.js"></script> <!-- ColReorder for DataTables -->
+    <script src="~/js/site.js" asp-append-version="true"></script> <!-- Custom JavaScript -->
 
-    @*<link href="~/fonts/Oswald-VariableFont_wght.ttf" rel="stylesheet">*@
 </head>
 <body style="width: 100vw; overflow-x:hidden;">
     @*<header>
@@ -43,79 +51,77 @@
                 @RenderBody()
             </main>
         </div>*@
-    
-        <!-- Full height container -->
-        <div class="container-fluid fulldiv vh-100 m-0 p-0" style="overflow-y: auto; overflow-x: hidden; max-height: 100vh; ">
-            <div class="row h-100 g-0">
-                <!-- Sidebar Column -->
-                <div class="col-md-2 col-sm-2 sidebar  text-white p-3 h-100">
-                    <h1>
-                        <a href="/Dashboard.aspx" class="text-decoration-none text-reset">IPES</a>
-                    </h1>
-                    <br />
 
-                    <h4 class="text-bg-info p-2 w-auto text-start">Master </h4>
+    <!-- Full height container -->
+    <div class="container-fluid fulldiv vh-100 m-0 p-0" style="overflow-y: auto; overflow-x: hidden; max-height: 100vh; ">
+        <div class="row h-100 g-0">
+            <!-- Sidebar Column -->
+            <div class="col-md-2 col-sm-2 sidebar  text-white p-3 h-100">
+                <h1>
+                    <a href="/Dashboard.aspx" class="text-decoration-none text-reset">IPES</a>
+                </h1>
+                <br />
 
-                    <div style="min-height: 120px;">
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="Admin" asp-controller="UserMaster" asp-action="UserMaster">Codes Master</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/Master/ErrorCodeMaster.aspx">Error Code Master</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/Master/UserMaster.aspx">User Master</a>
-                            </li>
+                <h4 class="text-bg-info p-2 w-auto text-start">Master </h4>
 
-                        </ul>
-                    </div>
+                <div style="min-height: 120px;">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Admin" asp-controller="UserMaster" asp-action="UserMaster">Codes Master</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Master/ErrorCodeMaster.aspx">Error Code Master</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Master/UserMaster.aspx">User Master</a>
+                        </li>
 
-                    <br />
-                    <h4 class=" text-bg-info p-2 w-auto text-start">Transaction </h4>
-
-                    <div style="min-height: 120px;">
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/Transaction/FirePolicyListing.aspx">Fire Policy</a>
-                            </li>
-
-                        </ul>
-
-                    </div>
-                    @*<div class="rounded bg-primary p-3 mb-0" style="position: absolute; bottom: 9%; width: 15%; ">
-                            <img src="../Assets/Image/user.png" class="bg-light rounded-5" style="width:25%;" />
-                            <asp:Label runat="server" ID="lblUserName"></asp:Label>
-                        </div>*@
-                    <div class="logout" style="position: absolute; bottom: 1%; width: 100%;">
-                        @*<asp:LinkButton type="button" CausesValidation="false" runat="server" ID="Logout" OnClick="Logout_Click" CssClass="btn btn-danger">
-                                <i class="bi bi-box-arrow-left"></i> LogOut
-                            </asp:LinkButton>*@
-                        <button ID="Logout" OnClick="Logout_Click" Class="btn btn-danger">
-                            <i class="bi bi-box-arrow-left"></i> LogOut
-                        </button>
-
-                    </div>
+                    </ul>
                 </div>
 
-                @*<footer class="border-top footer text-muted">
+                <br />
+                <h4 class=" text-bg-info p-2 w-auto text-start">Transaction </h4>
+
+                <div style="min-height: 120px;">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Transaction/FirePolicyListing.aspx">Fire Policy</a>
+                        </li>
+
+                    </ul>
+
+                </div>
+                @*<div class="rounded bg-primary p-3 mb-0" style="position: absolute; bottom: 9%; width: 15%; ">
+                        <img src="../Assets/Image/user.png" class="bg-light rounded-5" style="width:25%;" />
+                        <asp:Label runat="server" ID="lblUserName"></asp:Label>
+                    </div>*@
+                <div class="logout" style="position: absolute; bottom: 1%; width: 100%;">
+                    @*<asp:LinkButton type="button" CausesValidation="false" runat="server" ID="Logout" OnClick="Logout_Click" CssClass="btn btn-danger">
+                            <i class="bi bi-box-arrow-left"></i> LogOut
+                        </asp:LinkButton>*@
+                    <button ID="Logout" OnClick="Logout_Click" Class="btn btn-danger">
+                        <i class="bi bi-box-arrow-left"></i> LogOut
+                    </button>
+
+                </div>
+            </div>
+
+            @*<footer class="border-top footer text-muted">
                     <div class="container">
                         &copy; 2024 - InwardPolicy.Core.App - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </div>
                 </footer>*@
-                <!-- Main Content Column -->
-                <div class="col-md-10 p-3" style="overflow-y: auto; max-height: 97vh;">
-                    @RenderBody()
-                </div>
-
+            <!-- Main Content Column -->
+            <div class="col-md-10 p-3" style="overflow-y: auto; max-height: 97vh;">
+                @RenderBody()
             </div>
+
         </div>
-    
+    </div>
 
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

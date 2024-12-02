@@ -9,15 +9,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="icon" type="image/x-icon" href="https://img.icons8.com/?size=100&id=16231&format=png&color=000000">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    @*<link href="~/css/Login.scss" rel="stylesheet">*@
+    <link href="~/css/Login.css" rel="stylesheet" />
 </head>
 <body>
     <style>
-
+        
         .logingrid {
             height: 100vh;
             width: 100%;
@@ -70,10 +73,10 @@
 
 
     <h1 id="Heading" class=" shadow  text-center mt-5 text-white">INWARD POLICY ENTRY SYSTEM</h1>
-    <form id="form1" method="post" asp-action="CheckLogin">
+    <form id="form1" method="post" asp-action="CheckLogin" >
         <div class="container d-flex justify-content-center">
             <div class="card shadow" style="width: 400px;">
-                <div class="card-body">
+                <div class="card-body login">
                     <h3 class="text-center mb-4">Login</h3>
                     <div class="mb-3">
                         @Html.Label("txtUserName", "User Id:", new { @id = "lblUserName", @class = "form-label col-form-label mb-0" })
@@ -88,6 +91,13 @@
             </div>
         </div>
     </form>
+    @*<form class="login">
+        <input type="text" placeholder="Username">
+        <input type="password" placeholder="Password">
+        <button>Login</button>
+    </form>*@
+
+    @*<a href="https://codepen.io/davinci/" target="_blank">check my other pens</a>*@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>

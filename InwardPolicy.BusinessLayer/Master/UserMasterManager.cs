@@ -44,5 +44,19 @@ namespace BusinessLayer
 
             }
         }
+        public DataTable UserMasterBind()
+        {
+            try
+            {
+                string query = "SELECT USER_ID,USER_NAME," +
+                    "CASE WHEN USER_ACTIVE_YN='Y' THEN 'Yes' WHEN USER_ACTIVE_YN='N' THEN 'No' END AS USER_ACTIVE_YN " +
+                    "FROM USER_MASTER ORDER BY USER_ID";
+                return DBConnection.ExecuteDataset(query);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
