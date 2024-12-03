@@ -9,46 +9,48 @@
         @*<div class="col">*@
         <div class="container bg-light p-4 border rounded shadow mt-2">
             @*Row1*@
-            <form autocomplete="off" id="frmUserMaster" method="post" asp-action="UserMasterAdd">
+            <form id="frmUserMaster" method="post" asp-action="UserMasterAdd" asp-controller="UserMaster" asp-area="Admin">
                 <div class="row mb-3">
                     <div class="col-md-3">
-                        @Html.Label("txtUserId", "UserId:", new { @class = "form-label col-form-label mb-0" })
-                        @Html.TextBoxFor(m => m.UserMaster.UserId, new { @id = "txtUserId", @maxlength = "12", @class = "form-control form-control" })
+                        @Html.Label("txtUserId", "UserId:", new { @class = "form-label col-form-label mb-0" })<span class="text-danger required-asterisk">*</span>
+                        @Html.TextBoxFor(m => m.UserMaster.UserId, new { @id = "txtUserId", @maxlength = "12", @class = "form-control form-control", @required = "required" })
                     </div>
                     <div class="col-md-3">
-                        @Html.Label("txtUserName", "Name:", new { @class = "form-label col-form-label mb-0" })
-                        @Html.TextBoxFor(m => m.UserMaster.UserName, new { @id = "txtUserName", @maxlength = "30", @class = "form-control form-control", @autocomplete = "new-name" })
+                        @Html.Label("txtUserName", "Name:", new { @class = "form-label col-form-label mb-0" })<span class="text-danger required-asterisk">*</span>
+                        @Html.TextBoxFor(m => m.UserMaster.UserName, new { @id = "txtUserName", @maxlength = "30", @class = "form-control form-control", @autocomplete = "new-name", @required = "required" })
                     </div>
                     <div class="col-md-3">
-                        @Html.Label("txtPassword", "Password:", new { @class = "form-label col-form-label mb-0" })
-                        @Html.PasswordFor(m => m.UserMaster.Password, new { @id = "txtPassword", @maxlength = "30", @class = "form-control form-control", @autocomplete = "new-password" })
+                        @Html.Label("txtPassword", "Password:", new { @class = "form-label col-form-label mb-0" })<span class="text-danger required-asterisk">*</span>
+                        @Html.PasswordFor(m => m.UserMaster.Password, new { @id = "txtPassword", @maxlength = "30", @class = "form-control form-control", @autocomplete = "new-password", @required = "required" })
                     </div>
                     <div class="col-md-3 form-check form-switch">
                         <br />
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
+                        @* <input asp-for="" class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">*@
+                        @Html.CheckBoxFor(m => m.UserMaster.IsActiveYN, new { @id = "flexSwitchCheckChecked", @class = "form-check-input" })
                         @*<input  class="form-check-input" type="checkbox" id="chkActive" role="switch" />*@
                         <label class="form-label col-form-label mb-0">Active</label>
                     </div>
                 </div>
-            </form>
-            <!-- Submit -->
-            <div class="row mb-3">
-                <div class="col-md-12">
-                    <center>
-                        @if (!string.IsNullOrEmpty(Model.UserMaster.UserId))
-                        {
-                            <Button ID="btnSubmit" type="submit" Class="btn btn-primary">Update</Button>
-                            <Button ID="btnAddNew" type="button" Class="btn btn-primary" ><i class="bi bi-plus-circle"></i> Add New</Button>
-                        }
-                        else
-                        {
-                            <Button ID="btnSubmit" type="submit" Class="btn btn-primary"><i class="bi bi-floppy"></i> Save</Button>
-                        }
+                <!-- Submit -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <center>
+                            @if (!string.IsNullOrEmpty(Model.UserMaster.UserId))
+                            {
+                                <Button ID="btnSubmit" type="submit" Class="btn btn-primary">Update</Button>
+                                <Button ID="btnAddNew" type="button" Class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add New</Button>
+                            }
+                            else
+                            {
+                                <Button ID="btnSubmit" type="submit" Class="btn btn-primary"><i class="bi bi-floppy"></i> Save</Button>
+                            }
 
-                    </center>
+                        </center>
+                    </div>
+
                 </div>
+            </form>
 
-            </div>
         </div>
         @*</div>*@
     </div>
@@ -60,9 +62,9 @@
                     <tr class="table-info">
                         <th scope="col">User Id</th>
                         <th scope="col">Name</th>
-                        @*<th scope="col"></th>*@
                         <th scope="col">Active</th>
-                        </trclass="">
+                        <th scope="col">Action</th>
+                    </tr>
                 </thead>
                 <tbody>
                 </tbody>
@@ -74,37 +76,11 @@
 @section Scripts{
     <script>
 
-        @*$(document).ready(function () {
 
-            $('#tblUserMaster').DataTable(
-                {
-                    //dom: 'Bfrtip', // Define where buttons appear
-                    //buttons: ['copy', 'excel', 'pdf'],
-                      ajax: {
-                          url: '@Url.Action("UserMasterBind", "UserMaster", new { area = "Admin" })',
-                          type: "POST",
-                      },
-                      processing: true,
-                      serverSide: true,
-                      ordering:false,
-                      filter: true,
-                      orderMulti: false,
-                      info: true,
-
-                      columns: [
-                          { data: "USER_ID", name: "USER_ID", autoWidth: true },
-                          { data: "USER_NAME", name: "USER_NAME", autoWidth: true },
-                          { data: "USER_ACTIVE_YN", name: "USER_ACTIVE_YN", autoWidth: true }
-                      ]
-                  }
-            );
-
-
-        });*@
 
         $(document).ready(function () {
             $('#tblUserMaster').DataTable({
-                dom: 'Bfrtip', // Define layout for plugins
+                //dom: 'Bfrtip', // Define layout for plugins
                 buttons: [
                     'copy', 'excel', 'pdf', 'csv', 'print' // Add more buttons if needed
                 ],
@@ -113,7 +89,7 @@
                     type: "POST"
                 },
                 processing: true,
-                colReorder: true,
+                //colReorder: true,
                 serverSide: true,
                 //ordering: true, // Enable ordering
                 searching: true, // Enable search
@@ -124,42 +100,71 @@
                 columns: [
                     { data: "USER_ID", name: "USER_ID", autoWidth: true },
                     { data: "USER_NAME", name: "USER_NAME", autoWidth: true },
-                    { data: "USER_ACTIVE_YN", name: "USER_ACTIVE_YN", autoWidth: true }
+                    { data: "USER_ACTIVE_YN", name: "USER_ACTIVE_YN", autoWidth: true },
+                    {
+
+                        render: function (data, type, row) {
+                            if (row.CM_ACTIVE_YN === 'Y') {
+                                return "<a onclick='return UpdateUserMaster(" + row.USER_ID + ")'><i class='bi bi-pencil'></i></a>";
+                            } else {
+                                return "<a onclick='return UpdateUserMaster(" + row.USER_ID + ")'><i class='bi bi-pencil'></i></a>" +
+                                    "<a onclick='return DeleteUserMaster(" + row.USER_ID + ")'><i class='bi bi-trash'></i></a>";
+
+                            }
+                        }
+
+                    }
                 ],
 
             });
         });
-        @*$(document).ready(function () {
-    $('#tblUserMaster').DataTable({
-        dom: 'Bfrtip', // Include Buttons in the layout
-        buttons: [
-            'copy', 'excel', 'pdf', 'csv', 'print' // Export options
-        ],
-        ajax: {
-            url: '@Url.Action("UserMasterBind", "UserMaster", new { area = "Admin" })',
-            type: "POST"
+        @*function DeleteUserMaster(UserId) {
+            console.log("user id:  "),
+                console.log(UserId),
+                $.ajax({
+            type: "DELETE",
+            url: '@Url.Action("DeleteUserMaster", "UserMaster")',
+                    data: { userId: UserId},
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                console.log("AJAX request was successful. Response:", response);
+                //to data populate
+
+            },
+            error: function (xhr, status, error) {
+                console.log("Error: " + error);
+                console.log("Server response: " + xhr.responseText);
+            }
+         });
+        }*@
+
+        function DeleteUserMaster( UserId) {
+    //if (!UserId) {
+    //    console.error("Invalid UserId received");
+    //    return false;
+    //}
+
+    console.log("Deleting user with ID:", UserId);
+
+    $.ajax({
+        type: "DELETE",
+        url: '@Url.Action("DeleteUserMaster", "UserMaster")',
+        data: { userId: UserId }, // Use query string parameters if server requires it
+        success: function (response) {
+            console.log("AJAX request was successful. Response:", response);
+
+            // Refresh DataTable or perform UI updates
+            $('#tblUserMaster').DataTable().ajax.reload();
         },
-        processing: true,
-        serverSide: true,
-        colReorder: true, // Enable column reordering
-        ordering: true, // Enable sorting
-        searching: true, // Enable search
-        paging: true, // Enable pagination
-        orderMulti: false, // Single column sorting
-        pageLength: 10, // Default number of rows per page
-        lengthMenu: [5, 10, 20, 50, 100], // Options for rows per page
-        responsive: true, // Makes the table responsive
-        fixedHeader: true, // Freeze the header while scrolling
-        columnDefs: [
-            { targets: '_all', className: 'dt-center' } // Center align all columns
-        ],
-        columns: [
-            { data: "USER_ID", name: "USER_ID", autoWidth: true },
-            { data: "USER_NAME", name: "USER_NAME", autoWidth: true },
-            { data: "USER_ACTIVE_YN", name: "USER_ACTIVE_YN", autoWidth: true }
-        ]
+        error: function (xhr, status, error) {
+            console.error("Error occurred during deletion:", error);
+            console.log("Server response:", xhr.responseText);
+        }
     });
-});*@
+
+    return false; // Prevent default anchor click behavior
+}
 
 
 

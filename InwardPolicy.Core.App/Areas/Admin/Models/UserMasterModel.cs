@@ -9,5 +9,6 @@ namespace InwardPolicy.Admin.Models
     public class UserMasterModel
     {
         public UserMaster UserMaster { get; set; }
+        public string Mode { get; set; }
     }
 }

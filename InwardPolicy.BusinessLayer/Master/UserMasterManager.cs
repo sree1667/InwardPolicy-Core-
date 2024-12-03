@@ -1,4 +1,5 @@
-﻿using DataAccessLayer;
+﻿using BusinessEntity;
+using DataAccessLayer;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -56,6 +57,48 @@ namespace BusinessLayer
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+        public bool InsertUserMaster(UserMaster objUserMaster)
+        {
+            try
+            {
+                Dictionary<string, Object> Dict = new Dictionary<string, object>();
+                Dict["UserId"] = objUserMaster.UserId.ToUpper().Trim();
+                Dict["UserName"] = objUserMaster.UserName;
+                Dict["Password"] = objUserMaster.Password;
+                Dict["CrBy"] = objUserMaster.CrBy;
+                Dict["Active"] = objUserMaster.Active;
+                string query = "INSERT INTO USER_MASTER (USER_ID, USER_NAME, USER_PASSWORD, USER_CR_BY, USER_CR_DT, USER_ACTIVE_YN) VALUES(:UserId,:UserName, :Password, :CrBy, SYSDATE, :Active) ";
+                int i = DBConnection.ExecuteQuery(Dict, query);
+                if (i == 1)
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public bool DeleteUserMaster(string userId)
+        {
+            try
+            {
+                Dictionary<string, Object> Dict = new Dictionary<string, object>();
+                Dict["UserId"] = userId.ToUpper().Trim();
+                string query = "DELETE FROM USER_MASTER WHERE USER_ID=:UserId";
+                int i = DBConnection.ExecuteQuery(Dict, query);
+                if (i == 1)
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
         }
     }

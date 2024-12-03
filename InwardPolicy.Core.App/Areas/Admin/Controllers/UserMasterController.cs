@@ -20,6 +20,7 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
         {
             UserMasterModel model = new UserMasterModel();
             model.UserMaster = new UserMaster();
+            model.Mode = "I";
             return View(model);
         }
 
@@ -81,8 +82,9 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
                     if (!string.IsNullOrEmpty(searchValue))
                     {
                         data = data.Where(u =>
-                            u.USER_NAME.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
-                            u.USER_ID.ToString().Contains(searchValue)).ToList();
+                        (u.USER_NAME != null && u.USER_NAME.Contains(searchValue, StringComparison.OrdinalIgnoreCase)) ||
+                        (u.USER_ID != null && u.USER_ID.ToString().Contains(searchValue))).ToList();
+
                     }
 
                     // Count of filtered records
@@ -106,6 +108,70 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
                 else
                 {
                     return StatusCode((int)httpResponseMessage.StatusCode, "Error retrieving data");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UserMasterAdd(UserMasterModel objUserMasterModel)
+        {
+            try
+            {
+                HttpClient client = new HttpClient()
+                {
+                    BaseAddress = new System.Uri("http://localhost:26317/")
+                };
+                using HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync($"/Api/ApiUserMaster/UserMasterInsert/", objUserMasterModel.UserMaster);
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var result = await httpResponseMessage.Content.ReadAsStringAsync();
+                    bool loginStatus = JsonConvert.DeserializeObject<bool>(result);
+                    if (loginStatus)
+                    {
+                        return RedirectToAction("UserMaster", "UserMaster");
+                    }
+                    else
+                    {
+                        return RedirectToAction("UserMaster", "UserMaster");
+                    }
+                }
+                else
+                {
+                    return View("Login");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+        
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUserMaster(string userId)
+        {
+            try
+            {
+                HttpClient client = new HttpClient()
+                {
+                    BaseAddress = new System.Uri("http://localhost:26317/")
+                };
+                using HttpResponseMessage httpResponseMessage = await client.DeleteAsync($"/Api/ApiUserMaster/DeleteUserMaster?userId={userId}");
+
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var result = await httpResponseMessage.Content.ReadAsStringAsync();
+                    bool status = JsonConvert.DeserializeObject<bool>(result);
+                    return Ok(status);
+                }
+                else
+                {
+                    return View("Login");
                 }
             }
             catch (Exception ex)

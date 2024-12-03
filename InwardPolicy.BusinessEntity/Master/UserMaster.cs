@@ -16,5 +16,15 @@ namespace BusinessEntity
         public string UpBy { get; set; }
         public DateTime UpDate { get; set; }
         public string Active { get; set; }
+        public bool IsActiveYN
+
+        {
+
+            get => this.Active == "Y";
+
+            set => this.Active = (value) ? "Y" : "N";
+
+        }
+
     }
 }

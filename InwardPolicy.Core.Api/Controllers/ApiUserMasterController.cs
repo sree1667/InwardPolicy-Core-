@@ -22,6 +22,16 @@ namespace InwardPolicy.Core.Api.Controllers
             bool loginStatus = objUserMasterManager.CheckLogin(UserId, Password);
             return Ok(loginStatus);
         }
+
+        [HttpPost]
+        [Route("UserMasterInsert")]
+        public IActionResult UserMasterInsert(UserMaster objUserMaster)
+        {
+            UserMasterManager objUserMasterManager = new UserMasterManager();
+            bool InsertStatus = objUserMasterManager.InsertUserMaster(objUserMaster);
+            return Ok(InsertStatus);
+        }
+
         [HttpGet]
         [Route("UserMasterBind")]
         public IActionResult UserMasterBind()
@@ -37,6 +47,22 @@ namespace InwardPolicy.Core.Api.Controllers
             catch (Exception ex)
             {
 
+                throw ex; 
+            }
+        }
+        [HttpDelete]
+        [Route("UserMasterBind")]
+        public IActionResult DeleteUserMaster([FromQuery] string userId)
+        {
+            try
+            {
+                UserMasterManager objUserMasterManager = new UserMasterManager();
+                bool status = objUserMasterManager.DeleteUserMaster(userId);
+                string json = JsonConvert.SerializeObject(status);
+                return Ok(json);
+            }
+            catch (Exception ex)
+            {
                 throw ex; 
             }
         }
