@@ -59,27 +59,54 @@ namespace BusinessLayer
                 throw ex;
             }
         }
-        public bool InsertUserMaster(UserMaster objUserMaster)
+        public bool InsertUserMaster(UserMaster objUserMaster,string mode)
         {
             try
             {
-                Dictionary<string, Object> Dict = new Dictionary<string, object>();
-                Dict["UserId"] = objUserMaster.UserId.ToUpper().Trim();
-                Dict["UserName"] = objUserMaster.UserName;
-                Dict["Password"] = objUserMaster.Password;
-                Dict["CrBy"] = objUserMaster.CrBy;
-                Dict["Active"] = objUserMaster.Active;
-                string query = "INSERT INTO USER_MASTER (USER_ID, USER_NAME, USER_PASSWORD, USER_CR_BY, USER_CR_DT, USER_ACTIVE_YN) VALUES(:UserId,:UserName, :Password, :CrBy, SYSDATE, :Active) ";
-                int i = DBConnection.ExecuteQuery(Dict, query);
-                if (i == 1)
-                    return true;
+                
+                if (mode == "I")
+                {
+                    Dictionary<string, Object> Dict = new Dictionary<string, object>();
+                    
+                    Dict["UserId"] = objUserMaster.UserId.ToUpper().Trim();
+                    Dict["UserName"] = objUserMaster.UserName;
+                    Dict["Password"] = objUserMaster.Password;
+                    Dict["CrBy"] = objUserMaster.UpOrCrBy;
+                    Dict["Active"] = objUserMaster.Active;
+                  
+                    string query = "INSERT INTO USER_MASTER (USER_ID, USER_NAME, USER_PASSWORD, USER_CR_BY, USER_CR_DT, USER_ACTIVE_YN) VALUES(:UserId,:UserName, :Password, :CrBy, SYSDATE,:Active) ";
+                    int i = DBConnection.ExecuteQuery(Dict, query);
+                    if (i == 1)
+                        return true;
+                    else
+                        return false;
+                }
+                else if (mode == "U")
+                {
+                    Dictionary<string, Object> Dict = new Dictionary<string, object>();
+                   
+                    Dict["UserName"] = objUserMaster.UserName;
+                    //Dict["Password"] = objUserMaster.Password;
+                    Dict["UpBy"] = objUserMaster.UpOrCrBy;
+                    Dict["Active"] = objUserMaster.Active;
+                    Dict["UserId"] = objUserMaster.UserId.ToUpper().Trim();
+                    string query = "UPDATE USER_MASTER SET USER_NAME = :UserName,USER_UP_BY = :UpBy, USER_UP_DT=SYSDATE, USER_ACTIVE_YN = :Active WHERE USER_ID = :UserId";
+                    int i = DBConnection.ExecuteQuery(Dict, query);
+                    if (i == 1)
+                        return true;
+                    else
+                        return false;
+                }
                 else
+                {
                     return false;
+                }
+                
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw ex;
             }
         }
         public bool DeleteUserMaster(string userId)
@@ -94,6 +121,22 @@ namespace BusinessLayer
                     return true;
                 else
                     return false;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public DataTable GetUserDetails(string UserId)
+        {
+            try
+            {
+                Dictionary<string, Object> Dict = new Dictionary<string, object>();
+                Dict["UserId"] = UserId;
+                string query = "SELECT * FROM USER_MASTER WHERE USER_ID=:UserId";
+                DataTable dt = DBConnection.ExecuteQuerySelect(Dict, query).Tables[0];
+                return dt;
             }
             catch (Exception)
             {

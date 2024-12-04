@@ -24,11 +24,11 @@ namespace InwardPolicy.Core.Api.Controllers
         }
 
         [HttpPost]
-        [Route("UserMasterInsert")]
-        public IActionResult UserMasterInsert(UserMaster objUserMaster)
+        [Route("UserMasterInsert/{mode}")]
+        public IActionResult UserMasterInsert(UserMaster objUserMaster,string mode)
         {
             UserMasterManager objUserMasterManager = new UserMasterManager();
-            bool InsertStatus = objUserMasterManager.InsertUserMaster(objUserMaster);
+            bool InsertStatus = objUserMasterManager.InsertUserMaster(objUserMaster, mode);
             return Ok(InsertStatus);
         }
 
@@ -51,14 +51,31 @@ namespace InwardPolicy.Core.Api.Controllers
             }
         }
         [HttpDelete]
-        [Route("UserMasterBind")]
-        public IActionResult DeleteUserMaster([FromQuery] string userId)
+        [Route("DeleteUserMaster/{userId?}")]
+        public IActionResult DeleteUserMaster(string userId)
         {
             try
             {
                 UserMasterManager objUserMasterManager = new UserMasterManager();
                 bool status = objUserMasterManager.DeleteUserMaster(userId);
                 string json = JsonConvert.SerializeObject(status);
+                return Ok(json);
+            }
+            catch (Exception ex)
+            {
+                throw ex; 
+            }
+        }
+        
+        [HttpGet]
+        [Route("GetUserMasterDetails/{userId?}")]
+        public IActionResult GetUserMasterDetails(string userId)
+        {
+            try
+            {
+                UserMasterManager objUserMasterManager = new UserMasterManager();
+                DataTable dt = objUserMasterManager.GetUserDetails(userId);
+                string json = JsonConvert.SerializeObject(dt);
                 return Ok(json);
             }
             catch (Exception ex)

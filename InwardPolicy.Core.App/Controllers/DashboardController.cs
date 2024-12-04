@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using InwardPolicy.Models;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace InwardPolicy.Core.App.Controllers
 {
@@ -14,6 +15,7 @@ namespace InwardPolicy.Core.App.Controllers
     {
         public async Task<IActionResult> Dashboard()
         {
+            string temp = HttpContext.Session.GetString("UserId");
             DashboardModel objdashboardModel = new();
             objdashboardModel = await LoadDashBoard();
             return View(objdashboardModel);
