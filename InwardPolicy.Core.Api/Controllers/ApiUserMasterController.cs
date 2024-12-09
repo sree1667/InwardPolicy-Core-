@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BusinessLayer;
 using BusinessEntity;
-using System.Threading.Tasks;
 using System.Data;
 using Newtonsoft.Json;
 
@@ -21,6 +21,14 @@ namespace InwardPolicy.Core.Api.Controllers
             UserMasterManager objUserMasterManager = new UserMasterManager();
             bool loginStatus = objUserMasterManager.CheckLogin(UserId, Password);
             return Ok(loginStatus);
+        }
+        [HttpPost]
+        [Route("CheckUserId/{UserId?}")]
+        public IActionResult CheckUserId(string UserId, string Password)
+        {
+            UserMasterManager objUserMasterManager = new UserMasterManager();
+            bool status = objUserMasterManager.CheckUserId(UserId);
+            return Ok(status);
         }
 
         [HttpPost]

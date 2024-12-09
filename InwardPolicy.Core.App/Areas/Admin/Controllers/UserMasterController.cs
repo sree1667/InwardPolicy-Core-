@@ -57,7 +57,7 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
                     DataTable dt = JsonConvert.DeserializeObject<DataTable>(result);
 
                     // Convert DataTable to List of objects
-                    var data = ConvertDataTableToList(dt);
+                    var data = Helper.ConvertDataTableToList(dt);
 
                     // Apply Search
                     if (!string.IsNullOrEmpty(searchValue))
@@ -171,7 +171,35 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
             catch (Exception ex)
             {
 
-                throw;
+                throw ex;
+            }
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> CheckUserId(string userId)
+        {
+            try
+            {
+                HttpClient client = new HttpClient()
+                {
+                    BaseAddress = new System.Uri("http://localhost:26317/")
+                };
+                using HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync($"/Api/ApiUserMaster/CheckUserId/{userId}", userId);
+
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var result = await httpResponseMessage.Content.ReadAsStringAsync();
+                    return Ok(result);
+                }
+                else
+                {
+                    return Ok(false);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
             }
         }
         
@@ -223,26 +251,7 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
             }
         }
 
-        public static List<dynamic> ConvertDataTableToList(DataTable pDataTable)
-        {
-
-            var data = new List<dynamic>();
-            if (pDataTable != null)
-            {
-                foreach (DataRow item in pDataTable.Rows)
-                {
-                    IDictionary<string, object> dn = new ExpandoObject();
-
-                    foreach (var column in pDataTable.Columns.Cast<DataColumn>())
-                    {
-                        dn[column.ColumnName] = item[column];
-                    }
-                    data.Add(dn);
-                }
-            }
-
-            return data;
-        }
+        
     }
 
 }

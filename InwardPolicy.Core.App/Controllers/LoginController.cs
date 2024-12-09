@@ -26,7 +26,7 @@ namespace InwardPolicy.Core.App.Controllers
             {
                 HttpClient client = new HttpClient()
                 {
-                    BaseAddress = new System.Uri("http://localhost:26317/")
+                    BaseAddress = new System.Uri("http://localhost:26317")
                 };
                 using HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync($"/Api/ApiUserMaster/CheckLogin/{objUserMasterModel.UserId}/{objUserMasterModel.Password}", objUserMasterModel);
                 if (httpResponseMessage.IsSuccessStatusCode)

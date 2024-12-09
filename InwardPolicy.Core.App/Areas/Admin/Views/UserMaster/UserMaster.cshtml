@@ -5,19 +5,19 @@
 <div class="container mt-2">
     <h1>User Master</h1><br />
     <div class="row justify-content-center mb-3">
-        @if (TempData["Message"] != null)
-        {
-            <script>
+        @*@if (TempData["Message"] != null)
+            {
+                <script>
 
-                Swal.fire({
-                icon: 'success',
-                 title: '@TempData["Message"]',
-                 showConfirmButton: true,
-                 timer: 00
-                 });
-            </script>
-        }
-        
+                    Swal.fire({
+                    icon: 'success',
+                     title: '@TempData["Message"]',
+                     showConfirmButton: true,
+                     timer: 00
+                     });
+                </script>
+            }*@
+
         @*<div class="col">*@
         <div class="container bg-light p-4 border rounded shadow mt-2">
             @*Row1*@
@@ -29,7 +29,7 @@
                     @*<label>@Model.UserMaster.Password</label>*@
                     <div class="col-md-3">
                         @Html.Label("txtUserId", "UserId:", new { @class = "form-label col-form-label mb-0" })<span class="text-danger required-asterisk">*</span>
-                        @Html.TextBoxFor(m => m.UserMaster.UserId, new { @id = "txtUserId", @maxlength = "12", @class = "form-control form-control", @required = "required" })
+                        @Html.TextBoxFor(m => m.UserMaster.UserId, new { @id = "txtUserId", @maxlength = "12", onchange = "CheckUserId()", @class = "form-control form-control", @required = "required" })
                     </div>
                     <div class="col-md-3">
                         @Html.Label("txtUserName", "Name:", new { @class = "form-label col-form-label mb-0" })<span class="text-danger required-asterisk">*</span>
@@ -253,7 +253,26 @@
             document.getElementById("btnSave").style.display = "block"; // to hide the button
 
         }
+        function CheckUserId() {
+            var userId=$("#txtUserId").val();
 
+            $.ajax({
+            type: "POST",
+            url: '@Url.Action("CheckUserId", "UserMaster")',
+            data: { userId: userId },
+                success: function (response) {
+                    if (response) {
+                        $("#txtUserId").val('');
+                    }
+                    
+                    
+            },
+            error: function (xhr, status, error) {
+                console.error("Error occurred during deletion:", error);
+                console.log("Server response:", xhr.responseText);
+            }
+        });
+        }
 
 
 

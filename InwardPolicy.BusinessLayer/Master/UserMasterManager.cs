@@ -45,6 +45,28 @@ namespace BusinessLayer
 
             }
         }
+
+        public bool CheckUserId(string userId)
+        {
+            try
+            {
+                Dictionary<string, Object> Dict = new Dictionary<string, object>();
+                Dict["UserId"] = userId.ToUpper().Trim();
+                string query = $"SELECT 1 FROM USER_MASTER WHERE USER_ID=:UserId";
+                DataTable dt = DBConnection.ExecuteQuerySelect(Dict, query).Tables[0];
+                int count = dt.Rows.Count;
+                if (count != 1)
+                    return false;
+                else
+                    return true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public DataTable UserMasterBind()
         {
             try
