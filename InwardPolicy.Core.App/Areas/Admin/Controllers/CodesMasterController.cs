@@ -122,7 +122,7 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
         }
         [HttpGet]
         public async Task<IActionResult> ShowModal(string? userId)
-        -{
+        {
             try
             {
                 await Task.CompletedTask;
