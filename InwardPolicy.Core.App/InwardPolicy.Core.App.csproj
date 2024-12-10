@@ -18,10 +18,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="Areas\Transaction\Controllers\" />
     <Folder Include="Areas\Transaction\Data\" />
-    <Folder Include="Areas\Transaction\Models\" />
-    <Folder Include="Areas\Transaction\Views\" />
   </ItemGroup>
 
 </Project>

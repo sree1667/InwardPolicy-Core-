@@ -189,6 +189,8 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
                     var result = await httpResponseMessage.Content.ReadAsStringAsync();
+                    //using HttpResponseMessage httpResponseErrorMessage = await client.GetAsync($"/Api/ApiErrorCodeMaster/GetErrorMessage/{errCode}");
+
                     return Ok(result);
                 }
                 else

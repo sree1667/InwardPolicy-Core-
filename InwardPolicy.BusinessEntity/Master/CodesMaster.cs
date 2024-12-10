@@ -27,5 +27,6 @@ namespace BusinessEntity
             set => this.Active = (value) ? "Y" : "N";
 
         }
+        public string UpOrCrBy { get; set; }
     }
 }

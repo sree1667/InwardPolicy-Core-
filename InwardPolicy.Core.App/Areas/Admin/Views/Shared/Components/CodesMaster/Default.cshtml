@@ -2,18 +2,18 @@
 
 <div class="container bg-light p-4 border rounded shadow mt-2">
     @* Row 1 *@
-    <form id="frmUserMaster" method="post">
+    <form id="frmUserMaster" method="post" asp-action="CodesMaster" asp-controller="CodesMaster" asp-area="Admin">
         <div class="row mb-3">
             @Html.HiddenFor(m => m.Mode, new { @id = "hfMode" })
             <div class="col-md-4">
                 @Html.Label("txtCmType", "Type:", new { @class = "form-label" })
-                @Html.TextBoxFor(m => m.CodesMaster.Type, new { @id = "txtCmType", @class = "form-control", @maxlength = "12", @readonly = "readonly" })
-                @Html.ValidationMessageFor(m => m.CodesMaster.Type, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(m => m.CodesMaster.Type, new { @id = "txtCmType", @class = "form-control", @maxlength = "12",onchange= "CheckCodesMaster()" })
+                
             </div>
-            <div class="col-md-4"> 
+            <div class="col-md-4">
                 @Html.Label("txtCmCode", "Code:", new { @class = "form-label" })
-                @Html.TextBoxFor(m => m.CodesMaster.Code, new { @id = "txtCmCode", @class = "form-control", @maxlength = "12", @readonly = "readonly" })
-                @Html.ValidationMessageFor(m => m.CodesMaster.Code, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(m => m.CodesMaster.Code, new { @id = "txtCmCode", @class = "form-control", @maxlength = "12", onchange = "CheckCodesMaster()" })
+               
             </div>
             <div class="col-md-4">
                 @Html.Label("txtCmValue", "Value:", new { @class = "form-label" })
@@ -51,5 +51,23 @@
             </div>
         </div>
     </form>
+
+   
+    <script>
+
+        $(document).ready(function () {
+            const modeValue = $("#hfMode").val();
+
+            
+            if (modeValue === "U") {
+
+                $("#txtCmCode").prop("readonly", true);
+                $("#txtCmType").prop("readonly", true);
+            } 
+        });
+
+        
+    </script>
+
 </div>
 

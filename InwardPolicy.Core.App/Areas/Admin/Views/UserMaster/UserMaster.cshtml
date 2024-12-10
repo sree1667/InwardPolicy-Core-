@@ -97,7 +97,7 @@
 
         $(document).ready(function () {
 
-            //swal
+           
 
 
 
@@ -190,40 +190,40 @@
             url: '@Url.Action("GetUserMasterDetails", "UserMaster")',
             data: { userId: UserId },
                 success: function (response) {
-                    console.log(response);
-                    const dataTableData = response;
-                    console.log(typeof dataTableData);
-                    const parsedData = JSON.parse(dataTableData);
-                    console.log(typeof parsedData);
-                    parsedData.forEach(item => {
-                        $("#txtUserId").val(item.USER_ID);
-                        $("#hfUserId").val(item.USER_ID);
-                        $("#txtUserId").attr("readonly", true);
-                        $("#txtUserName").val(item.USER_NAME);
-                        $("#txtPassword").val(item.USER_PASSWORD);
-                        if (item.USER_ACTIVE_YN == 'Y') {
-                            console.log("true");
-                            $("#flexSwitchCheckChecked").prop("checked", true);
-                        }
-                        else {
-                            $("#flexSwitchCheckChecked").prop("checked", false);
-                        }
-                        $('#hfMode').val('U');
-                        document.getElementById("btnUpdate").style.display = "block"; // to show the button
-                        document.getElementById("btnAddNew").style.display = "block"; // to show the button
-                        document.getElementById("btnSave").style.display = "none"; // to hide the button
-                        //$("#btnSave").prop("visible", false);
-                        //$("#btnAddnew").prop("visible", true);
+                    //console.log(response);
+                    //const dataTableData = response;
+                    //console.log(typeof dataTableData);
+                    //const parsedData = JSON.parse(dataTableData);
+                    //console.log(typeof parsedData);
+                    //parsedData.forEach(item => {
+                    //    $("#txtUserId").val(item.CM_CODE);
+                    //    $("#hfUserId").val(item.USER_ID);
+                    //    $("#txtUserId").attr("readonly", true);
+                    //    $("#txtUserName").val(item.USER_NAME);
+                    //    $("#txtPassword").val(item.USER_PASSWORD);
+                    //    if (item.USER_ACTIVE_YN == 'Y') {
+                    //        console.log("true");
+                    //        $("#flexSwitchCheckChecked").prop("checked", true);
+                    //    }
+                    //    else {
+                    //        $("#flexSwitchCheckChecked").prop("checked", false);
+                    //    }
+                    //    $('#hfMode').val('U');
+                    //    document.getElementById("btnUpdate").style.display = "block"; // to show the button
+                    //    document.getElementById("btnAddNew").style.display = "block"; // to show the button
+                    //    document.getElementById("btnSave").style.display = "none"; // to hide the button
+                    //    //$("#btnSave").prop("visible", false);
+                    //    //$("#btnAddnew").prop("visible", true);
 
-                        //console
-                        console.log("USER_NAME:", item.USER_NAME);
-                        console.log("USER_PASSWORD:", item.USER_PASSWORD);
-                        console.log("USER_CR_BY:", item.USER_CR_BY);
-                        console.log("USER_CR_DT:", item.USER_CR_DT);
-                        console.log("USER_UP_BY:", item.USER_UP_BY);
-                        console.log("USER_UP_DT:", item.USER_UP_DT);
-                        console.log("USER_ACTIVE_YN:", item.USER_ACTIVE_YN);
-                    });
+                    //    //console
+                    //    console.log("USER_NAME:", item.CM_CODE);
+                    //    console.log("USER_PASSWORD:", item.USER_PASSWORD);
+                    //    console.log("USER_CR_BY:", item.USER_CR_BY);
+                    //    console.log("USER_CR_DT:", item.USER_CR_DT);
+                    //    console.log("USER_UP_BY:", item.USER_UP_BY);
+                    //    console.log("USER_UP_DT:", item.USER_UP_DT);
+                    //    console.log("USER_ACTIVE_YN:", item.USER_ACTIVE_YN);
+                    //});
 
 
 
@@ -253,19 +253,24 @@
             document.getElementById("btnSave").style.display = "block"; // to hide the button
 
         }
+
+        //duplication check
         function CheckUserId() {
             var userId=$("#txtUserId").val();
-
             $.ajax({
             type: "POST",
             url: '@Url.Action("CheckUserId", "UserMaster")',
             data: { userId: userId },
                 success: function (response) {
                     if (response) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'UserId already exists',
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        });
                         $("#txtUserId").val('');
                     }
-                    
-                    
             },
             error: function (xhr, status, error) {
                 console.error("Error occurred during deletion:", error);

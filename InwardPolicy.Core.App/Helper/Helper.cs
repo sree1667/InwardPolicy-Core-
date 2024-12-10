@@ -29,5 +29,10 @@ namespace InwardPolicy
 
             return data;
         }
+
+        public static string Message { get; set; }
+        public static string Title { get; set; }
+        public static string Icon { get; set; }
     }
+
 }

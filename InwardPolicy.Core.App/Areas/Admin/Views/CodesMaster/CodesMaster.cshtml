@@ -7,9 +7,7 @@
     .modal-header {
         background-color: #87E0E0;
     }
-    .modal-body {
-        background-color: #87E0E0;
-    }
+    
     #modalHeading {
         font-size: 50px;
     }
@@ -17,26 +15,27 @@
 
 <div class="container bg-light p-4 border rounded shadow mt-2">
     @*Row1*@
+   
     <div class=" text-end justify-content-center mb-3">
-        <button id="btnAddNew"  type="button" class="btn btn-primary">
+        <button id="btnAddNew" type="button" class="btn btn-primary">
             <i class="bi bi-plus-circle"></i> Add New
         </button>
     </div>
     <form id="frmUserMaster" method="post">
         <div class="row justify-content-center mb-3">
             @*<div class="container bg-light p-4 border rounded shadow mt-2">*@
-                <table class="table table-hover" id="tblCodesMaster">
-                    <thead>
-                        <tr class="table-info">
-                            <th scope="col">User Id</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Active</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+            <table class="table table-hover" id="tblCodesMaster">
+                <thead>
+                    <tr class="table-info">
+                        <th scope="col">Type</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Active</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
             @*</div>*@
         </div>
     </form>
@@ -63,6 +62,17 @@
     <script>
 
         $(document).ready(function () {
+            const swalTitle = '@TempData["SwalTitle"]';
+            const swalMessage = '@TempData["SwalMessage"]';
+            const swalIcon = '@TempData["SwalIcon"]';
+            if (swalTitle && swalMessage && swalIcon) {
+                Swal.fire({
+                    title: swalTitle,
+                    text: swalMessage,
+                    icon: swalIcon
+                });
+            }
+
 
             //datatable
             $('#tblCodesMaster').DataTable({
@@ -84,20 +94,21 @@
                 pageLength: 10, // Default number of rows per page
                 lengthMenu: [5, 10, 20, 50, 100], // Options for rows per page
                 columns: [
-                    { data: "CM_CODE", name: "USER_ID", autoWidth: true },
-                    { data: "CM_TYPE", name: "USER_NAME", autoWidth: true },
+                    { data: "CM_TYPE", name: "USER_ID", autoWidth: true },
+                    { data: "CM_CODE", name: "USER_NAME", autoWidth: true },
                     { data: "CM_ACTIVE_YN", name: "USER_ACTIVE_YN", autoWidth: true },
                     {
 
                         render: function (data, type, row) {
                             if (row.CM_ACTIVE_YN === 'Y') {
-                                return "<a onclick=UpdateUserMaster('" + row.USER_ID + "'); ><i class='bi bi-pencil'></i></a>";
+                                return "<a onclick=\"UpdateCodesMaster('" + row.CM_CODE + "', '" + row.CM_TYPE + "');\"><i class='bi bi-pencil'></i></a>";
                             } else {
-                                return "<a onclick=UpdateUserMaster('" + row.USER_ID + "');><i class='bi bi-pencil'></i></a>" +
-                                    "<a onclick=DeleteUserMaster('" + row.USER_ID + "');><i class='bi bi-trash'></i></a>";
-
+                                return "<a onclick=\"UpdateCodesMaster('" + row.CM_CODE + "', '" + row.CM_TYPE + "');\"><i class='bi bi-pencil'></i></a>" +
+                                    "<a onclick=\"DeleteCodesMaster('" + row.CM_CODE + "', '" + row.CM_TYPE + "');\"><i class='bi bi-trash'></i></a>";
                             }
                         }
+
+
 
                     }
                 ],
@@ -105,17 +116,19 @@
             });
         });
         //delete
-        function DeleteUserMaster(UserId) {
+        function DeleteCodesMaster(CM_CODE,CM_TYPE) {
             //console.log("Deleting user with ID:", UserId);
+            console.log(CM_CODE);
+            console.log(CM_TYPE );
             $.ajax({
                 type: "DELETE",
                 url: '@Url.Action("DeleteCodesMaster", "CodesMaster")',
-                data: { userId: UserId },
+                data: { code : CM_CODE, type: CM_TYPE },
                 success: function (response) {
                     console.log("AJAX request was successful. Response:", response);
                     if (response) {
-                         var message = "@ViewBag.Message";
-                         var title = "@ViewBag.Title";
+                        var message = "@ViewBag.Message";
+                        var title = "@ViewBag.Title";
                         var icon = "@ViewBag.Icon";
                         console.log(message);
                         console.log(title);
@@ -124,7 +137,7 @@
                     else {
 
                     }
-                    $('#tblUserMaster').DataTable().ajax.reload();
+                    $('#tblCodesMaster').DataTable().ajax.reload();
                 },
                 error: function (xhr, status, error) {
                     console.error("Error occurred during deletion:", error);
@@ -133,7 +146,28 @@
             });
         }
 
-        //Modal
+        //Update
+        function UpdateCodesMaster(CM_CODE, CM_TYPE) {
+            //console.log("Deleting user with ID:", UserId);
+            console.log(CM_CODE);
+            console.log(CM_TYPE);
+            $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetCodesMasterDetails", "CodesMaster")',
+            data: { code: CM_CODE, type: CM_TYPE },
+                success: function (CodesMasterViewComponent) {
+                    $("#modalCodesMasterBody").html(CodesMasterViewComponent);
+                    $("#modalCodesMaster").modal("show");
+
+                },
+            error: function (xhr, status, error) {
+                console.error("Error occurred during deletion:", error);
+                console.log("Server response:", xhr.responseText);
+            }
+        });
+        }
+
+        //AddNew
         $(function () {
                 $('#btnAddNew').click(function () {
                     var CodeMasterViewModel = null;
@@ -153,6 +187,37 @@
                         }
                     });
                 });
-            })
+        })
+
+        //duplicate check
+        function CheckCodesMaster() {
+            var code = $("#txtCmCode").val();
+            var type = $("#txtCmType").val();
+            if (code && type) {
+
+                console.log(code);
+                console.log(type);
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("CheckCodesMaster", "CodesMaster")',
+                    data: { code: code, type: type },
+                    success: function (response) {
+                        console.log(response)
+                        if (response===true) {
+                            $("#txtCmCode").val("");
+                            $("#txtCmType").val("");
+                        }
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error occurred during deletion:", error);
+                        console.log("Server response:", xhr.responseText);
+                    }
+                });
+            }
+
+        }
+
     </script>
 }

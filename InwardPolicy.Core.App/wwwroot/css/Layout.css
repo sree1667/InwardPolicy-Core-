@@ -7,7 +7,44 @@ body {
     color: #212529;
 }
 
+div.ui-datepicker {
+    font-size: 14.5px !important;
+    background-color: #1a7182;
+}
 
+.ui-datepicker th {
+    padding: 0.7em 0.3em;
+    text-align: center;
+    font-weight: bold;
+    border: 0;
+    background-color: #87E0E0;
+}
+
+
+.ui-datepicker-trigger,
+.ui-datepicker-trigger img {
+    height: 20px;
+    width: 20px;
+    border: none;
+    width: fit-content;
+    background-color: #f8f9fa;
+}
+
+.ui-datepicker .ui-datepicker-header {
+    position: relative;
+    padding: 0.2em 0;
+    background-color: #212529;
+}
+
+.ui-datepicker .ui-datepicker-header {
+    position: relative;
+    padding: 0.2em 0;
+    background-color: #23b8cf;
+}
+
+.inner-sec {
+    display: flex;
+}
 .sidebar {
     background-color: #87E0E0;
     color: #55dd96;

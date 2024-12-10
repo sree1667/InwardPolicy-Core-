@@ -1,4 +1,7 @@
-﻿using InwardPolicy_ViewComponent;
+﻿using BusinessEntity;
+using InwardPolicy.Admin.Models;
+using InwardPolicy_ViewComponent;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
@@ -6,6 +9,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace InwardPolicy.Core.App.Areas.Admin.Controllers
@@ -90,7 +94,7 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteUserMaster(string userId)
+        public async Task<IActionResult> DeleteCodesMaster(string code, string type)
         {
             try
             {
@@ -98,7 +102,7 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
                 {
                     BaseAddress = new System.Uri("http://localhost:26317/")
                 };
-                using HttpResponseMessage httpResponseMessage = await client.DeleteAsync($"/Api/ApiUserMaster/DeleteCodesMaster/{userId}");
+                using HttpResponseMessage httpResponseMessage = await client.DeleteAsync($"/Api/ApiCodesMaster/DeleteCodesMaster/{code}/{type}");
 
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
@@ -107,11 +111,11 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
                     TempData["Title"] = "success";
                     TempData["Message"] = "deleted";
                     TempData["Icon"] = "success";
-                    return View("UserMaster");
+                    return Ok(true);
                 }
                 else
                 {
-                    return View("Login");
+                    return NotFound(false);
                 }
             }
             catch (Exception ex)
@@ -134,5 +138,105 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
                 throw;
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCodesMasterDetails(string code,string type)
+        {
+            try
+            {
+                CodesMasterModel objCodesMasterModel = new CodesMasterModel();
+                objCodesMasterModel.CodesMaster = new CodesMaster();
+                HttpClient client = new HttpClient()
+                {
+                    BaseAddress = new System.Uri("http://localhost:26317/")
+                };
+                using HttpResponseMessage httpResponseMessage = await client.GetAsync($"/Api/ApiCodesMaster/GetCodesMasterDetails/{code}/{type}");
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var result = await httpResponseMessage.Content.ReadAsStringAsync();
+                    objCodesMasterModel.CodesMaster = JsonConvert.DeserializeObject<CodesMaster>(result);
+                    objCodesMasterModel.Mode = "U";
+                    return ViewComponent(typeof(CodesMasterViewComponent), objCodesMasterModel);
+                }
+                else
+                {
+                    return View("Login");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> CheckCodesMaster(string code,string type)
+        {
+            try
+            {
+                
+                HttpClient client = new HttpClient()
+                {
+                    BaseAddress = new System.Uri("http://localhost:26317/")
+                };
+                using HttpResponseMessage httpResponseMessage = await client.GetAsync($"/Api/ApiCodesMaster/CheckCodesMaster/{code}/{type}");
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var result = await httpResponseMessage.Content.ReadAsStringAsync();
+                    bool status = JsonConvert.DeserializeObject<bool>(result);
+                    return Ok(status);
+                }
+                else
+                {
+                    return View("Login");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CodesMaster(CodesMasterModel objCodesMasterModel)
+        {
+            try
+            {
+                HttpClient client = new HttpClient()
+                {
+                    BaseAddress = new System.Uri("http://localhost:26317/")
+                };
+                objCodesMasterModel.CodesMaster.UpOrCrBy = HttpContext.Session.GetString("UserId");
+                using HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync($"/Api/ApiCodesMaster/CodesMasterInsert/{objCodesMasterModel.Mode}", objCodesMasterModel.CodesMaster);
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var result = await httpResponseMessage.Content.ReadAsStringAsync();
+                    bool status = JsonConvert.DeserializeObject<bool>(result);
+                    if (status)
+                    {
+                        TempData["SwalTitle"] = "Success!";
+                        TempData["SwalMessage"] = "Your operation was completed successfully.";
+                        TempData["SwalIcon"] = "success";
+                        return View("CodesMaster", objCodesMasterModel);
+                    }
+                    else
+                    {
+                        return View("CodesMaster", objCodesMasterModel);
+                    }
+                }
+                else
+                {
+                    return View("Login");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
     }
 }
