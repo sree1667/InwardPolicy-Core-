@@ -58,7 +58,7 @@ namespace InwardPolicy.Core.Api.Controllers
                 FirePolicyManager objFirePolicyManager = new FirePolicyManager();
                 DataTable dt = objFirePolicyManager.BindGrid();
                 string json = JsonConvert.SerializeObject(dt);
-                return Ok(json);  
+                return Ok(json);
             }
             catch (Exception ex)
             {
@@ -76,7 +76,7 @@ namespace InwardPolicy.Core.Api.Controllers
                 DataRow dr = objFirePolicyManager.FetchPolicyDetails(uid);
                 FirePolicy objfirePolicy = new FirePolicy();
 
-                objfirePolicy.PolIssDt = Convert.ToDateTime(dr["POL_ISS_DT"]);
+
                 objfirePolicy.PolNo = dr["POL_NO"].ToString();
 
                 //DateTime fromDate = Convert.ToDateTime(dr["POL_FM_DT"]);
@@ -112,9 +112,14 @@ namespace InwardPolicy.Core.Api.Controllers
                 //txtPolVATLCAmt.Text = dr["POL_VAT_LC_AMT"] != DBNull.Value ? Convert.ToDecimal(dr["POL_VAT_LC_AMT"]).ToString("N2", new CultureInfo("en-US")) : "0.00";
                 // Assuming objFirePolicy is your object
 
-                // Binding DateTime fields
-                objfirePolicy.PolFmDt = dr["POL_FM_DT"] != DBNull.Value ? Convert.ToDateTime(dr["POL_FM_DT"]) : DateTime.MinValue;
+                //Binding DateTime fields
+                string fmdt= Convert.ToDateTime( dr["POL_FM_DT"]).ToString("yyyy-MM-dd");
+                objfirePolicy.PolFmDt = fmdt != null ? Convert.ToDateTime(fmdt) : DateTime.MinValue;
                 objfirePolicy.PolToDt = dr["POL_TO_DT"] != DBNull.Value ? Convert.ToDateTime(dr["POL_TO_DT"]) : DateTime.MinValue;
+                objfirePolicy.PolIssDt = Convert.ToDateTime(dr["POL_ISS_DT"]);
+                objfirePolicy.PolAssrDob = dr["POL_ASSR_DOB"] != DBNull.Value ? Convert.ToDateTime(dr["POL_ASSR_DOB"]) : DateTime.MinValue;
+
+
 
                 // Binding string fields
                 objfirePolicy.PolProdCode = dr["POL_PROD_CODE"] != DBNull.Value ? dr["POL_PROD_CODE"].ToString() : string.Empty;
@@ -124,7 +129,7 @@ namespace InwardPolicy.Core.Api.Controllers
                 objfirePolicy.PolAssrEmail = dr["POL_ASSR_EMAIL"] != DBNull.Value ? dr["POL_ASSR_EMAIL"].ToString() : string.Empty;
 
                 // Binding DateTime for Assured's DOB
-                objfirePolicy.PolAssrDob = dr["POL_ASSR_DOB"] != DBNull.Value ? Convert.ToDateTime(dr["POL_ASSR_DOB"]) : DateTime.MinValue;
+
 
                 objfirePolicy.PolAssrOccupation = dr["POL_ASSR_OCCUPATION"] != DBNull.Value ? dr["POL_ASSR_OCCUPATION"].ToString() : string.Empty;
                 objfirePolicy.PolAssrType = dr["POL_ASSR_TYPE"] != DBNull.Value ? dr["POL_ASSR_TYPE"].ToString() : string.Empty;
@@ -149,7 +154,7 @@ namespace InwardPolicy.Core.Api.Controllers
 
 
                 string json = JsonConvert.SerializeObject(objfirePolicy);
-                return Ok(json);  
+                return Ok(json);
             }
             catch (Exception ex)
             {

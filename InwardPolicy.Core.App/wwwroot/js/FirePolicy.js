@@ -3,7 +3,7 @@
         $("#txtFromDate").datepicker({
             dateFormat: 'dd-mm-yy',
             minDate: 0,
-            buttonImage: '../../images/calenderIcon.png',
+            buttonImage: '../../../images/calenderIcon.png',
             showOn: 'button'
 
         });
@@ -12,7 +12,7 @@
 
         $("#txtDoB").datepicker({
             dateFormat: 'dd-mm-yy',
-            buttonImage: '../../images/calenderIcon.png',
+            buttonImage: '../../../images/calenderIcon.png',
             showOn: 'button'
 
         });

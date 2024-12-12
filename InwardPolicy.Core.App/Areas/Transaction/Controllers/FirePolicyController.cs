@@ -17,7 +17,7 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
     [Area("Transaction")]
     public class FirePolicyController : Controller
     {
-        public async Task<IActionResult> FirePolicy(string id1)
+        public async Task<IActionResult> FirePolicy(string id1,string id2)
         {
             
             HttpClient client = new HttpClient()
@@ -26,25 +26,44 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
             };
             //ddl
             FirePolicyModel objFirePolicyModel = new FirePolicyModel();
-            if (!string.IsNullOrEmpty(id1))
-            {
-                using HttpResponseMessage httpResponseMessage1 = await client.GetAsync($"Api/ApiFirePolicy/LoadControl/{id1}");
-                
-                if (httpResponseMessage1.IsSuccessStatusCode)
-                {
-                    var result = await httpResponseMessage1.Content.ReadAsStringAsync();
-                    objFirePolicyModel.FirePolicy = JsonConvert.DeserializeObject<FirePolicy>(result);
-
-
-                }
-            }
+            objFirePolicyModel.FirePolicy = new FirePolicy();
             using HttpResponseMessage httpResponseMessage = await client.GetAsync("Api/ApiCodesMaster/FetchDropdownList");
-          
+
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 var result = await httpResponseMessage.Content.ReadAsStringAsync();
                 objFirePolicyModel = FillDropDowns(result, objFirePolicyModel);
 
+
+            }
+            //control data
+            if (!string.IsNullOrEmpty(id1))
+            {
+                objFirePolicyModel.Mode = "U";
+                objFirePolicyModel.FirePolicy.Poluid = Convert.ToInt32(id1);
+                using HttpResponseMessage httpResponseMessage1 = await client.GetAsync($"Api/ApiFirePolicy/LoadControl/{id1}");
+                if (httpResponseMessage1.IsSuccessStatusCode)
+                {
+                    var result = await httpResponseMessage1.Content.ReadAsStringAsync();
+                    objFirePolicyModel.FirePolicy = JsonConvert.DeserializeObject<FirePolicy>(result);
+                }
+            }
+            else
+            {
+                objFirePolicyModel.Mode = "I";
+                //objFirePolicyModel.FirePolicy.PolFmDt = null;
+                //objFirePolicyModel.FirePolicy.PolToDt = null;
+                //objFirePolicyModel.FirePolicy.PolAssrDob = null;
+
+            }
+                
+            if (id2=="A")
+            {
+                objFirePolicyModel.ApprStatus = "A";
+            }
+            else
+            {
+                objFirePolicyModel.ApprStatus = "N";
 
             }
 
@@ -190,15 +209,22 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
 
             try
             {
+                
                 HttpClient client = new HttpClient()
                 {
                     BaseAddress = new System.Uri("http://localhost:26317")
                 };
                 objFirePolicyModel.FirePolicy.CrOrUpBy= HttpContext.Session.GetString("UserId");
-                using HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync($"/Api/ApiFirePolicy/AddFirePolicy/{objFirePolicyModel.Mode}", objFirePolicyModel);
+                using HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync($"/Api/ApiFirePolicy/AddFirePolicy/{objFirePolicyModel.Mode}", objFirePolicyModel.FirePolicy);
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
-                    return View();
+                    TempData["SwalTitle"] = "Success!";
+                    TempData["SwalMessage"] = "Your operation was completed successfully.";
+                    TempData["SwalIcon"] = "success";
+                    var result = await httpResponseMessage.Content.ReadAsStringAsync();
+                    string uid = JsonConvert.DeserializeObject<string>(result);
+                    return  RedirectToAction("FirePolicy", new { id1 = $"{uid}", id2 = "N" });
+                    
                 }
                 else
                 {
@@ -211,6 +237,149 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                 throw ex;
             }
 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> FirePolicyRiskBind(string poluid)
+        {
+            try
+            {
+                HttpClient client = new HttpClient()
+                {
+                    BaseAddress = new System.Uri("http://localhost:26317/")
+                };
+
+                using HttpResponseMessage httpResponseMessage = await client.GetAsync($"Api/ApiFirePolicyRisk/FirePolicyRiskBind/{poluid}");
+
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var orderColumnIndex = Request.Form["order[0][column]"].FirstOrDefault(); // Get column index
+                    var orderDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+                    var draw = Request.Form["draw"].FirstOrDefault();
+                    var start = Request.Form["start"].FirstOrDefault();
+                    var length = Request.Form["length"].FirstOrDefault();
+                    var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+                    int pageSize = length != null ? Convert.ToInt32(length) : 5;
+                    int skip = start != null ? Convert.ToInt32(start) : 0;
+
+                    // Fetch data from the API
+                    var result = await httpResponseMessage.Content.ReadAsStringAsync();
+                    DataTable dt = JsonConvert.DeserializeObject<DataTable>(result);
+
+                    // Convert DataTable to List of objects
+                    var data = Helper.ConvertDataTableToList(dt);
+
+                    // Apply Search
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        data = data.Where(u =>
+                        (u.USER_NAME != null && u.USER_NAME.Contains(searchValue, StringComparison.OrdinalIgnoreCase))).ToList();
+
+                    }
+
+
+
+                    // Count of filtered records
+                    var recordsFiltered = data.Count;
+
+                    // Apply Pagination
+                    var pagedData = data.Skip(skip).Take(pageSize).ToList();
+
+                    // Prepare the response
+                    var dataTableResponse = new
+                    {
+                        draw = draw,
+                        recordsTotal = dt.Rows.Count, // Total records in the DataTable (unfiltered)
+                        recordsFiltered = recordsFiltered, // Total records after filtering
+                        data = pagedData // Paginated and filtered data
+                    };
+
+                    return Ok(dataTableResponse);
+
+                }
+                else
+                {
+                    return StatusCode((int)httpResponseMessage.StatusCode, "Error retrieving data");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> FireInwPolicyBind(string poluid)
+        {
+            try
+            {
+                HttpClient client = new HttpClient()
+                {
+                    BaseAddress = new System.Uri("http://localhost:26317/")
+                };
+
+                using HttpResponseMessage httpResponseMessage = await client.GetAsync($"Api/ApiFireInwardPolicy/FireInwardPolicyBind/{poluid}");
+
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var orderColumnIndex = Request.Form["order[0][column]"].FirstOrDefault(); // Get column index
+                    var orderDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+                    var draw = Request.Form["draw"].FirstOrDefault();
+                    var start = Request.Form["start"].FirstOrDefault();
+                    var length = Request.Form["length"].FirstOrDefault();
+                    var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+                    int pageSize = length != null ? Convert.ToInt32(length) : 5;
+                    int skip = start != null ? Convert.ToInt32(start) : 0;
+
+                    // Fetch data from the API
+                    var result = await httpResponseMessage.Content.ReadAsStringAsync();
+                    DataTable dt = JsonConvert.DeserializeObject<DataTable>(result);
+
+                    // Convert DataTable to List of objects
+                    var data = Helper.ConvertDataTableToList(dt);
+
+                    // Apply Search
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        data = data.Where(u =>
+                        (u.USER_NAME != null && u.USER_NAME.Contains(searchValue, StringComparison.OrdinalIgnoreCase))).ToList();
+
+                    }
+
+
+
+                    // Count of filtered records
+                    var recordsFiltered = data.Count;
+
+                    // Apply Pagination
+                    var pagedData = data.Skip(skip).Take(pageSize).ToList();
+
+                    // Prepare the response
+                    var dataTableResponse = new
+                    {
+                        draw = draw,
+                        recordsTotal = dt.Rows.Count, // Total records in the DataTable (unfiltered)
+                        recordsFiltered = recordsFiltered, // Total records after filtering
+                        data = pagedData // Paginated and filtered data
+                    };
+
+                    return Ok(dataTableResponse);
+
+                }
+                else
+                {
+                    return StatusCode((int)httpResponseMessage.StatusCode, "Error retrieving data");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
     }
 }
