@@ -1,4 +1,5 @@
-﻿using DataAccessLayer;
+﻿using BusinessEntity;
+using DataAccessLayer;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -33,5 +34,102 @@ namespace BusinessLayer
             }
             return policyCount;
         }
+
+        private string GetPolicyNumber(FirePolicy objFirePolicy)
+        {
+
+            
+            Dictionary<string, object> Dict = new Dictionary<string, object>();
+            Dict["PolProdCode"] = objFirePolicy.PolProdCode;
+            string query = " SELECT DFUN_POLICY_NUMBER(:PolProdCode) POLICY_NUMBER FROM dual";
+            DataTable dt = DBConnection.ExecuteQuerySelect(Dict, query).Tables[0];
+            string policyNumber = dt.Rows[0]["POLICY_NUMBER"].ToString();
+            return policyNumber;
+        }
+        public int GetPolUid()
+        {
+            string query = "SELECT SEQ_POL_UID.NEXTVAL FROM DUAL ";
+            int uid = Convert.ToInt32(DBConnection.ExecuteScalar(query));
+            return uid;
+        }
+
+        public string AddFirePolicy(FirePolicy objFirePolicy,string mode)
+        {
+            if (mode == "U")
+            {
+                Dictionary<string, object> Dict = new Dictionary<string, object>();
+                Dict["PolFmDt"] = objFirePolicy.PolFmDt;
+                Dict["PolToDt"] = objFirePolicy.PolToDt;
+                Dict["PolAssrName"] = objFirePolicy.PolAssrName;
+                Dict["PolAssrAddress"] = objFirePolicy.PolAssrAddress;
+                Dict["PolAssrMobile"] = objFirePolicy.PolAssrMobile;
+                Dict["PolAssrEmail"] = objFirePolicy.PolAssrEmail;
+                Dict["PolAssrDob"] = objFirePolicy.PolAssrDob;
+                Dict["PolAssrOccupation"] = objFirePolicy.PolAssrOccupation;
+                Dict["PolAssrType"] = objFirePolicy.PolAssrType;
+                Dict["PolAssrCivilId"] = objFirePolicy.PolAssrCivilId;
+                Dict["UpBy"] = objFirePolicy.CrOrUpBy;
+                Dict["Poluid"] = objFirePolicy.Poluid;
+                string query = "UPDATE FIRE_POLICY SET  POL_FM_DT = :PolFmDt, POL_TO_DT = :PolToDt,  " +
+                    "POL_ASSR_NAME = :PolAssrName, POL_ASSR_ADDRESS = :PolAssrAddress, POL_ASSR_MOBILE = :PolAssrMobile, POL_ASSR_EMAIL = :PolAssrEmail, " +
+                    "POL_ASSR_DOB = :PolAssrDob, POL_ASSR_OCCUPATION = :PolAssrOccupation, POL_ASSR_TYPE = :PolAssrType, POL_ASSR_CIVIL_ID = :PolAssrCivilId, " +
+                   " POL_UP_BY = :UpBy, POL_UP_DT = SYSDATE WHERE POL_UID = :Poluid";
+                int i = DBConnection.ExecuteQuery(Dict, query);
+                if (i == 1)
+                    return objFirePolicy.Poluid.ToString();
+                else
+                    return null;
+            }
+            else
+            {
+                string policyNumber = GetPolicyNumber(objFirePolicy);
+                Dictionary<string, object> Dict = new Dictionary<string, object>();
+                Dict["PolNo"] = policyNumber;
+                string uid = GetPolUid().ToString();
+                Dict["Poluid"] = Convert.ToInt32(uid);
+                Dict["PolFmDt"] = objFirePolicy.PolFmDt;
+                Dict["PolToDt"] = objFirePolicy.PolToDt;
+                Dict["PolProdCode"] = objFirePolicy.PolProdCode;
+                Dict["PolAssrName"] = objFirePolicy.PolAssrName;
+                Dict["PolAssrAddress"] = objFirePolicy.PolAssrAddress;
+                Dict["PolAssrMobile"] = objFirePolicy.PolAssrMobile;
+                Dict["PolAssrEmail"] = objFirePolicy.PolAssrEmail;
+                Dict["PolAssrDob"] = objFirePolicy.PolAssrDob;
+                Dict["PolAssrOccupation"] = objFirePolicy.PolAssrOccupation;
+                Dict["PolAssrType"] = objFirePolicy.PolAssrType;
+                Dict["PolAssrCivilId"] = objFirePolicy.PolAssrCivilId;
+                Dict["PolSICurrency"] = objFirePolicy.PolSICurrency;
+                Dict["PolSICurrencyRate"] = objFirePolicy.PolSICurrencyRate;
+                Dict["PolPremCurrency"] = objFirePolicy.PolPremCurrency;
+                Dict["PolPremCurrencyRate"] = objFirePolicy.PolPremCurrencyRate;
+                Dict["CrBy"] = objFirePolicy.CrOrUpBy;
+                string query = "INSERT INTO FIRE_POLICY (POL_NO, POL_UID, POL_ISS_DT, POL_FM_DT, POL_TO_DT, POL_PROD_CODE, POL_ASSR_NAME, POL_ASSR_ADDRESS, POL_ASSR_MOBILE, POL_ASSR_EMAIL," +
+                    " POL_ASSR_DOB, POL_ASSR_OCCUPATION, POL_ASSR_TYPE, POL_ASSR_CIVIL_ID, POL_SI_CURRENCY, POL_SI_CURR_RATE, POL_PREM_CURRENCY, POL_PREM_CURR_RATE," +
+                    "  POL_APPR_STATUS,POL_CR_BY,POL_CR_DT) VALUES(:PolNo,:Poluid,SYSDATE,:PolFmDt,:PolToDt,:PolProdCode,:PolAssrName,:PolAssrAddress," +
+                    ":PolAssrMobile,:PolAssrEmail,:PolAssrDob,:PolAssrOccupation,:PolAssrType,:PolAssrCivilId,:PolSICurrency,:PolSICurrencyRate,:PolPremCurrency,:PolPremCurrencyRate," +
+                    "'N',:CrBy,SYSDATE)";
+                int i = DBConnection.ExecuteQuery(Dict, query);
+                if (i == 1)
+                    return uid;
+                else
+                    return null;
+            }
+        }
+        public DataTable BindGrid()
+        {
+            string query = "SELECT * FROM FIRE_POLICY ORDER BY POL_UID";
+            return DBConnection.ExecuteDataset(query);
+        }
+        public DataRow FetchPolicyDetails(string polUid)
+        {
+            Dictionary<string, object> Dict = new Dictionary<string, object>();
+            Dict["poluid"] = polUid;
+            string query = $"SELECT * FROM FIRE_POLICY WHERE POL_UID=:poluid";
+            DataRow dr = DBConnection.ExecuteQuerySelect(Dict, query).Tables[0].Rows[0];
+            return dr;
+
+        }
+
+
     }
 }

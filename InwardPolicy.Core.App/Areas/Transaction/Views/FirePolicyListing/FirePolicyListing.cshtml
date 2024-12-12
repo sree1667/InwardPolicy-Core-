@@ -1,0 +1,109 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+</style>
+
+<div class="container bg-light p-4 border rounded shadow mt-2">
+    @*Row1*@
+    
+    <div class=" text-end justify-content-center mb-3">
+        <a id="btnAddNew" asp-action="FirePolicy"  asp-controller="FirePolicy" asp-area="Transaction" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Add New
+        </a>
+        
+            
+       
+    </div>
+    <form id="frmFirePolicy" method="post">
+        <div class="row justify-content-center mb-3">
+            @*<div class="container bg-light p-4 border rounded shadow mt-2">*@
+            <table class="table table-hover" id="tblFirePolicy">
+                <thead>
+                    <tr class="table-info">
+                        <th scope="col">Policy Number</th>
+                        
+                        <th scope="col">Issue Date</th>
+                        <th scope="col">Name</th>
+                        <th scope="col" class="text-center">Approval status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            @*</div>*@
+        </div>
+    </form>
+</div>
+@section Scripts{
+    <script>
+        //datatable
+        $('#tblFirePolicy').DataTable({
+
+                //dom: 'Bfrtip', // Define layout for plugins
+                //buttons: [
+                //    'copy', 'excel', 'pdf', 'csv', 'print' // Add more buttons if needed
+                //],
+                ajax: {
+                    url: '@Url.Action("FirePolicyBind", "FirePolicyListing", new { area = "Transaction" })',
+                    type: "POST"
+                },
+
+                processing: true,
+                //colReorder: true,
+                serverSide: true,
+                //ordering: true, // Enable ordering
+                searching: true, // Enable search
+                paging: true, // Enable pagination
+                //orderMulti: true, // Single column sorting
+                pageLength: 10, // Default number of rows per page
+                lengthMenu: [5, 10, 20, 50, 100], // Options for rows per page
+                columns: [
+                    { data: "POL_NO", name: "USER_ID", autoWidth: true },
+
+                    { data: "POL_ISS_DT", name: "USER_NAME", autoWidth: true },
+                    { data: "POL_ASSR_NAME", name: "USER_NAME", autoWidth: true },
+                    {
+                        data: "POL_APPR_STATUS",
+                        name: "USER_ACTIVE_YN",
+                        autoWidth: true,
+                        render: function (data, type, row) {
+                            if (data === "A") {
+                                // Green tick icon for status 'A'
+                                return "<i class='bi bi-check-circle-fill text-success'></i>";
+                            } else {
+                                // Timer icon for other statuses
+                                return "<i class='bi bi-hourglass-split text-warning'></i>";
+                            }
+                        }
+                    },
+                    { data: "POL_UID", name: "USER_ID", autoWidth: true, visible: false },
+
+                    {
+
+                        render: function (data, type, row) {
+                            if (row.CM_ACTIVE_YN === 'Y') {
+                                return "<a onclick=\"UpdatePolicy('" + row.POL_UID + "');\"><i class='bi bi-pencil'></i></a>";
+                            } else {
+                                return "<a onclick=\"UpdatePolicy('" + row.POL_UID + "');\"><i class='bi bi-pencil'></i></a>"
+                                    //+"<a onclick=\"DeleteCodesMaster('" + row.CM_CODE + "', '" + row.CM_TYPE + "');\"><i class='bi bi-trash'></i></a>";
+                            }
+                        }
+
+
+
+                    }
+                ],
+
+        });
+        function UpdatePolicy(POL_UID) {
+            
+            console.log(POL_UID);
+
+            window.location.href = '@Url.Action("FirePolicy", "FirePolicy", new { area = "Transaction" })' + '/' + POL_UID;
+            
+        }
+    </script>
+}

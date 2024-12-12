@@ -17,7 +17,7 @@
 </style>
 <div class="row justify-content-center mb-2">
     @*<h1>@Html.LabelFor(m => m.FirePolicy.PolNo, "Policy Number:", new { @class = "form-label col-form-label mb-0" })</h1>*@
-    <h1><label class = "form-label col-form-label mb-0" >Fire Policy</label></h1>
+    <h1><label class="form-label col-form-label mb-0">Fire Policy</label></h1>
     <div class="col">
         <div class="container h-auto p-4 border bg-light rounded shadow mt-2">
             @*<div class="mb-3">
@@ -44,16 +44,16 @@
                 <div class="col-md-3">
                     @Html.LabelFor(m => m.FirePolicy.PolFmDt, "Policy From Date:", new { @class = "form-label" })
                     <span class="text-danger required-asterisk">*</span>
-                    @Html.TextBoxFor(m => m.FirePolicy.PolFmDt, new {id="txtFromDate",@onchange="SetToDate()", @class = "form-control date", placeholder = "dd-mm-yyyy", @onfocus = "setMinDate()" })
+                    @Html.TextBoxFor(m => m.FirePolicy.PolFmDt, new { id = "txtFromDate", @onchange = "SetToDate()", @class = "form-control date", placeholder = "dd-mm-yyyy", @onfocus = "setMinDate()" })
                 </div>
                 <div class="col-md-3">
                     @Html.LabelFor(m => m.FirePolicy.PolToDt, "Policy To Date:", new { @class = "form-label" })
-                    @Html.TextBoxFor(m => m.FirePolicy.PolToDt, new {@id = "txtToDate", @class = "form-control", placeholder = "dd-mm-yyyy", @readonly = "true" })
+                    @Html.TextBoxFor(m => m.FirePolicy.PolToDt, new { @id = "txtToDate", @class = "form-control", placeholder = "dd-mm-yyyy", @readonly = "true" })
                 </div>
                 <div class="col-md-3">
                     @Html.LabelFor(m => m.FirePolicy.PolProdCode, "Product Code:", new { @class = "form-label" })
                     <span class="text-danger required-asterisk">*</span>
-                    @* @Html.DropDownListFor(m => m.FirePolicy.PolProdCode, new SelectList(Model.FirePolicy.PolProdCode), new { @class = "form-control" })*@
+                     @Html.DropDownListFor(m => m.FirePolicy.PolProdCode, new SelectList(Model.PolProductCodeList, "Value", "Text"), new { @class = "form-control" })
                 </div>
             </div>
 
@@ -71,11 +71,13 @@
                 </div>
                 <div class="col-md-3">
                     @Html.LabelFor(m => m.FirePolicy.PolAssrMobile, "Mobile:", new { @class = "form-label" })
-                    @Html.TextBoxFor(m => m.FirePolicy.PolAssrMobile, new { @class = "form-control", @maxlength = "10" })
+                    @Html.TextBoxFor(m => m.FirePolicy.PolAssrMobile, new { @id= "txtMobile", @class = "form-control", @maxlength = "10" })
+                    <p id="mobileError" style="color: red;"></p>
                 </div>
                 <div class="col-md-3">
                     @Html.LabelFor(m => m.FirePolicy.PolAssrEmail, "Email:", new { @class = "form-label" })
-                    @Html.TextBoxFor(m => m.FirePolicy.PolAssrEmail, new { @class = "form-control", TextMode = "Email", @maxlength = "120" })
+                    @Html.TextBoxFor(m => m.FirePolicy.PolAssrEmail, new { @id = "txtEmail", @class = "form-control", TextMode = "Email", @maxlength = "120" })
+                    <p id="error" style="color: red;"></p>
                 </div>
             </div>
 
@@ -84,16 +86,16 @@
                 <div class="col-md-3">
                     @Html.LabelFor(m => m.FirePolicy.PolAssrDob, "Date of Birth:", new { @class = "form-label" })
                     <span class="text-danger required-asterisk">*</span>
-                    @Html.TextBoxFor(m => m.FirePolicy.PolAssrDob, new {@id="txtDoB" ,@class = "form-control date", placeholder = "dd-mm-yyyy",@onchange= "ValidateDoB()" })
+                    @Html.TextBoxFor(m => m.FirePolicy.PolAssrDob, new { @id = "txtDoB", @class = "form-control date", placeholder = "dd-mm-yyyy", @onchange = "ValidateDoB()" })
                 </div>
                 <div class="col-md-3">
                     @Html.LabelFor(m => m.FirePolicy.PolAssrOccupation, "Occupation:", new { @class = "form-label" })
-                    @* @Html.DropDownListFor(m => m.FirePolicy.PolAssrOccupation, new SelectList(Model.FirePolicy.PolAssrOccupation), new { @class = "form-select form-control" })*@
+                     @Html.DropDownListFor(m => m.FirePolicy.PolAssrOccupation, new SelectList(Model.PolOccupationList, "Value", "Text"), new { @class = "form-select form-control" })
                 </div>
                 <div class="col-md-3">
                     @Html.LabelFor(m => m.FirePolicy.PolAssrType, "Type:", new { @class = "form-label" })
                     <span class="text-danger required-asterisk">*</span>
-                    @* @Html.DropDownListFor(m => m.FirePolicy.PolAssrType, new SelectList(Model.FirePolicy.PolAssrType), new { @class = "form-select form-control" })*@
+                     @Html.DropDownListFor(m => m.FirePolicy.PolAssrType, new SelectList(Model.PolAssuredTypeList, "Value", "Text"), new { @class = "form-select form-control" })
                 </div>
                 <div class="col-md-3">
                     @Html.LabelFor(m => m.FirePolicy.PolAssrCivilId, "Civil ID:", new { @class = "form-label" })
@@ -106,20 +108,20 @@
                 <div class="col-md-3">
                     @Html.LabelFor(m => m.FirePolicy.PolSICurrency, "SI Currency:", new { @class = "form-label" })
                     <span class="text-danger required-asterisk">*</span>
-                    @* @Html.DropDownListFor(m => m.FirePolicy.PolSICurrency, new SelectList(Model.FirePolicy.PolSICurrency), new { @class = "form-select form-control" })*@
+                    @Html.DropDownListFor(m => m.FirePolicy.PolSICurrency, new SelectList(Model.PolCurrencyList,"Value","Text"), new { @id = "ddlPolSICurrency", onChange = "ddlPolSICurrency_SelectedIndexChanged()", @class = "form-select form-control" })
                 </div>
                 <div class="col-md-3">
                     @Html.LabelFor(m => m.FirePolicy.PolSICurrencyRate, "SI Currency Rate:", new { @class = "form-label" })
-                    @Html.TextBoxFor(m => m.FirePolicy.PolSICurrencyRate, new { @class = "form-control text-end" })
+                    @Html.TextBoxFor(m => m.FirePolicy.PolSICurrencyRate, new { @id = "txtPolSICurrencyRate", @class = "form-control text-end" })
                 </div>
                 <div class="col-md-3">
                     @Html.LabelFor(m => m.FirePolicy.PolPremCurrency, "Premium Currency:", new { @class = "form-label" })
                     <span class="text-danger required-asterisk">*</span>
-                    @* @Html.DropDownListFor(m => m.FirePolicy.PolPremCurrency, new SelectList(Model.FirePolicy.PolPremCurrency), new { @class = "form-select form-control" })*@
+                    @Html.DropDownListFor(m => m.FirePolicy.PolPremCurrency, new SelectList(Model.PolCurrencyList, "Value", "Text"), new {@id= "ddlPolPremCurrency",  onChange = "ddlPolPremCurrency_SelectedIndexChanged()", @class = "form-select form-control" })
                 </div>
                 <div class="col-md-3">
                     @Html.LabelFor(m => m.FirePolicy.PolPremCurrencyRate, "Premium Currency Rate:", new { @class = "form-label" })
-                    @Html.TextBoxFor(m => m.FirePolicy.PolPremCurrencyRate, new { @class = "form-control text-end" })
+                    @Html.TextBoxFor(m => m.FirePolicy.PolPremCurrencyRate, new { @class = "form-control text-end", @id = "txtPolPremCurrencyRate" })
                 </div>
             </div>
 
@@ -180,55 +182,67 @@
     </div>
 </div>
 @*<img src="~/images/calenderIcon.png" />*@
+<script src="~/js/FirePolicy.js"></script>
 @section Scripts{
     <script>
-        $(document).ready(function () {
-            $(function () {
-                $("#txtFromDate").datepicker({
-                    dateFormat: 'dd-mm-yy',
-                    minDate: 0,
-                    buttonImage: '~/images/calenderIcon.png',
-                    showOn: 'button'
-
-                });
-            });
-            $(function () {
-
-                $("#txtDoB").datepicker({
-                    dateFormat: 'dd-mm-yy',
-                    buttonImage: '~/images/calenderIcon.png',
-                    showOn: 'button'
-
-                });
-
-            });
-        });
-
-        function setMinDate() {
-            var today = new Date();
-            var dd = String(today.getDate()).padStart(2, '0');
-            var mm = String(today.getMonth() + 1).padStart(2, '0');
-            var yyyy = today.getFullYear();
-            today = yyyy + '-' + mm + '-' + dd;
-            /*document.getElementById('<%= txtFromDate.ClientID %>').setAttribute('min', today);*/
-
-        };
-        
-       
         //to date
+        function ddlPolSICurrency_SelectedIndexChanged() {
 
+            var selectedValue = $('#ddlPolSICurrency').val();
+            //alert(selectedValue);
+            if (selectedValue) {
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("GetCurrencyRate","FirePolicy")',
+                    data: { value: selectedValue },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response)
+                        //$('#txtPolSICurrencyRate').val(response.d);
+                        $('#txtPolSICurrencyRate').val(response);
+                    },
+                    error: function (response) {
+                        console.log("Error: " + response);
+                    }
+                });
+            }
+        }
+        //Policy Prem
+        function ddlPolPremCurrency_SelectedIndexChanged() {
+            var selectedValue = $('#ddlPolPremCurrency').val();
+            //alert(selectedValue);
+            if (selectedValue) {
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("GetCurrencyRate","FirePolicy")',
+                    data: { value: selectedValue },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response)
+                        //$('#txtPolSICurrencyRate').val(response.d);
+                        //$('#txtPolSICurrencyRate').val(response);
+                        $('#txtPolPremCurrencyRate').val(response);
+                    },
+                    error: function (response) {
+                        console.log("Error: " + response);
+                    }
+                });
+            }
+        }
         function SetToDate() {
             var fromDate = $("#txtFromDate").val();
             console.log(fromDate);
             $.ajax({
                 type: "GET",
                 url: '@Url.Action( "SetToDate", "FirePolicy")',
-                data: { fromDate : fromDate},
+                data: { fromDate: fromDate },
                 success: function (response) {
                     console.log("AJAX request was successful. Response:", response);
                     if (response) {
                         $("#txtToDate").val(response);
-                       
+
                     }
                     else {
                         Swal.fire({
@@ -249,18 +263,18 @@
             });
         }
         //date of birth validation
-        function  ValidateDoB() {
+        function ValidateDoB() {
             var dob = $("#txtDoB").val();
             console.log(dob);
             $.ajax({
                 type: "GET",
                 url: '@Url.Action("ValidateDoB", "FirePolicy")',
-                data: { dob : dob},
+                data: { dob: dob },
                 success: function (response) {
                     console.log("AJAX request was successful. Response:", response);
                     if (response) {
                         $("#txtDoB").val(response);
-                        
+
                     }
                     else {
                         Swal.fire({
@@ -270,7 +284,7 @@
                             confirmButtonText: 'OK'
                         });
                         $("#txtDoB").val('');
-                       
+
                     }
                     $('#tblCodesMaster').DataTable().ajax.reload();
                 },

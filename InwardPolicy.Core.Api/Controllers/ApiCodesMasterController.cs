@@ -94,5 +94,66 @@ namespace InwardPolicy.Core.Api.Controllers
             bool InsertStatus = objCodesMasterManager.InsertUserMaster(objCodesMaster, mode);
             return Ok(InsertStatus);
         }
+
+        [HttpGet]
+        [Route("FetchDropdownList")]
+        public IActionResult FetchDropdownList()
+        {
+            try
+            {
+                CodesMasterManager objCodesMasterManager = new CodesMasterManager();
+                DataSet ds = new DataSet();
+                DataTable dtcopy = new DataTable();
+                //Assured Type
+                DataTable dt = objCodesMasterManager.BindDropDown("ASSURED TYPE");
+                dtcopy = dt.Copy();
+                dtcopy.TableName = "ASSURED TYPE";
+                ds.Tables.Add(dtcopy);
+                //Occupation
+                dt.Clear();
+                dt = objCodesMasterManager.BindDropDown("OCCUPATION");
+                dtcopy = dt.Copy();
+                dtcopy.TableName = "OCCUPATION";
+                ds.Tables.Add(dtcopy);
+                //PRODUCT CODE
+                dt.Clear();
+                dt = objCodesMasterManager.BindDropDown("PRODUCT CODE");
+                dtcopy = dt.Copy();
+                dtcopy.TableName = "PRODUCT CODE";
+                ds.Tables.Add(dtcopy);
+                //Currency
+                dt.Clear();
+                dt = objCodesMasterManager.BindDropDown("CURRENCY");
+                dtcopy = dt.Copy();
+                dtcopy.TableName = "CURRENCY";
+                ds.Tables.Add(dtcopy);
+                return Ok(JsonConvert.SerializeObject(ds));
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        
+        [HttpGet]
+        [Route("GetCurrencyRate/{value?}")]
+        public IActionResult GetCurrencyRate(string value)
+        {
+            try
+            {
+                string type = "CURRENCY";
+                CodesMasterManager objCodesMasterManager = new CodesMasterManager();
+                string rate = objCodesMasterManager.GetddlValue(value, type);
+                return Ok(rate);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+       
     }
 }

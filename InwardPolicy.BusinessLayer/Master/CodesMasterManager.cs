@@ -27,6 +27,12 @@ namespace BusinessLayer
             }
 
         }
+        public DataTable BindDropDown(string type)
+        {
+            string query = $"SELECT CM_CODE  CODE,CM_VALUE VALUE, CM_CODE ||' - ' || CM_DESC TEXT FROM CODES_MASTER WHERE CM_TYPE='{type}' AND CM_ACTIVE_YN='Y' ORDER BY CM_CODE";
+            DataTable dt = DBConnection.ExecuteDataset(query);
+            return dt;
+        }
 
         public bool DeleteUserMaster(string code, string type)
         {
@@ -36,7 +42,7 @@ namespace BusinessLayer
                 Dict["Code"] = code.ToUpper().Trim();
                 Dict["Type"] = type.ToUpper().Trim();
                 string query = "DELETE FROM CODES_MASTER WHERE CM_CODE=:Code AND CM_TYPE=:Type";
-                int i = DBConnection.ExecuteQuery(Dict , query);
+                int i = DBConnection.ExecuteQuery(Dict, query);
                 if (i == 1)
                     return true;
                 else
@@ -71,7 +77,7 @@ namespace BusinessLayer
             if (mode == "U" && !string.IsNullOrEmpty(mode))
             {
                 Dictionary<string, object> Dict = new Dictionary<string, object>();
-                
+
                 Dict["Description"] = objCodesMaster.Description;
                 Dict["Value"] = objCodesMaster.Value;
                 Dict["UpBy"] = objCodesMaster.UpBy;
@@ -85,7 +91,7 @@ namespace BusinessLayer
                 else
                     return false;
             }
-            else 
+            else
             {
                 Dictionary<string, Object> Dict = new Dictionary<string, object>();
                 Dict["Code"] = objCodesMaster.Code.ToUpper().Trim();
@@ -101,13 +107,13 @@ namespace BusinessLayer
                 else
                     return false;
             }
-            
+
         }
 
         public bool CheckCodesMaster(string code, string type)
         {
             Dictionary<string, Object> Dict = new Dictionary<string, object>();
-            
+
             Dict["Code"] = code.ToUpper().Trim();
             Dict["Type"] = type.ToUpper().Trim();
             string query = $"SELECT 1 FROM CODES_MASTER WHERE CM_CODE=:Code AND CM_TYPE=:Type";
@@ -117,6 +123,15 @@ namespace BusinessLayer
                 return false;
             else
                 return true;
+        }
+
+        public string GetddlValue(string code, string type)
+        {
+
+            string query = $"SELECT CM_VALUE FROM CODES_MASTER WHERE CM_CODE='{code}' AND CM_TYPE='{type}'";
+            string value = DBConnection.ExecuteScalar(query).ToString();
+            return value;
+
         }
     }
 }
