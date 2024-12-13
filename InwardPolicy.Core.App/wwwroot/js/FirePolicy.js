@@ -14,7 +14,6 @@
             dateFormat: 'dd-mm-yy',
             buttonImage: '../../../images/calenderIcon.png',
             showOn: 'button'
-
         });
 
     });

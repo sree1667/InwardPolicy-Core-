@@ -121,9 +121,46 @@ namespace InwardPolicy.Core.Api.Controllers
                 dtcopy = dt.Copy();
                 dtcopy.TableName = "PRODUCT CODE";
                 ds.Tables.Add(dtcopy);
+                //RISK CLASS
+                dt.Clear();
+                dt = objCodesMasterManager.BindDropDown("RISK CLASS");
+                dtcopy = dt.Copy();
+                dtcopy.TableName = "RISK CLASS";
+                ds.Tables.Add(dtcopy);
+                //CEDING SOURCE
+                dt.Clear();
+                dt = objCodesMasterManager.BindDropDown("CEDING SOURCE");
+                dtcopy = dt.Copy();
+                dtcopy.TableName = "CEDING SOURCE";
+                ds.Tables.Add(dtcopy);
                 //Currency
                 dt.Clear();
                 dt = objCodesMasterManager.BindDropDown("CURRENCY");
+                dtcopy = dt.Copy();
+                dtcopy.TableName = "CURRENCY";
+                ds.Tables.Add(dtcopy);
+                return Ok(JsonConvert.SerializeObject(ds));
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        
+
+        [HttpGet]
+        [Route("FetchPolicyRiskDropdownList")]
+        public IActionResult FetchPolicyRiskDropdownList()
+        {
+            try
+            {
+                CodesMasterManager objCodesMasterManager = new CodesMasterManager();
+                DataSet ds = new DataSet();
+                DataTable dtcopy = new DataTable();
+                //Assured Type
+                
+                DataTable dt = objCodesMasterManager.BindDropDown("CURRENCY");
                 dtcopy = dt.Copy();
                 dtcopy.TableName = "CURRENCY";
                 ds.Tables.Add(dtcopy);

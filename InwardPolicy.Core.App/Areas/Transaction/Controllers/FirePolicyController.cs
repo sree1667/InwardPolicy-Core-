@@ -28,7 +28,7 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
             FirePolicyModel objFirePolicyModel = new FirePolicyModel();
             objFirePolicyModel.FirePolicy = new FirePolicy();
             using HttpResponseMessage httpResponseMessage = await client.GetAsync("Api/ApiCodesMaster/FetchDropdownList");
-
+            //ddl fetch
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 var result = await httpResponseMessage.Content.ReadAsStringAsync();
@@ -42,10 +42,23 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                 objFirePolicyModel.Mode = "U";
                 objFirePolicyModel.FirePolicy.Poluid = Convert.ToInt32(id1);
                 using HttpResponseMessage httpResponseMessage1 = await client.GetAsync($"Api/ApiFirePolicy/LoadControl/{id1}");
+                //load policy control
                 if (httpResponseMessage1.IsSuccessStatusCode)
                 {
                     var result = await httpResponseMessage1.Content.ReadAsStringAsync();
                     objFirePolicyModel.FirePolicy = JsonConvert.DeserializeObject<FirePolicy>(result);
+                    //check if there is any inward
+                    if (objFirePolicyModel.FirePolicy.InwCount == 1)
+                    {
+                        objFirePolicyModel.FireInwardPolicy = new FireInwardPolicy();
+                        using HttpResponseMessage httpResponseMessageInward = await client.GetAsync($"Api/ApiFirePolicy/LoadInwardControl/{id1}");
+                        //INWARD LOAD
+                        if (httpResponseMessageInward.IsSuccessStatusCode)
+                        {
+                            var inwardDetails = await httpResponseMessageInward.Content.ReadAsStringAsync();
+                            objFirePolicyModel.FireInwardPolicy = JsonConvert.DeserializeObject<FireInwardPolicy>(result);
+                        }
+                    }
                 }
             }
             else
@@ -85,6 +98,8 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
             objFirePolicyModel.PolOccupationList = new List<SelectListItem>();
             objFirePolicyModel.PolProductCodeList = new List<SelectListItem>();
             objFirePolicyModel.PolAssuredTypeList = new List<SelectListItem>();
+            objFirePolicyModel.CedingSourceList = new List<SelectListItem>();
+            objFirePolicyModel.RiskClassList = new List<SelectListItem>();
 
             DataSet ds = JsonConvert.DeserializeObject<DataSet>(result);
             var tableMapping = new Dictionary<string, List<SelectListItem>>
@@ -92,6 +107,8 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                 { "Currency", objFirePolicyModel.PolCurrencyList },
                 { "OCCUPATION", objFirePolicyModel.PolOccupationList },
                 { "PRODUCT CODE", objFirePolicyModel.PolProductCodeList },
+                { "RISK CLASS", objFirePolicyModel.RiskClassList },
+                { "CEDINGSOURCE", objFirePolicyModel.CedingSourceList },
                 { "ASSURED TYPE", objFirePolicyModel.PolAssuredTypeList }
             };
             foreach (var mapping in tableMapping)
@@ -205,6 +222,42 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> FirePolicy(FirePolicyModel objFirePolicyModel)
+        {
+
+            try
+            {
+                
+                HttpClient client = new HttpClient()
+                {
+                    BaseAddress = new System.Uri("http://localhost:26317")
+                };
+                objFirePolicyModel.FirePolicy.CrOrUpBy= HttpContext.Session.GetString("UserId");
+                using HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync($"/Api/ApiFirePolicy/AddFirePolicy/{objFirePolicyModel.Mode}", objFirePolicyModel.FirePolicy);
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    TempData["SwalTitle"] = "Success!";
+                    TempData["SwalMessage"] = "Your operation was completed successfully.";
+                    TempData["SwalIcon"] = "success";
+                    var result = await httpResponseMessage.Content.ReadAsStringAsync();
+                    string uid = JsonConvert.DeserializeObject<string>(result);
+                    return  RedirectToAction("FirePolicy", new { id1 = $"{uid}", id2 = "N" });
+                    
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> FireInwardPolicy(FirePolicyModel objFirePolicyModel)
         {
 
             try

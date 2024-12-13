@@ -9,6 +9,7 @@ namespace BusinessEntity
     public class FirePolicy
     {
         public string PolNo { get; set; }
+        public int InwCount { get; set; }
         public DateTime? PolFmDt { get; set; }
         public DateTime? PolIssDt { get; set; }
         public DateTime? PolToDt { get; set; }

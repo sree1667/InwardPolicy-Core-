@@ -47,7 +47,6 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
                     var draw = Request.Form["draw"].FirstOrDefault();
                     var start = Request.Form["start"].FirstOrDefault();
                     var length = Request.Form["length"].FirstOrDefault();
-                    var searchValue = Request.Form["search[value]"].FirstOrDefault();
 
                     int pageSize = length != null ? Convert.ToInt32(length) : 5;
                     int skip = start != null ? Convert.ToInt32(start) : 0;
@@ -59,6 +58,7 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
                     // Convert DataTable to List of objects
                     var data = Helper.ConvertDataTableToList(dt);
 
+                    var searchValue = Request.Form["search[value]"].FirstOrDefault();
                     // Apply Search
                     if (!string.IsNullOrEmpty(searchValue))
                     {
