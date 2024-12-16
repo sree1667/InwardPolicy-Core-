@@ -1,36 +1,38 @@
-﻿@model InwardPolicy.Models.FirePolicyRiskModel
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model InwardPolicy.Models.FirePolicyRiskModel
 
 <div class="row justify-content-center mb-2">
     <h1>ADD RISK</h1>
     <div class="col">
         <div class="container h-auto p-4 border bg-light rounded shadow mt-2">
             @*<div class="mb-3">
-                <a href="@Url.Action("BackAction")" class="btn btn-secondary text-light">
-                    <i class="bi bi-arrow-left-circle"></i> Back
-                </a>
-            </div>
-            <div class="text-end">
-                <a href="@Url.Action("AddNewAction")" class="btn btn-primary text-light">
-                    <i class="bi bi-plus-circle"></i> Add New
-                </a>
-            </div>
-            <div class="text-start">
-                @Html.Label("Risk Id:", htmlAttributes: new { @class = "form-label" })
-                <span>@Model.RiskUid</span>
-            </div>*@
+                    <a href="@Url.Action("BackAction")" class="btn btn-secondary text-light">
+                        <i class="bi bi-arrow-left-circle"></i> Back
+                    </a>
+                </div>
+                <div class="text-end">
+                    <a href="@Url.Action("AddNewAction")" class="btn btn-primary text-light">
+                        <i class="bi bi-plus-circle"></i> Add New
+                    </a>
+                </div>
+                <div class="text-start">
+                    @Html.Label("Risk Id:", htmlAttributes: new { @class = "form-label" })
+                    <span>@Model.RiskUid</span>
+                </div>*@
 
             <div class="row mb-3">
                 <!-- RISK_CLASS -->
                 <div class="col-md-4">
                     @Html.LabelFor(m => m.FirePolicyRisk.RiskClass, "Risk Class", new { @class = "form-label" })
                     <span class="text-danger required-asterisk">*</span>
-                    @*@Html.DropDownListFor(
-                        m => m.FirePolicyRisk.RiskClass,
-                        new SelectList(Model.FirePolicyRisk.RiskClassList, "Value", "Text"),
-                        "Select Risk Class",
-                        new { @id = "ddlRiskClass",@requred= "required", @onchange = "ddlRiskClass_SelectedIndexChanged()", @class = "form-select form-control" }
-                    )*@
-                   
+                    @Html.DropDownListFor(
+                            m => m.FirePolicyRisk.RiskClass,
+                            new SelectList(Model.RiskClass, "Value", "Text"),
+                            new { @id = "ddlRiskClass", @requred = "required", @onchange = "OnRiskChange()", @class = "form-select form-control" }
+                        )
+
                 </div>
 
                 <!-- RISK_DESC -->
@@ -46,10 +48,10 @@
                     <span class="text-danger required-asterisk">*</span>
                     @Html.DropDownListFor(
                         m => m.FirePolicyRisk.RiskSICurr,
-                        new SelectList(Model.RiskCurrency, "Value", "Text"),                       
+                        new SelectList(Model.RiskCurrency, "Value", "Text"),
                         new { @id = "ddlRiskSICurr", @class = "form-control", @disabled = "disabled" }
                     )
-                   
+
                 </div>
             </div>
 
@@ -57,14 +59,14 @@
                 <!-- RISK_FC_SI -->
                 <div class="col-md-4">
                     @Html.LabelFor(m => m.FirePolicyRisk.RiskFcSi, "Risk FC Sum Insured", new { @class = "form-label" })
-                    @Html.TextBoxFor(m => m.FirePolicyRisk.RiskFcSi, new { @class = "form-control text-end", @maxlength = "9", @onchange = "GetLC();", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
-                    @Html.ValidationMessageFor(m => m.FirePolicyRisk.RiskFcSi, "Risk FC Sum Insured is required", new { @class = "text-danger" })
+                    @Html.TextBoxFor(m => m.FirePolicyRisk.RiskFcSi, new { @id = "RiskFcSi", @class = "form-control text-end", @maxlength = "9", @onchange = "GetLC();", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
+
                 </div>
 
                 <!-- RISK_LC_SI -->
                 <div class="col-md-4">
                     @Html.LabelFor(m => m.FirePolicyRisk.RiskLcSi, "Risk LC Sum Insured", new { @class = "form-label" })
-                    @Html.TextBoxFor(m => m.FirePolicyRisk.RiskLcSi, new { @class = "form-control text-end", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
+                    @Html.TextBoxFor(m => m.FirePolicyRisk.RiskLcSi, new { @id = "RiskLcSi", @class = "form-control text-end", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
                 </div>
 
                 <!-- RISK_PREM_CURRENCY -->
@@ -72,7 +74,7 @@
                     @Html.LabelFor(m => m.FirePolicyRisk.RiskPremCurr, "Risk Premium Currency", new { @class = "form-label" })
                     @Html.DropDownListFor(
                         m => m.FirePolicyRisk.RiskPremCurr,
-                        new SelectList(Model.RiskCurrency, "Value", "Text"),                       
+                        new SelectList(Model.RiskCurrency, "Value", "Text"),
                         new { @id = "ddlRiskPremCurrency", @class = "form-control", @disabled = "disabled" }
                     )
                     @Html.ValidationMessageFor(m => m.FirePolicyRisk.RiskPremCurr, "Risk Premium Currency is required", new { @class = "text-danger" })
@@ -83,21 +85,19 @@
                 <!-- RISK_PREM_RATE -->
                 <div class="col-md-4">
                     @Html.LabelFor(m => m.FirePolicyRisk.RiskPremRate, "Risk Premium Rate", new { @class = "form-label" })
-                    @Html.TextBoxFor(m => m.FirePolicyRisk.RiskPremRate, new { @class = "form-control text-end", @onchange = "GetLC();", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
-                    @Html.ValidationMessageFor(m => m.FirePolicyRisk.RiskPremRate, "Risk Premium Rate is required", new { @class = "text-danger" })
+                    @Html.TextBoxFor(m => m.FirePolicyRisk.RiskPremRate, new { @id = "txtPremiumRate", @class = "form-control text-end", @onchange = "GetLC();", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
                 </div>
 
                 <!-- RISK_FC_PREM -->
                 <div class="col-md-4">
                     @Html.LabelFor(m => m.FirePolicyRisk.RiskFcPrem, "Risk FC Premium", new { @class = "form-label" })
-                    @Html.TextBoxFor(m => m.FirePolicyRisk.RiskFcPrem, new { @class = "form-control text-end", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
-                    @Html.ValidationMessageFor(m => m.FirePolicyRisk.RiskFcPrem, "Risk FC Premium is required", new { @class = "text-danger" })
+                    @Html.TextBoxFor(m => m.FirePolicyRisk.RiskFcPrem, new {@id= "RiskFcPrem", @class = "form-control text-end", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
                 </div>
 
                 <!-- RISK_LC_PREM -->
                 <div class="col-md-4">
                     @Html.LabelFor(m => m.FirePolicyRisk.RiskLcPrem, "Risk LC Premium", new { @class = "form-label" })
-                    @Html.TextBoxFor(m => m.FirePolicyRisk.RiskLcPrem, new { @class = "form-control text-end", @onchange = "GetPremFc();", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
+                    @Html.TextBoxFor(m => m.FirePolicyRisk.RiskLcPrem, new { @id = "RiskLcPrem", @class = "form-control text-end", @onchange = "GetPremFc();", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
                 </div>
             </div>
 
@@ -109,60 +109,97 @@
         </div>
     </div>
 </div>
-@section script{ 
+
 <script>
-    function GetLC() {
-        var riskfc = $('#txtRiskFCSumInsured').val();
-        var selectedValueSI = $('#ddlRiskSICurr').val();
-        var selectedValuePrem = $('#ddlRiskPremCurrency').val();
-        var premrate = $('#txtRiskPremRate').val();
-        if (premrate > 100) {
-            alert("Percentage cannot be greater than 100.")
-            $('#txtRiskPremRate').val(0);
-            return;
-        }
-        if (!riskfc || !selectedValueSI || !selectedValuePrem || !premrate) {
-            return;
-        }
-
-        riskfc = parseFloat(riskfc);
-        premrate = parseFloat(premrate);
-
-        if (isNaN(riskfc) || isNaN(premrate)) {
-            return;
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "../WebService/CurrencyRate.asmx/CalculateLC",
-            data: JSON.stringify({ riskFc: riskfc, value: selectedValueSI }),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
-                $('#txtRiskLCSumInsured').val(response.d);
-                var riskPremLC = (response.d * (premrate / 100)).toFixed(2);
-                $('#txtRiskLCPrem').val(riskPremLC);
-
-                $.ajax({
-                    type: "POST",
-                    url: "../WebService/CurrencyRate.asmx/CalculatePremLC",
-                    data: JSON.stringify({ riskPremLC: riskPremLC, value: selectedValuePrem }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        $('#txtRiskFCPrem').val(response.d);
-                    },
-                    error: function (error) {
-                        console.log("Error: " + error);
+        function OnRiskChange(){
+            var riskClass = $("#ddlRiskClass").val();
+            console.log(riskClass);
+            $.ajax({
+                type: "GET",
+                url:'@Url.Action("GetCmValue", "FirePolicyRisk")',
+                data: { code: riskClass},
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response > 100) {
+                        alert("Percentage cannot be greater than 100.")
+                        $('#txtPremiumRate').val(0);
+                        return;
                     }
-                });
-
-            },
-            error: function (error) {
-                console.log("Error: " + error);
+                    else {
+                    $("#txtPremiumRate").val(response);
+                    }
+                },
+                error: function (error) {
+                    console.log("Error: " + error);
+                }
+            });
+        }
+        @*$("RiskFcSi").change(function () {
+            $.ajax({
+                type: "GET",
+                url:'@Url.Action("CurrencyRate", "FirePolicyRisk")',
+                data: { code: riskClass},
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    $("#RiskLcSi").val(response);
+                },
+                error: function (error) {
+                    console.log("Error: " + error);
+                }
+            });
+        });*@
+        var path = window.location.pathname;
+        var segments = path.split('/');
+        var poluid = segments[4];
+        function GetLC() {
+            var riskfc = $('#RiskFcSi').val();
+            var selectedValue = $('#ddlRiskClass').val();
+            //var selectedValuePrem = $('#ddlRiskPremCurrency').val();
+            var premrate = $('#txtPremiumRate').val();
+            
+            if (!riskfc || !selectedValue || !premrate) {
+                return;
             }
-        });
-    }
+
+            riskfc = parseFloat(riskfc);
+            premrate = parseFloat(premrate);
+
+            if (isNaN(riskfc) || isNaN(premrate)) {
+                return;
+            }
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("FillAll", "FirePolicyRisk")',
+                data: { poluid: poluid,},
+                dataType: "json",
+                success: function (response) {
+                    console.log(response)
+                    const siCurrRate = response[0];
+                    const premCurrRate = response[1];
+                    console.log("SI Rate:", siCurrRate);
+                    console.log("Premium Rate:", premCurrRate);
+                    var riskLc = siCurrRate * riskfc;
+                    var roundedRiskLc = Math.round(riskLc * 100) / 100;  // Round to 2 decimal places
+                    $("#RiskLcSi").val(roundedRiskLc);
+
+                    var riskPremLc = premrate * riskfc;
+                    var roundedRiskPremLc = Math.round(riskPremLc * 100) / 100;  // Round to 2 decimal places
+                    $("#RiskLcPrem").val(roundedRiskPremLc);
+
+                    var riskFcPrem = riskPremLc / premCurrRate;
+                    var roundedRiskFcPrem = Math.round(riskFcPrem * 100) / 100;  // Round to 2 decimal places
+                    $("#RiskFcPrem").val(roundedRiskFcPrem);
+
+
+                },
+                error: function (error) {
+                    console.log("Error: " + error);
+                }
+            });
+        }
 </script>
-}
+
 

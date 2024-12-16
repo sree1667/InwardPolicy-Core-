@@ -1,4 +1,5 @@
-﻿using BusinessLayer;
+﻿using BusinessEntity;
+using BusinessLayer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -14,6 +15,23 @@ namespace InwardPolicy.Core.Api.Controllers
     [ApiController]
     public class ApiFireInwardPolicyController : ControllerBase
     {
+        [HttpGet]
+        [Route("LoadInwardControl/{poluid?}")]
+        public IActionResult LoadInwardControl(string poluid)
+        {
+            try
+            {
+                FireInwardPolicyManager objFirePolicyManager = new FireInwardPolicyManager();
+                FireInwardPolicy fireInwardPolicy  = objFirePolicyManager.FetchInwardDetails(poluid);
+                string json = JsonConvert.SerializeObject(fireInwardPolicy);
+                return Ok(json);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
         [HttpGet]
         [Route("FireInwardPolicyBind/{poluid?}")]
         public IActionResult FireInwardPolicyBind(string poluid)

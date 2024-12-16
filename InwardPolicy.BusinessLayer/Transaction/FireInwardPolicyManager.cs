@@ -25,9 +25,12 @@ namespace BusinessLayer
             Dictionary<string, object> Dict = new Dictionary<string, object>();
             Dict["InwPolUid"] = uid;
             string query = "SELECT * FROM FIRE_INW_POLICY  WHERE INW_POL_UID=:InwPolUid";
-            DataRow dr = DBConnection.ExecuteQuerySelect(Dict, query).Tables[0].Rows[0];
+            DataTable dt = DBConnection.ExecuteQuerySelect(Dict, query).Tables[0];
+            DataRow dr = dt.Rows[0];
             FireInwardPolicy objFireInwardPolicy = new FireInwardPolicy();
-            // Assuming objFireInwardPolicy is already instantiated
+            // dt into obj
+            objFireInwardPolicy.InwPremCurr = dr["INW_SI_CURR"] != DBNull.Value ? dr["INW_SI_CURR"].ToString() : null;
+            objFireInwardPolicy.InwSiCurr = dr["INW_PREM_CURR"] != DBNull.Value ? dr["INW_PREM_CURR"].ToString() : null;
             objFireInwardPolicy.InwOrgPolNo = dr["INW_ORG_POL_NO"] != DBNull.Value ? dr["INW_ORG_POL_NO"].ToString() : null;
             objFireInwardPolicy.InwCedingSource = dr["INW_CEDING_SOURCE"] != DBNull.Value ? dr["INW_CEDING_SOURCE"].ToString() : null;
             objFireInwardPolicy.InwRiskClass = dr["INW_RISK_CLASS"] != DBNull.Value ? dr["INW_RISK_CLASS"].ToString() : null;
@@ -50,7 +53,9 @@ namespace BusinessLayer
             objFireInwardPolicy.InwCrDt = dr["INW_CR_DT"] != DBNull.Value ? Convert.ToDateTime(dr["INW_CR_DT"]) : (DateTime?)null;
             objFireInwardPolicy.InwUpDt = dr["INW_UP_DT"] != DBNull.Value ? Convert.ToDateTime(dr["INW_UP_DT"]) : DateTime.MinValue;
 
+            //return objFireInwardPolicy;
             return objFireInwardPolicy;
+
         }
     }
 }

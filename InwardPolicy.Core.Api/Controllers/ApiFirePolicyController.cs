@@ -83,23 +83,23 @@ namespace InwardPolicy.Core.Api.Controllers
                 throw ex;
             }
         }
-        [HttpGet]
-        [Route("LoadInwardControl/{uid}")]
-        public IActionResult LoadInwardControl(string uid)
-        {
-            try
-            {
-                FireInwardPolicyManager objFireInwardPolicyManager = new FireInwardPolicyManager();
-                FireInwardPolicy objfireInwardPolicy = objFireInwardPolicyManager.FetchInwardDetails(uid);
-                string json = JsonConvert.SerializeObject(objfireInwardPolicy);
-                return Ok(json);
-            }
-            catch (Exception ex)
-            {
+        //[HttpGet]
+        //[Route("LoadInwardControl/{uid}")]
+        //public IActionResult LoadInwardControl(string uid)
+        //{
+        //    try
+        //    {
+        //        FireInwardPolicyManager objFireInwardPolicyManager = new FireInwardPolicyManager();
+        //        FireInwardPolicy objfireInwardPolicy = objFireInwardPolicyManager.FetchInwardDetails(uid);
+        //        string json = JsonConvert.SerializeObject(objfireInwardPolicy);
+        //        return Ok(json);
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                throw ex;
-            }
-        }
+        //        throw ex;
+        //    }
+        //}
 
         [HttpPost]
         [Route("AddFirePolicy/{mode?}")]
@@ -108,6 +108,14 @@ namespace InwardPolicy.Core.Api.Controllers
             FirePolicyManager objFirePolicyManager = new FirePolicyManager();
             string uid = objFirePolicyManager.AddFirePolicy(objFirePolicy, mode);
             return Ok(uid);
+        }
+        [HttpGet]
+        [Route("FillAll/{polUid?}")]
+        public IActionResult FillAll(string polUid)
+        {
+            FirePolicyManager objFirePolicyManager = new FirePolicyManager();
+            string[] json = objFirePolicyManager.GetRate(polUid);
+            return Ok(json);
         }
     }
 

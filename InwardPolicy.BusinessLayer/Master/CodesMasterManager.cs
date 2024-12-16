@@ -34,12 +34,12 @@ namespace BusinessLayer
             return dt;
         }
         
-        public DataTable RiskClass(string type)
+        public DataTable BindRiskClass(string polUid)
         {
             string query = $"SELECT CM_CODE  CODE,CM_VALUE VALUE, CM_CODE ||' - ' || CM_DESC TEXT FROM CODES_MASTER " +
                 $"WHERE CM_TYPE='RISK CLASS' AND " +
                 $"CM_ACTIVE_YN='Y' AND " +
-                $"CM_CODE NOT IN(SELECT RISK_CLASS FROM FIRE_POLICY_RISK WHERE ) ORDER BY CM_CODE";
+                $"CM_CODE NOT IN(SELECT RISK_CLASS FROM FIRE_POLICY_RISK WHERE RISK_POL_UID={polUid} ) ORDER BY CM_CODE";
             DataTable dt = DBConnection.ExecuteDataset(query);
             return dt;
         }

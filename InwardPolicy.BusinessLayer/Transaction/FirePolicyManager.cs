@@ -38,7 +38,7 @@ namespace BusinessLayer
         private string GetPolicyNumber(FirePolicy objFirePolicy)
         {
 
-            
+
             Dictionary<string, object> Dict = new Dictionary<string, object>();
             Dict["PolProdCode"] = objFirePolicy.PolProdCode;
             string query = " SELECT DFUN_POLICY_NUMBER(:PolProdCode) POLICY_NUMBER FROM dual";
@@ -53,7 +53,7 @@ namespace BusinessLayer
             return uid;
         }
 
-        public string AddFirePolicy(FirePolicy objFirePolicy,string mode)
+        public string AddFirePolicy(FirePolicy objFirePolicy, string mode)
         {
             if (mode == "U")
             {
@@ -115,6 +115,19 @@ namespace BusinessLayer
                     return null;
             }
         }
+
+        public string[] GetRate(string polUid)
+        {
+            string query = $"SELECT POL_SI_CURR_RATE,POL_PREM_CURR_RATE FROM FIRE_POLICY WHERE POL_UID={polUid}";
+            DataRow dr = DBConnection.ExecuteDataset(query).Rows[0];
+            string[] jsonArray = new string[]
+            {
+                dr["POL_SI_CURR_RATE"].ToString(),
+                dr["POL_PREM_CURR_RATE"].ToString()
+            };
+            return jsonArray;
+        }
+
         public DataTable BindGrid()
         {
             string query = "SELECT * FROM FIRE_POLICY ORDER BY POL_UID";

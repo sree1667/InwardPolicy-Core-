@@ -328,7 +328,7 @@
 
                                     <div class="col-md-3">
                                         @Html.LabelFor(m => m.FireInwardPolicy.InwSharePerc, "Share Percentage:", new { @class = "form-label" })
-                                        @Html.TextBoxFor(m => m.FireInwardPolicy.InwSharePerc, new { @class = "numeric-input text-end form-control", id = "SharePercentage", required = "required" })
+                                        @Html.TextBoxFor(m => m.FireInwardPolicy.InwSharePerc, new { @class = "numeric-input text-end form-control",onchange= "OnSharePercChange()", id = "SharePercentage", required = "required" })
                                     </div>
                                     <div class="col-md-3">
                                         @Html.LabelFor(m => m.FireInwardPolicy.InwSiShareFc, "Sum Insured Share FC:", new { @class = "form-label" })
@@ -356,10 +356,10 @@
                                     </div>
                                     <div class="col-md-3">
                                         @Html.LabelFor(m => m.FireInwardPolicy.InwCommPerc, "Commission Percentage:", new { @class = "form-label" })
-                                        @Html.TextBoxFor(m => m.FireInwardPolicy.InwCommPerc, new { @class = "numeric-input text-end form-control", id = "CommissionPercentage", required = "required" })
+                                        @Html.TextBoxFor(m => m.FireInwardPolicy.InwCommPerc, new { @class = "numeric-input text-end form-control",onchange="OnCommPercChange()", id = "CommissionPercentage", required = "required" })
                                     </div>
                                 </div>
-
+                                
                                 <!-- Row 5 -->
                                 <div class="row mb-1">
 
@@ -518,6 +518,37 @@
             console.log(riskUid);
             console.log(polUid);
             window.location.href = '@Url.Action("FirePolicyRisk", "FirePolicyRisk", new { area = "Transaction" })' + '/' + polUid + '/' + riskUid;
+        }
+        function OnSharePercChange() {
+            var SharePerc = $("#SharePercentage").val();
+            var SiFc = $("#SumInsuredFC").val();
+            var SiLc = $("#SumInsuredLC").val();
+            var premFc = $("#PremiumFC").val();
+            var premLc = $("#PremiumLC").val();
+            if (SharePerc > 100) {
+                alert("Percentage cannot be greater than 100");
+                $("#SharePercentage").val('');
+            }
+            else {
+                $("#SumInsuredShareFC").val(SharePerc / 100 * SiFc);
+                $("#SumInsuredShareLC").val(SharePerc / 100 * SiLc);
+                $("#PremiumShareFC").val(SharePerc / 100 * premFc);
+                $("#PremiumShareLC").val(SharePerc / 100 * premLc);
+            }
+        }
+        function OnCommPercChange() {
+            
+            var commPerc = $("#CommissionPercentage").val();
+            var sharePremFc = $("#PremiumShareFC").val();
+            var sharePremLc = $("#PremiumShareLC").val();
+            if (commPerc > 100) {
+                alert("Percentage cannot be greater than 100");
+                $("#CommissionPercentage").val('');
+            }
+            else {
+            $("#CommissionLCAmt").val(commPerc/100 * sharePremLc);
+            $("#CommissionFCAmt").val(commPerc/100 * sharePremFc);
+            }
         }
         function AddNewRisk() {
 

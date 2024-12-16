@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
@@ -24,7 +25,7 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
             //ddl
             FirePolicyRiskModel objFirePolicyRiskModel = new FirePolicyRiskModel();
             objFirePolicyRiskModel.FirePolicyRisk = new FirePolicyRisk();
-            using HttpResponseMessage httpResponseMessage = await client.GetAsync("Api/ApiCodesMaster/FetchPolicyRiskDropdownList");
+            using HttpResponseMessage httpResponseMessage = await client.GetAsync($"Api/ApiCodesMaster/FetchPolicyRiskDropdownList/{id1}");
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
@@ -38,7 +39,7 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
             {
                 objFirePolicyRiskModel.Mode = "U";
                 objFirePolicyRiskModel.FirePolicyRisk.RiskPolUid = id1;
-                using HttpResponseMessage httpResponseMessage1 = await client.GetAsync($"Api/ApiFirePolicy/LoadControl/{id1}");
+                using HttpResponseMessage httpResponseMessage1 = await client.GetAsync($"Api/ApiFirePolicyRisk/FetchRiskDetails/{id2}");
                 if (httpResponseMessage1.IsSuccessStatusCode)
                 {
                     var result = await httpResponseMessage1.Content.ReadAsStringAsync();
@@ -65,7 +66,25 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
             }
             return View(objFirePolicyRiskModel);
         }
-
+        [HttpPost]
+        public async Task<IActionResult> FirePolicyRisk(FirePolicyRiskModel objFirePolicyRiskModel)
+        {
+            HttpClient client = new HttpClient()
+            {
+                BaseAddress = new System.Uri("http://localhost:26317/")
+            };
+            using HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync($"Api/ApiFirePolicyRisk/AddRisk/{objFirePolicyRiskModel.Mode}",objFirePolicyRiskModel.FirePolicyRisk);
+            if (httpResponseMessage.IsSuccessStatusCode)
+            {
+                var result = await httpResponseMessage.Content.ReadAsStringAsync();
+                int rate = JsonConvert.DeserializeObject<int>(result);
+                return Ok(rate);
+            }
+            else
+            {
+                return Ok();
+            }
+        }
         private FirePolicyRiskModel FillDropDowns(string result, FirePolicyRiskModel objFirePolicyRiskModel)
         {
             objFirePolicyRiskModel.RiskClass = new List<SelectListItem>();
@@ -78,6 +97,7 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
             {
                 //{ "Currency", objFirePolicyRiskModel.RiskClass },
                 { "Currency", objFirePolicyRiskModel.RiskCurrency },
+                { "RISK CLASS", objFirePolicyRiskModel.RiskClass },
                 
                
             };
@@ -101,6 +121,60 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
             }
             return objFirePolicyRiskModel;
 
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetCmValue(string? code)
+        {
+            try
+            {
+                HttpClient client = new HttpClient()
+                {
+                    BaseAddress = new System.Uri("http://localhost:26317/")
+                };
+                using HttpResponseMessage httpResponseMessage = await client.GetAsync($"Api/ApiCodesMaster/GetRiskPremium/{code}");
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var result = await httpResponseMessage.Content.ReadAsStringAsync();
+                    int rate = JsonConvert.DeserializeObject<int>(result);
+                    return Ok(rate);
+                }
+                else
+                {
+                    return Ok();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> FillAll(string? poluid)
+        {
+            try
+            {
+                HttpClient client = new HttpClient()
+                {
+                    BaseAddress = new System.Uri("http://localhost:26317/")
+                };
+                using HttpResponseMessage httpResponseMessage = await client.GetAsync($"Api/ApiFirePolicy/FillAll/{poluid}");
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var result = await httpResponseMessage.Content.ReadAsStringAsync();
+                    string[] rate = JsonConvert.DeserializeObject<string[]>(result);
+                    return Ok(rate);
+                }
+                else
+                {
+                    return Ok();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
     }

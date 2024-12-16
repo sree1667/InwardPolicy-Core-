@@ -150,8 +150,8 @@ namespace InwardPolicy.Core.Api.Controllers
         
 
         [HttpGet]
-        [Route("FetchPolicyRiskDropdownList")]
-        public IActionResult FetchPolicyRiskDropdownList()
+        [Route("FetchPolicyRiskDropdownList/{polUid?}")]
+        public IActionResult FetchPolicyRiskDropdownList(string polUid)
         {
             try
             {
@@ -164,6 +164,13 @@ namespace InwardPolicy.Core.Api.Controllers
                 dtcopy = dt.Copy();
                 dtcopy.TableName = "CURRENCY";
                 ds.Tables.Add(dtcopy);
+
+                dt.Clear();
+                dt = objCodesMasterManager.BindRiskClass(polUid);
+                dtcopy = dt.Copy();
+                dtcopy.TableName = "RISK CLASS";
+                ds.Tables.Add(dtcopy);
+
                 return Ok(JsonConvert.SerializeObject(ds));
             }
             catch (Exception ex)
@@ -180,6 +187,23 @@ namespace InwardPolicy.Core.Api.Controllers
             try
             {
                 string type = "CURRENCY";
+                CodesMasterManager objCodesMasterManager = new CodesMasterManager();
+                string rate = objCodesMasterManager.GetddlValue(value, type);
+                return Ok(rate);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        [HttpGet]
+        [Route("GetRiskPremium/{value?}")]
+        public IActionResult GetRiskPremium(string value)
+        {
+            try
+            {
+                string type = "RISK CLASS";
                 CodesMasterManager objCodesMasterManager = new CodesMasterManager();
                 string rate = objCodesMasterManager.GetddlValue(value, type);
                 return Ok(rate);

@@ -102,7 +102,26 @@
         </div>
     </div>
 
+    <script>
+        function isNumberKey(evt) {
+            //alert("hi")
+            var charCode = evt.which ? evt.which : evt.keyCode;
+            if (charCode != 46 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
 
+        //to limit number to 9 digits including digits after decimal point
+        function limitDigits(input) {
+            //alert("hi")
+            var numericValue = input.value.replace(/[^0-9]/g, '');
+
+            if (numericValue.length > 8) {
+                input.value = input.value.slice(0, input.value.length - 1);
+            }
+        }
+    </script>
 
 
     @await RenderSectionAsync("Scripts", required: false)

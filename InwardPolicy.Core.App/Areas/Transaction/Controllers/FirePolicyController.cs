@@ -50,13 +50,14 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                     //check if there is any inward
                     if (objFirePolicyModel.FirePolicy.InwCount == 1)
                     {
-                        objFirePolicyModel.FireInwardPolicy = new FireInwardPolicy();
-                        using HttpResponseMessage httpResponseMessageInward = await client.GetAsync($"Api/ApiFirePolicy/LoadInwardControl/{id1}");
+                        
+                        using HttpResponseMessage httpResponseMessageInward = await client.GetAsync($"Api/ApiFireInwardPolicy/LoadInwardControl/{id1}");
                         //INWARD LOAD
                         if (httpResponseMessageInward.IsSuccessStatusCode)
                         {
                             var inwardDetails = await httpResponseMessageInward.Content.ReadAsStringAsync();
-                            objFirePolicyModel.FireInwardPolicy = JsonConvert.DeserializeObject<FireInwardPolicy>(result);
+                            objFirePolicyModel.FireInwardPolicy = new FireInwardPolicy();
+                            objFirePolicyModel.FireInwardPolicy = JsonConvert.DeserializeObject<FireInwardPolicy>(inwardDetails);
                         }
                     }
                 }
@@ -267,7 +268,8 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                 {
                     BaseAddress = new System.Uri("http://localhost:26317")
                 };
-                objFirePolicyModel.FirePolicy.CrOrUpBy= HttpContext.Session.GetString("UserId");
+                //objFirePolicyModel.FirePolicy.CrOrUpBy= HttpContext.Session.GetString("UserId");
+                objFirePolicyModel.FirePolicy.CrOrUpBy = HttpContext.Session.GetString("UserId");
                 using HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync($"/Api/ApiFirePolicy/AddFirePolicy/{objFirePolicyModel.Mode}", objFirePolicyModel.FirePolicy);
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
