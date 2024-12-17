@@ -50,7 +50,7 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                     //check if there is any inward
                     if (objFirePolicyModel.FirePolicy.InwCount == 1)
                     {
-                        
+                        objFirePolicyModel.InwardMode = "U";
                         using HttpResponseMessage httpResponseMessageInward = await client.GetAsync($"Api/ApiFireInwardPolicy/LoadInwardControl/{id1}");
                         //INWARD LOAD
                         if (httpResponseMessageInward.IsSuccessStatusCode)
@@ -59,6 +59,10 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                             objFirePolicyModel.FireInwardPolicy = new FireInwardPolicy();
                             objFirePolicyModel.FireInwardPolicy = JsonConvert.DeserializeObject<FireInwardPolicy>(inwardDetails);
                         }
+                    }
+                    else
+                    {
+                        objFirePolicyModel.InwardMode = "I";
                     }
                 }
             }
@@ -222,7 +226,35 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> FirePolicy(FirePolicyModel objFirePolicyModel)
+        public async Task<IActionResult> DeleteFirePolicyRisk(string? riskUid,string polUid)
+        {
+            try
+            {
+                HttpClient client = new HttpClient()
+                {
+                    BaseAddress = new System.Uri("http://localhost:26317/")
+                };
+                using HttpResponseMessage httpResponseMessage = await client.DeleteAsync($"Api/ApiFirePolicyRisk/DeleteFirePolicyRisk/{riskUid}/{polUid}");
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var result = await httpResponseMessage.Content.ReadAsStringAsync();
+                    bool status = JsonConvert.DeserializeObject<bool>(result);
+                    return Ok(status);
+
+                }
+                else
+                {
+                    return Ok();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> FirePolicy(FirePolicyModel objFirePolicyModel,string id1)
         {
 
             try
@@ -232,6 +264,10 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                 {
                     BaseAddress = new System.Uri("http://localhost:26317")
                 };
+                if (!string.IsNullOrEmpty(id1))
+                {
+                    objFirePolicyModel.FirePolicy.Poluid = Convert.ToInt32(id1);
+                }
                 objFirePolicyModel.FirePolicy.CrOrUpBy= HttpContext.Session.GetString("UserId");
                 using HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync($"/Api/ApiFirePolicy/AddFirePolicy/{objFirePolicyModel.Mode}", objFirePolicyModel.FirePolicy);
                 if (httpResponseMessage.IsSuccessStatusCode)
@@ -269,8 +305,8 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                     BaseAddress = new System.Uri("http://localhost:26317")
                 };
                 //objFirePolicyModel.FirePolicy.CrOrUpBy= HttpContext.Session.GetString("UserId");
-                objFirePolicyModel.FirePolicy.CrOrUpBy = HttpContext.Session.GetString("UserId");
-                using HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync($"/Api/ApiFirePolicy/AddFirePolicy/{objFirePolicyModel.Mode}", objFirePolicyModel.FirePolicy);
+                //objFirePolicyModel.FirePolicy.CrOrUpBy = HttpContext.Session.GetString("UserId");
+                using HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync($"/Api/ApiFireInwardPolicy/AddFireInwardPolicy/{objFirePolicyModel.InwardMode}", objFirePolicyModel.FireInwardPolicy);
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
                     TempData["SwalTitle"] = "Success!";

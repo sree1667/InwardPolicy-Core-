@@ -15,7 +15,7 @@ namespace InwardPolicy.BusinessLayer.Transaction
         {
             Dictionary<string, Object> Dict = new Dictionary<string, Object>();
             Dict["PolUid"] = PolUid;
-            string query = "SELECT RISK_ID, RISK_UID,RISK_DESC,RISK_LC_SI,RISK_FC_SI,RISK_LC_PREM,RISK_FC_PREM,(SELECT CM_DESC FROM CODES_MASTER WHERE CM_CODE=RISK_CLASS AND CM_TYPE='RISK CLASS') AS RISK_CLASS FROM FIRE_POLICY_RISK WHERE RISK_POL_UID=:PolUid ORDER BY RISK_ID ";
+            string query = "SELECT ROWNUM AS RISK_ID, RISK_UID,RISK_DESC,RISK_LC_SI,RISK_FC_SI,RISK_LC_PREM,RISK_FC_PREM,(SELECT CM_DESC FROM CODES_MASTER WHERE CM_CODE=RISK_CLASS AND CM_TYPE='RISK CLASS') AS RISK_CLASS FROM FIRE_POLICY_RISK WHERE RISK_POL_UID=:PolUid ORDER BY RISK_ID ";
             return DBConnection.ExecuteQuerySelect(Dict, query).Tables[0];
         }
 
@@ -44,56 +44,82 @@ namespace InwardPolicy.BusinessLayer.Transaction
             return objFirePolicyRisk;
         }
 
+        public bool DeleteRisk(string riskUid,string polUid)
+        {
+            Dictionary<string, Object> Dict = new Dictionary<string, Object>();
+            Dict["riskUid"] = riskUid;
+            string query = "DELETE FROM FIRE_POLICY_RISK WHERE RISK_UID=:riskUid";
+            int i = DBConnection.ExecuteQuery(Dict, query);
+            UpdateFirePolicy(polUid);
+            if (i == 1)
+                return true;
+            else
+                return false;
+        }
+
         public FirePolicyRisk AddRisk(string mode, FirePolicyRisk objFirePolicyRisk)
         {
-            if (mode == "U")
+            try
             {
-                
-                Dictionary<string, Object> Dict = new Dictionary<string, Object>();
-                
-                Dict["RiskUid"] = objFirePolicyRisk.RiskUid;    
-                Dict["RiskClass"] = objFirePolicyRisk.RiskClass;
-                Dict["RiskDesc"] = objFirePolicyRisk.RiskDesc;
-                Dict["RiskFcSi"] = objFirePolicyRisk.RiskFcSi;
-                Dict["RiskLcSi"] = objFirePolicyRisk.RiskLcSi;
-                Dict["RiskFcPrem"] = objFirePolicyRisk.RiskFcPrem;
-                Dict["RiskLcPrem"] = objFirePolicyRisk.RiskLcPrem;
-                Dict["RiskUpBy"] = objFirePolicyRisk.RiskUpBy;
-                string query = "UPDATE FIRE_POLICY_RISK SET RISK_CLASS = :RiskClass, RISK_DESC = :RiskDesc,  " +
-                   "RISK_FC_SI = :RiskFcSi, RISK_LC_SI = :RiskLcSi, RISK_FC_PREM = :RiskFcPrem, RISK_LC_PREM = :RiskLcPrem, RISK_UP_BY = :RiskUpBy, RISK_UP_DT = SYSDATE WHERE RISK_UID = :RiskUid";
-                int i = DBConnection.ExecuteQuery(Dict, query);
-                UpdateFirePolicy(objFirePolicyRisk.RiskPolUid);
-                if (i == 1)
-                    return objFirePolicyRisk;
+
+                if (mode == "U")
+                {
+                    Dictionary<string, Object> Dict = new Dictionary<string, Object>();
+                    Dict["RiskClass"] = objFirePolicyRisk.RiskClass;
+                    Dict["RiskDesc"] = objFirePolicyRisk.RiskDesc;
+                    Dict["RiskFcSi"] = objFirePolicyRisk.RiskFcSi;
+                    Dict["RiskLcSi"] = objFirePolicyRisk.RiskLcSi;
+                    Dict["RiskFcPrem"] = objFirePolicyRisk.RiskFcPrem;
+                    Dict["RiskLcPrem"] = objFirePolicyRisk.RiskLcPrem;
+                    Dict["RiskUpBy"] = objFirePolicyRisk.RiskUpBy;
+                    Dict["RiskUid"] = Convert.ToInt32(objFirePolicyRisk.RiskUid);
+                    string query = "UPDATE FIRE_POLICY_RISK SET RISK_CLASS = :RiskClass, RISK_DESC = :RiskDesc,  " +
+                                       "RISK_FC_SI = :RiskFcSi, RISK_LC_SI = :RiskLcSi, RISK_FC_PREM = :RiskFcPrem, RISK_LC_PREM = :RiskLcPrem, " +
+                                       "RISK_UP_BY = :RiskUpBy, RISK_UP_DT = SYSDATE " +
+                                   "WHERE RISK_UID = :RiskUid";
+                    int i = DBConnection.ExecuteQuery(Dict, query);
+                    UpdateFirePolicy(objFirePolicyRisk.RiskPolUid);
+                    if (i == 1)
+                        return objFirePolicyRisk;
+                    else
+                        return null;
+                }
                 else
-                    return null;
+                {
+                    objFirePolicyRisk.RiskUid = GetRiskUid().ToString();
+                    Dictionary<string, Object> Dict = new Dictionary<string, Object>();
+                    Dict["RiskUid"] = Convert.ToInt32(objFirePolicyRisk.RiskUid);
+                    Dict["RiskPolUid"] = Convert.ToInt32(objFirePolicyRisk.RiskPolUid);
+                    Dict["RiskClass"] = objFirePolicyRisk.RiskClass;
+                    Dict["RiskDesc"] = objFirePolicyRisk.RiskDesc;
+                    Dict["RiskSICurr"] = objFirePolicyRisk.RiskSICurr;
+                    Dict["RiskFcSi"] = objFirePolicyRisk.RiskFcSi;
+                    Dict["RiskLcSi"] = objFirePolicyRisk.RiskLcSi;
+                    Dict["RiskPremCurr"] = objFirePolicyRisk.RiskPremCurr;
+                    Dict["RiskPremRate"] = objFirePolicyRisk.RiskPremRate;
+                    Dict["RiskFcPrem"] = objFirePolicyRisk.RiskFcPrem;
+                    Dict["RiskLcPrem"] = objFirePolicyRisk.RiskLcPrem;
+                    Dict["RiskCrBy"] = objFirePolicyRisk.RiskCrBy;
+                    
+                    string query = "INSERT INTO FIRE_POLICY_RISK (RISK_UID, RISK_POL_UID, RISK_CLASS, RISK_DESC, RISK_SI_CURR, " +
+                                        "RISK_FC_SI, RISK_LC_SI, RISK_PREM_CURR, RISK_PREM_RATE, RISK_FC_PREM, RISK_LC_PREM, RISK_CR_BY, " +
+                                        "RISK_CR_DT) " +
+                                    "VALUES (:RiskUid, :RiskPolUid, :RiskClass, :RiskDesc, :RiskSICurr, :RiskFcSi," +
+                                        " :RiskLcSi, :RiskPremCurr, :RiskPremRate, :RiskFcPrem, :RiskLcPrem, :RiskCrBy, " +
+                                        "SYSDATE)";
+                    int i = DBConnection.ExecuteQuery(Dict, query);
+                    //DBConnection.ExecuteProc(objFirePolicyRiskEntity.RiskPolUid);
+                    UpdateFirePolicy(objFirePolicyRisk.RiskPolUid);
+                    if (i == 1)
+                        return objFirePolicyRisk;
+                    else
+                        return null;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                objFirePolicyRisk.RiskUid = GetRiskUid().ToString();
-                Dictionary<string, Object> Dict = new Dictionary<string, Object>();
-                Dict["RiskPolUid"] = objFirePolicyRisk.RiskPolUid;
-                Dict["RiskUid"] = objFirePolicyRisk.RiskUid;
-                Dict["RiskClass"] = objFirePolicyRisk.RiskClass;
-                Dict["RiskDesc"] = objFirePolicyRisk.RiskDesc;
-                Dict["RiskSICurr"] = objFirePolicyRisk.RiskSICurr;
-                Dict["RiskFcSi"] = objFirePolicyRisk.RiskFcSi;
-                Dict["RiskLcSi"] = objFirePolicyRisk.RiskLcSi;
-                Dict["RiskPremCurr"] = objFirePolicyRisk.RiskPremCurr;
-                Dict["RiskPremRate"] = objFirePolicyRisk.RiskPremRate;
-                Dict["RiskFcPrem"] = objFirePolicyRisk.RiskFcPrem;
-                Dict["RiskLcPrem"] = objFirePolicyRisk.RiskLcPrem;
-                Dict["RiskCrBy"] = objFirePolicyRisk.RiskCrBy;
-                string query = "INSERT INTO FIRE_POLICY_RISK (RISK_UID, RISK_POL_UID, RISK_CLASS, RISK_DESC, RISK_SI_CURR, RISK_FC_SI, RISK_LC_SI, RISK_PREM_CURR, RISK_PREM_RATE, RISK_FC_PREM, RISK_LC_PREM, RISK_CR_BY, " +
-                    "RISK_CR_DT,RISK_ID) VALUES (:RiskUid, :RiskPolUid, :RiskClass, :RiskDesc, :RiskSICurr, :RiskFcSi, :RiskLcSi, :RiskPremCurr, :RiskPremRate, :RiskFcPrem, :RiskLcPrem, :RiskCrBy, " +
-                    "SYSDATE,SEQ_RISK_ID.NEXTVAL)";
-                int i = DBConnection.ExecuteQuery(Dict, query);
-                //DBConnection.ExecuteProc(objFirePolicyRiskEntity.RiskPolUid);
-                UpdateFirePolicy(objFirePolicyRisk.RiskPolUid);
-                if (i == 1)
-                    return objFirePolicyRisk;
-                else
-                    return null;
+
+                throw ex;
             }
         }
         public int GetRiskUid()

@@ -16,7 +16,7 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
     [Area("Transaction")]
     public class FirePolicyRiskController : Controller
     {
-        public async Task<IActionResult> FirePolicyRisk(string id1,string id2, string id3)
+        public async Task<IActionResult> FirePolicyRisk(string id1, string id2,string id3)
         {
             HttpClient client = new HttpClient()
             {
@@ -49,10 +49,6 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
             else
             {
                 objFirePolicyRiskModel.Mode = "I";
-                //objFirePolicyModel.FirePolicy.PolFmDt = null;
-                //objFirePolicyModel.FirePolicy.PolToDt = null;
-                //objFirePolicyModel.FirePolicy.PolAssrDob = null;
-
             }
 
             if (id3 == "A")
@@ -67,18 +63,26 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
             return View(objFirePolicyRiskModel);
         }
         [HttpPost]
-        public async Task<IActionResult> FirePolicyRisk(FirePolicyRiskModel objFirePolicyRiskModel)
+        public async Task<IActionResult> FirePolicyRisk(FirePolicyRiskModel objFirePolicyRiskModel, string id1, string id2)
         {
+            if (!string.IsNullOrEmpty(id2))
+            {
+                objFirePolicyRiskModel.Mode = "U";
+                objFirePolicyRiskModel.FirePolicyRisk.RiskUid = id2;
+                
+            }
+            objFirePolicyRiskModel.FirePolicyRisk.RiskPolUid = id1;
             HttpClient client = new HttpClient()
             {
                 BaseAddress = new System.Uri("http://localhost:26317/")
             };
-            using HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync($"Api/ApiFirePolicyRisk/AddRisk/{objFirePolicyRiskModel.Mode}",objFirePolicyRiskModel.FirePolicyRisk);
+            using HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync($"Api/ApiFirePolicyRisk/AddRisk/{objFirePolicyRiskModel.Mode}", objFirePolicyRiskModel.FirePolicyRisk);
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 var result = await httpResponseMessage.Content.ReadAsStringAsync();
-                int rate = JsonConvert.DeserializeObject<int>(result);
-                return Ok(rate);
+                objFirePolicyRiskModel.FirePolicyRisk = JsonConvert.DeserializeObject<FirePolicyRisk>(result);
+                return RedirectToAction("FirePolicyRisk", new { id2 = objFirePolicyRiskModel.FirePolicyRisk.RiskUid });
+
             }
             else
             {
@@ -90,7 +94,7 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
             objFirePolicyRiskModel.RiskClass = new List<SelectListItem>();
             objFirePolicyRiskModel.RiskCurrency = new List<SelectListItem>();
             //objFirePolicyRiskModel.RiskPremCurrency = new List<SelectListItem>();
-            
+
 
             DataSet ds = JsonConvert.DeserializeObject<DataSet>(result);
             var tableMapping = new Dictionary<string, List<SelectListItem>>
@@ -98,8 +102,8 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                 //{ "Currency", objFirePolicyRiskModel.RiskClass },
                 { "Currency", objFirePolicyRiskModel.RiskCurrency },
                 { "RISK CLASS", objFirePolicyRiskModel.RiskClass },
-                
-               
+
+
             };
             foreach (var mapping in tableMapping)
             {

@@ -22,22 +22,36 @@
         <form method="post">
             <div class="container h-auto p-4 border bg-light rounded shadow mt-2">
                 <div class="mb-3">
-                    @Html.ActionLink("Back", "Index", new { @class = "btn btn-secondary text-light" })
+                    <a href="@Url.Action("FirePolicyListing", "FirePolicyListing")" class="btn btn-secondary text-light">
+                        <i class="bi bi-arrow-left-circle"></i> Back
+                    </a>
+
                     <div class="text-center">
-                        @Html.ActionLink("Copy", "Copy", new { @class = "btn btn-primary", aria_label = "Copy", @visible = "false" })
-                        @Html.ActionLink("Print", "Print", new { @class = "btn btn-danger", aria_label = "Print", @visible = "false" })
+                        @if (Model.Mode == "U")
+                        {
+                            @Html.ActionLink("Copy", "Copy", new { @class = "btn btn-primary", aria_label = "Copy", @visible = "false" })
+                            @Html.ActionLink("Print", "Print", new { @class = "btn btn-danger", aria_label = "Print", @visible = "false" })
+                        }
                     </div>
                     <div class="text-end mb-2">
-                        @Html.ActionLink("Approve", "Approve", new { @class = "btn btn-danger text-light", onclick = "return confirm('Are you sure you want to approve this?');" })
+                        @if (Model.Mode == "U")
+                        {
+                            @Html.ActionLink("Approve", "Approve", new { @class = "btn btn-danger text-light", onclick = "return confirm('Are you sure you want to approve this?');" })
+                        }
                     </div>
                     <div class="text-end">
-                        <label id="lblPolIssDt">Issue Date: @Model.FirePolicy.PolIssDt</label>
+                        @if (Model.Mode == "U")
+                        {
+                            <label id="lblPolIssDt">Issue Date: @Model.FirePolicy.PolIssDt</label>
+                        }
                     </div>
                 </div>
 
                 <!-- Row 1 -->
                 @Html.HiddenFor(m => m.Mode, new { @id = "hfMode" })
                 @Html.HiddenFor(m => m.FirePolicy.Poluid, new { @id = "hfuid" })
+                
+                <label>@Model.InwardMode</label>
                 <div class="row mb-1">
                     <div class="col-md-3">
                         @Html.LabelFor(m => m.FirePolicy.PolNo, "Policy Number:", new { @class = "red form-label" })
@@ -188,214 +202,217 @@
     ----------------------TABS----------------------------
     ----------------------------------------------------*@
 
-
-<div ID="divTab">
-    <div class="container h-auto p-2 Tab  border bg-light rounded shadow mt-1">
-        <nav>
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link  active" id="nav-risk-tab" data-bs-toggle="tab" data-bs-target="#nav-risk" type="button" role="tab" aria-controls="nav-risk" aria-selected="true">Risk</button>
-                <button class="nav-link " id="nav-inward-tab" data-bs-toggle="tab" data-bs-target="#nav-inward" type="button" role="tab" aria-controls="nav-inward" aria-selected="true">Inward</button>
-            </div>
-        </nav>
-        <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-risk" role="tabpanel" aria-labelledby="nav-risk-tab">
-
-                <h1 class="mb-3">Risk Listing</h1>
-                <div class="table-responsive bg-light p-4 border rounded shadow">
-
-                    <div>
-                        <button ID="AddNewRisk" onclick="AddNewRisk()" Class="btn btn-primary mb-4 ">
-                            <i class="bi bi-plus-circle"></i>  Add New
-                        </button>
-                    </div>
-                    @* RISK GRID *@
-                    <div class="row justify-content-center mb-3">
-                        @*<div class="container bg-light p-4 border rounded shadow mt-2">*@
-                        <table class="table table-hover" id="tblFirePolicyRisk">
-                            <thead>
-                                <tr class="table-info">
-                                    <th scope="col">Policy Number</th>
-                                    <th scope="col">Issue Date</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col" class="text-center">Approval status</th>
-                                    <th scope="col">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                        @*</div>*@
-                    </div>
+@if (Model.Mode == "U")
+{
+    <div ID="divTab">
+        <div class="container h-auto p-2 Tab  border bg-light rounded shadow mt-1">
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button class="nav-link  active" id="nav-risk-tab" data-bs-toggle="tab" data-bs-target="#nav-risk" type="button" role="tab" aria-controls="nav-risk" aria-selected="true">Risk</button>
+                    <button class="nav-link " id="nav-inward-tab" data-bs-toggle="tab" data-bs-target="#nav-inward" type="button" role="tab" aria-controls="nav-inward" aria-selected="true">Inward</button>
                 </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-risk" role="tabpanel" aria-labelledby="nav-risk-tab">
 
-            </div>
-            <div class="tab-pane fade" id="nav-inward" role="tabpanel" aria-labelledby="nav-inward-tab">
+                    <h1 class="mb-3">Risk Listing</h1>
+                    <div class="table-responsive bg-light p-4 border rounded shadow">
 
-                @*INWARD*@
-                <!--<div class="tab-pane fade show active" id="nav-risk" role="tabpanel" aria-labelledby="nav-risk-tab">
-
-                <h1 class="mb-3">Inward Listing</h1>
-                <div class="table-responsive bg-light p-4 border rounded shadow">
-
-                    <div>
-                        <a ID="AddNewInward" Class="btn btn-primary mb-4 ">
-                            <i class="bi bi-plus-circle"></i>  Add New
-                        </a>
-                    </div>-->
-                <!--<div class="row justify-content-center mb-3">-->
-                @*<div class="container bg-light p-4 border rounded shadow mt-2">*@
-                <!--<table class="table table-hover" id="tblFireInwPolicy">
-                    <thead>
-                        <tr class="table-info">
-                            <th scope="col">Policy Number</th>
-                            <th scope="col">Issue Date</th>
-                            <th scope="col">Name</th>
-                            <th scope="col" class="text-center">Approval status</th>
-                            <th scope="col">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>-->
-                @*</div>*@
-                <!--</div>
+                        <div>
+                            <button ID="AddNewRisk" onclick="AddNewRisk()" Class="btn btn-primary mb-4 ">
+                                <i class="bi bi-plus-circle"></i>  Add New
+                            </button>
+                        </div>
+                        @* RISK GRID *@
+                        <div class="row justify-content-center mb-3">
+                            @*<div class="container bg-light p-4 border rounded shadow mt-2">*@
+                            <table class="table table-hover" id="tblFirePolicyRisk">
+                                <thead>
+                                    <tr class="table-info">
+                                        <th scope="col">SI No</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">class</th>
+                                        <th scope="col" class="text-center">SumInsured(LC)</th>
+                                        <th scope="col" class="text-center">Premium(LC)</th>
+                                        <th scope="col">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            @*</div>*@
+                        </div>
                     </div>
-                </div>-->
-                <div class="row justify-content-center mb-1">
-                    <form method="post" asp-action="FireInwardPolicy" asp-controller="FirePolicy">
-                        <div class="col">
-                            <div class="container h-auto p-4 border bg-light rounded shadow mt-2">
-                                <!-- Row 1 -->
-                                <div class="row mb-1">
-                                    <div class="col-md-3">
-                                        @Html.LabelFor(m => m.FireInwardPolicy.InwOrgPolNo, "Original Policy Number:", new { @class = "red form-label" })
-                                        @Html.TextBoxFor(m => m.FireInwardPolicy.InwOrgPolNo, new { @class = "form-control", id = "OriginalPolicyNumber", required = "required" })
+
+                </div>
+                <div class="tab-pane fade" id="nav-inward" role="tabpanel" aria-labelledby="nav-inward-tab">
+
+                    @*INWARD*@
+                    <!--<div class="tab-pane fade show active" id="nav-risk" role="tabpanel" aria-labelledby="nav-risk-tab">
+
+                    <h1 class="mb-3">Inward Listing</h1>
+                    <div class="table-responsive bg-light p-4 border rounded shadow">
+
+                        <div>
+                            <a ID="AddNewInward" Class="btn btn-primary mb-4 ">
+                                <i class="bi bi-plus-circle"></i>  Add New
+                            </a>
+                        </div>-->
+                    <!--<div class="row justify-content-center mb-3">-->
+                    @*<div class="container bg-light p-4 border rounded shadow mt-2">*@
+                    <!--<table class="table table-hover" id="tblFireInwPolicy">
+                        <thead>
+                            <tr class="table-info">
+                                <th scope="col">Policy Number</th>
+                                <th scope="col">Issue Date</th>
+                                <th scope="col">Name</th>
+                                <th scope="col" class="text-center">Approval status</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>-->
+                    @*</div>*@
+                    <!--</div>
+                        </div>
+                    </div>-->
+                    <div class="row justify-content-center mb-1">
+                        <form method="post" asp-action="FireInwardPolicy" asp-controller="FirePolicy">
+                            <div class="col">
+                                <div id="inwardDiv" class=" container h-auto p-4 border bg-light rounded shadow mt-2">
+                                    <!-- Row 1 -->
+                                    @Html.HiddenFor(m => m.InwardMode, new { @id = "hfInwardMode" })
+                                    <div class="row mb-1">
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(m => m.FireInwardPolicy.InwOrgPolNo, "Original Policy Number:", new { @class = "red form-label" })
+                                            @Html.TextBoxFor(m => m.FireInwardPolicy.InwOrgPolNo, new { @class = "form-control", id = "OriginalPolicyNumber", required = "required" })
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(m => m.FireInwardPolicy.InwCedingSource, "Ceding Source:", new { @class = "form-label" })
+                                            @Html.DropDownListFor(m => m.FireInwardPolicy.InwCedingSource, new SelectList(Model.CedingSourceList, "Value", "Text"), new { @class = "form-select form-control", id = "CedingSource", required = "required" })
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(m => m.FireInwardPolicy.InwRiskClass, "Risk Class:", new { @class = "form-label" })
+                                            @Html.DropDownListFor(m => m.FireInwardPolicy.InwRiskClass, new SelectList(Model.RiskClassList, "Value", "Text"), new { @class = "form-select form-control", id = "RiskClass", required = "required" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(m => m.FireInwardPolicy.InwOrgInsName, "Name:", new { @class = "form-label" })
+                                            @Html.TextBoxFor(m => m.FireInwardPolicy.InwOrgInsName, new { @class = "form-control", id = "Name", required = "required" })
+                                        </div><div class="col-md-3">
+                                        </div>
                                     </div>
 
-                                    <div class="col-md-3">
-                                        @Html.LabelFor(m => m.FireInwardPolicy.InwCedingSource, "Ceding Source:", new { @class = "form-label" })
-                                        @Html.DropDownListFor(m => m.FireInwardPolicy.InwCedingSource, new SelectList(Model.CedingSourceList, "Value", "Text"), new { @class = "form-select form-control", id = "CedingSource", required = "required" })
+                                    <!-- Row 2 -->
+                                    <div class="row mb-1">
+
+
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(m => m.FireInwardPolicy.InwSiCurr, "Sum Insured Currency:", new { @class = "form-label" })
+                                            @Html.DropDownListFor(m => m.FireInwardPolicy.InwSiCurr, new SelectList(Model.PolCurrencyList, "Value", "Text"), new { @class = "form-control", id = "SumInsuredCurrency", @disabled = true, required = "required" })
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(m => m.FireInwardPolicy.InwOrgSiFc, "Sum Insured FC:", new { @class = "form-label" })
+                                            @Html.TextBoxFor(m => m.FireInwardPolicy.InwOrgSiFc, new { @class = "numeric-input text-end form-control", id = "SumInsuredFC", required = "required" })
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(m => m.FireInwardPolicy.InwOrgSiLc, "Sum Insured LC:", new { @class = "form-label" })
+                                            @Html.TextBoxFor(m => m.FireInwardPolicy.InwOrgSiLc, new { @class = "text-end form-control", id = "SumInsuredLC", required = "required" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(m => m.FireInwardPolicy.InwPremCurr, "Premium Currency:", new { @class = "form-label" })
+                                            @Html.DropDownListFor(m => m.FireInwardPolicy.InwPremCurr, new SelectList(Model.PolCurrencyList, "Value", "Text"), "Select", new { @class = "form-control", id = "PremiumCurrency", @disabled = true, required = "required" })
+                                        </div>
                                     </div>
 
-                                    <div class="col-md-3">
-                                        @Html.LabelFor(m => m.FireInwardPolicy.InwRiskClass, "Risk Class:", new { @class = "form-label" })
-                                        @Html.DropDownListFor(m => m.FireInwardPolicy.InwRiskClass, new SelectList(Model.RiskClassList, "Value", "Text"), new { @class = "form-select form-control", id = "RiskClass", required = "required" })
-                                    </div>
-                                    <div class="col-md-3">
-                                        @Html.LabelFor(m => m.FireInwardPolicy.InwOrgInsName, "Name:", new { @class = "form-label" })
-                                        @Html.TextBoxFor(m => m.FireInwardPolicy.InwOrgInsName, new { @class = "form-control", id = "Name", required = "required" })
-                                    </div><div class="col-md-3">
-                                    </div>
-                                </div>
-
-                                <!-- Row 2 -->
-                                <div class="row mb-1">
+                                    <!-- Row 3 -->
+                                    <div class="row mb-1">
 
 
-                                    <div class="col-md-3">
-                                        @Html.LabelFor(m => m.FireInwardPolicy.InwSiCurr, "Sum Insured Currency:", new { @class = "form-label" })
-                                        @Html.DropDownListFor(m => m.FireInwardPolicy.InwSiCurr, new SelectList(Model.PolCurrencyList, "Value", "Text"), new { @class = "form-control", id = "SumInsuredCurrency", @disabled = true, required = "required" })
-                                    </div>
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(m => m.FireInwardPolicy.InwOrgPremFc, "Premium FC:", new { @class = "form-label" })
+                                            @Html.TextBoxFor(m => m.FireInwardPolicy.InwOrgPremFc, new { @class = "numeric-input text-end form-control", id = "PremiumFC", required = "required" })
+                                        </div>
 
-                                    <div class="col-md-3">
-                                        @Html.LabelFor(m => m.FireInwardPolicy.InwOrgSiFc, "Sum Insured FC:", new { @class = "form-label" })
-                                        @Html.TextBoxFor(m => m.FireInwardPolicy.InwOrgSiFc, new { @class = "numeric-input text-end form-control", id = "SumInsuredFC", required = "required" })
-                                    </div>
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(m => m.FireInwardPolicy.InwOrgPremLc, "Premium LC:", new { @class = "form-label" })
+                                            @Html.TextBoxFor(m => m.FireInwardPolicy.InwOrgPremLc, new { @class = "text-end form-control", id = "PremiumLC", required = "required" })
+                                        </div>
 
-                                    <div class="col-md-3">
-                                        @Html.LabelFor(m => m.FireInwardPolicy.InwOrgSiLc, "Sum Insured LC:", new { @class = "form-label" })
-                                        @Html.TextBoxFor(m => m.FireInwardPolicy.InwOrgSiLc, new { @class = "text-end form-control", id = "SumInsuredLC", required = "required" })
-                                    </div>
-                                    <div class="col-md-3">
-                                        @Html.LabelFor(m => m.FireInwardPolicy.InwPremCurr, "Premium Currency:", new { @class = "form-label" })
-                                        @Html.DropDownListFor(m => m.FireInwardPolicy.InwPremCurr, new SelectList(Model.PolCurrencyList, "Value", "Text"), "Select", new { @class = "form-control", id = "PremiumCurrency", @disabled = true, required = "required" })
-                                    </div>
-                                </div>
-
-                                <!-- Row 3 -->
-                                <div class="row mb-1">
-
-
-                                    <div class="col-md-3">
-                                        @Html.LabelFor(m => m.FireInwardPolicy.InwOrgPremFc, "Premium FC:", new { @class = "form-label" })
-                                        @Html.TextBoxFor(m => m.FireInwardPolicy.InwOrgPremFc, new { @class = "numeric-input text-end form-control", id = "PremiumFC", required = "required" })
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(m => m.FireInwardPolicy.InwSharePerc, "Share Percentage:", new { @class = "form-label" })
+                                            @Html.TextBoxFor(m => m.FireInwardPolicy.InwSharePerc, new { @class = "numeric-input text-end form-control", onchange = "OnSharePercChange()", id = "SharePercentage", required = "required" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(m => m.FireInwardPolicy.InwSiShareFc, "Sum Insured Share FC:", new { @class = "form-label" })
+                                            @Html.TextBoxFor(m => m.FireInwardPolicy.InwSiShareFc, new { @class = "text-end form-control", id = "SumInsuredShareFC", required = "required" })
+                                        </div>
                                     </div>
 
-                                    <div class="col-md-3">
-                                        @Html.LabelFor(m => m.FireInwardPolicy.InwOrgPremLc, "Premium LC:", new { @class = "form-label" })
-                                        @Html.TextBoxFor(m => m.FireInwardPolicy.InwOrgPremLc, new { @class = "text-end form-control", id = "PremiumLC", required = "required" })
+                                    <!-- Row 4 -->
+                                    <div class="row mb-1">
+
+
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(m => m.FireInwardPolicy.InwSiShareLc, "Sum Insured Share LC:", new { @class = "form-label" })
+                                            @Html.TextBoxFor(m => m.FireInwardPolicy.InwSiShareLc, new { @class = "text-end form-control", id = "SumInsuredShareLC", required = "required" })
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(m => m.FireInwardPolicy.InwPremShareFc, "Premium Share FC:", new { @class = "form-label" })
+                                            @Html.TextBoxFor(m => m.FireInwardPolicy.InwPremShareFc, new { @class = "text-end form-control", id = "PremiumShareFC", required = "required" })
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(m => m.FireInwardPolicy.InwPremShareLc, "Premium Share LC:", new { @class = "form-label" })
+                                            @Html.TextBoxFor(m => m.FireInwardPolicy.InwPremShareLc, new { @class = "text-end form-control", id = "PremiumShareLC", required = "required" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(m => m.FireInwardPolicy.InwCommPerc, "Commission Percentage:", new { @class = "form-label" })
+                                            @Html.TextBoxFor(m => m.FireInwardPolicy.InwCommPerc, new { @class = "numeric-input text-end form-control", onchange = "OnCommPercChange()", id = "CommissionPercentage", required = "required" })
+                                        </div>
                                     </div>
 
-                                    <div class="col-md-3">
-                                        @Html.LabelFor(m => m.FireInwardPolicy.InwSharePerc, "Share Percentage:", new { @class = "form-label" })
-                                        @Html.TextBoxFor(m => m.FireInwardPolicy.InwSharePerc, new { @class = "numeric-input text-end form-control",onchange= "OnSharePercChange()", id = "SharePercentage", required = "required" })
-                                    </div>
-                                    <div class="col-md-3">
-                                        @Html.LabelFor(m => m.FireInwardPolicy.InwSiShareFc, "Sum Insured Share FC:", new { @class = "form-label" })
-                                        @Html.TextBoxFor(m => m.FireInwardPolicy.InwSiShareFc, new { @class = "text-end form-control", id = "SumInsuredShareFC", required = "required" })
-                                    </div>
-                                </div>
-
-                                <!-- Row 4 -->
-                                <div class="row mb-1">
+                                    <!-- Row 5 -->
+                                    <div class="row mb-1">
 
 
-                                    <div class="col-md-3">
-                                        @Html.LabelFor(m => m.FireInwardPolicy.InwSiShareLc, "Sum Insured Share LC:", new { @class = "form-label" })
-                                        @Html.TextBoxFor(m => m.FireInwardPolicy.InwSiShareLc, new { @class = "text-end form-control", id = "SumInsuredShareLC", required = "required" })
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(m => m.FireInwardPolicy.InwCommFcAmt, "Commission FC Amount:", new { @class = "form-label" })
+                                            @Html.TextBoxFor(m => m.FireInwardPolicy.InwCommFcAmt, new { @class = "form-control text-end", id = "CommissionFCAmt", required = "required" })
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(m => m.FireInwardPolicy.InwCommLcAmt, "Commission LC Amount:", new { @class = "form-label" })
+                                            @Html.TextBoxFor(m => m.FireInwardPolicy.InwCommLcAmt, new { @class = "form-control text-end", id = "CommissionLCAmt", required = "required" })
+                                        </div>
                                     </div>
 
-                                    <div class="col-md-3">
-                                        @Html.LabelFor(m => m.FireInwardPolicy.InwPremShareFc, "Premium Share FC:", new { @class = "form-label" })
-                                        @Html.TextBoxFor(m => m.FireInwardPolicy.InwPremShareFc, new { @class = "text-end form-control", id = "PremiumShareFC", required = "required" })
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        @Html.LabelFor(m => m.FireInwardPolicy.InwPremShareLc, "Premium Share LC:", new { @class = "form-label" })
-                                        @Html.TextBoxFor(m => m.FireInwardPolicy.InwPremShareLc, new { @class = "text-end form-control", id = "PremiumShareLC", required = "required" })
-                                    </div>
-                                    <div class="col-md-3">
-                                        @Html.LabelFor(m => m.FireInwardPolicy.InwCommPerc, "Commission Percentage:", new { @class = "form-label" })
-                                        @Html.TextBoxFor(m => m.FireInwardPolicy.InwCommPerc, new { @class = "numeric-input text-end form-control",onchange="OnCommPercChange()", id = "CommissionPercentage", required = "required" })
-                                    </div>
-                                </div>
-                                
-                                <!-- Row 5 -->
-                                <div class="row mb-1">
-
-
-                                    <div class="col-md-3">
-                                        @Html.LabelFor(m => m.FireInwardPolicy.InwCommFcAmt, "Commission FC Amount:", new { @class = "form-label" })
-                                        @Html.TextBoxFor(m => m.FireInwardPolicy.InwCommFcAmt, new { @class = "form-control text-end", id = "CommissionFCAmt", required = "required" })
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        @Html.LabelFor(m => m.FireInwardPolicy.InwCommLcAmt, "Commission LC Amount:", new { @class = "form-label" })
-                                        @Html.TextBoxFor(m => m.FireInwardPolicy.InwCommLcAmt, new { @class = "form-control text-end", id = "CommissionLCAmt", required = "required" })
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <center>
-                                            <button type="submit" class="btn btn-primary">
-                                                <i class="bi bi-floppy"></i> Submit
-                                            </button>
-                                        </center>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <center>
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="bi bi-floppy"></i> Submit
+                                                </button>
+                                            </center>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
+
+
                 </div>
-
-
             </div>
+
         </div>
-
     </div>
-</div>
-
+}
 
 @if (Model.Mode == "U")
 {
@@ -417,7 +434,15 @@
     <script>
         $(document).ready(function () {
             function disableFormElements() {
+                //$("#btnsave").prop('Visible', false);
+                $("#btnsave").hide();
                 var div = document.getElementById("fullPage");
+                var inputs = div.querySelectorAll('input, button, select, textarea');
+                inputs.forEach(function (input) {
+                    input.disabled = true;
+
+                });
+                var div = document.getElementById("inwardDiv");
                 var inputs = div.querySelectorAll('input, button, select, textarea');
                 inputs.forEach(function (input) {
                     input.disabled = true;
@@ -425,7 +450,7 @@
                 $('#txtFromDate').datepicker("disable");
                 $('#txtDoB').datepicker("disable");
                 $(".ui-datepicker-trigger").prop('disabled', true);
-                $("#btnsave").prop('Visible', false);
+               
             }
             disableFormElements();
         });
@@ -468,6 +493,7 @@
         var path = window.location.pathname;
         var segments = path.split('/');
         var poluid = segments[4];
+        var apprStatus = segments[5];
         $('#tblFirePolicyRisk').DataTable({
 
                 //dom: 'Bfrtip', // Define layout for plugins
@@ -505,8 +531,11 @@
                         render: function (data, type, row) {
                             if (row.CM_ACTIVE_YN === 'Y') {
                                 return "<a onclick=\"UpdateRisk('" + row.RISK_UID + "', poluid);\"><i class='bi bi-pencil'></i></a>";
+                                return "<a onclick=\"DeleteRisk('" + row.RISK_UID + "',poluid);\"><i class='bi bi-trash'></i></a>";
+
                             } else {
-                                return "<a onclick=\"UpdateRisk('" + row.RISK_UID + "', poluid);\"><i class='bi bi-pencil'></i></a>";
+                                return "<a onclick=\"UpdateRisk('" + row.RISK_UID + "', poluid);\"><i class='bi bi-pencil'></i></a>"+
+                                 "<a onclick=\"DeleteRisk('" + row.RISK_UID + "',poluid);\"><i class='bi bi-trash'></i></a>";
                                     //+"<a onclick=\"DeleteCodesMaster('" + row.CM_CODE + "', '" + row.CM_TYPE + "');\"><i class='bi bi-trash'></i></a>";
                             }
                         }
@@ -517,7 +546,34 @@
         function UpdateRisk(riskUid, polUid) {
             console.log(riskUid);
             console.log(polUid);
-            window.location.href = '@Url.Action("FirePolicyRisk", "FirePolicyRisk", new { area = "Transaction" })' + '/' + polUid + '/' + riskUid;
+            window.location.href = '@Url.Action("FirePolicyRisk", "FirePolicyRisk", new { area = "Transaction" })' + '/' + polUid + '/' + riskUid + '/' + apprStatus;
+        }
+        function DeleteRisk(riskUid,polUid) {
+            if (riskUid) {
+                console.log(riskUid);
+                console.log(polUid);
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("DeleteFirePolicyRisk","FirePolicy")',
+                    data: { riskUid: riskUid, polUid: polUid },
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response)
+                        if (response === true) {
+                            var table = $('#tblFirePolicyRisk').DataTable();
+                            table.ajax.reload(null, false);
+                            //swal
+                        }
+                        else {
+                            //swal
+                        }
+
+                    },
+                    error: function (response) {
+                        console.log("Error: " + response);
+                    }
+                });
+            }
         }
         function OnSharePercChange() {
             var SharePerc = $("#SharePercentage").val();
@@ -537,7 +593,7 @@
             }
         }
         function OnCommPercChange() {
-            
+
             var commPerc = $("#CommissionPercentage").val();
             var sharePremFc = $("#PremiumShareFC").val();
             var sharePremLc = $("#PremiumShareLC").val();
@@ -623,7 +679,7 @@
             }
         });
 
-
+        
         //console.log("ID1:", id1);
 
 

@@ -57,5 +57,78 @@ namespace BusinessLayer
             return objFireInwardPolicy;
 
         }
+
+        public FireInwardPolicy AddInward(FireInwardPolicy objfireInwardPolicy, string mode)
+        {
+            if (mode == "U")
+            {
+                Dictionary<string, object> Dict = new Dictionary<string, object>();
+                Dict["InwCedingSource"] = objfireInwardPolicy.InwCedingSource;
+                Dict["InwRiskClass"] = objfireInwardPolicy.InwRiskClass;
+                Dict["InwOrgSiFc"] = objfireInwardPolicy.InwOrgSiFc;
+                Dict["InwOrgSiLc"] = objfireInwardPolicy.InwOrgSiLc;
+                Dict["InwOrgPremFc"] = objfireInwardPolicy.InwOrgPremFc;
+                Dict["InwOrgPremLc"] = objfireInwardPolicy.InwOrgPremLc;
+                Dict["InwOrgInsName"] = objfireInwardPolicy.InwOrgInsName;
+                Dict["InwSharePerc"] = objfireInwardPolicy.InwSharePerc;
+                Dict["InwSiShareFc"] = objfireInwardPolicy.InwSiShareFc;
+                Dict["InwSiShareLc"] = objfireInwardPolicy.InwSiShareLc;
+                Dict["InwPremShareFc"] = objfireInwardPolicy.InwPremShareFc;
+                Dict["InwPremShareLc"] = objfireInwardPolicy.InwPremShareLc;
+                Dict["InwCommPerc"] = objfireInwardPolicy.InwCommPerc;
+                Dict["InwCommFcAmt"] = objfireInwardPolicy.InwCommFcAmt;
+                Dict["InwCommLcAmt"] = objfireInwardPolicy.InwCommLcAmt;
+                Dict["InwUpBy"] = objfireInwardPolicy.InwCrBy;
+                Dict["InwPolUid"] = objfireInwardPolicy.InwPolUid;
+                string query = "UPDATE FIRE_INW_POLICY SET  INW_CEDING_SOURCE = :InwCedingSource," +
+                    " INW_RISK_CLASS = :InwRiskClass,  INW_ORG_SI_FC = :InwOrgSiFc, INW_ORG_SI_LC = :InwOrgSiLc," +
+                    " INW_ORG_PREM_FC = :InwOrgPremFc, INW_ORG_PREM_LC = :InwOrgPremLc, INW_ORG_INS_NAME = :InwOrgInsName," +
+                    " INW_SHARE_PERC = :InwSharePerc, INW_SI_SHARE_FC = :InwSiShareFc, INW_SI_SHARE_LC = :InwSiShareLc, INW_PREM_SHARE_FC = :InwPremShareFc," +
+                    " INW_PREM_SHARE_LC = :InwPremShareLc, INW_COMM_PERC = :InwCommPerc, INW_COMM_LC_AMT = :InwCommLcAmt, INW_COMM_FC_AMT = :InwCommFcAmt," +
+                    " INW_UP_BY = :InwUpBy, INW_UP_DT = SYSDATE WHERE INW_POL_UID = :InwPolUid";
+                int i = DBConnection.ExecuteQuery(Dict, query);
+                if (i == 1)
+                    return objfireInwardPolicy;
+                else
+                    return null;
+
+            }
+            else
+            {
+                Dictionary<string, object> Dict = new Dictionary<string, object>();
+                Dict["InwPolUid"] = objfireInwardPolicy.InwPolUid;
+                Dict["InwOrgPolNo"] = objfireInwardPolicy.InwOrgPolNo;
+                Dict["InwCedingSource"] = objfireInwardPolicy.InwCedingSource;
+                Dict["InwRiskClass"] = objfireInwardPolicy.InwRiskClass;
+                Dict["InwSiCurr"] = objfireInwardPolicy.InwSiCurr;
+                Dict["InwOrgSiFc"] = objfireInwardPolicy.InwOrgSiFc;
+                Dict["InwOrgSiLc"] = objfireInwardPolicy.InwOrgSiLc;
+                Dict["InwPremCurr"] = objfireInwardPolicy.InwPremCurr;
+                Dict["InwOrgPremFc"] = objfireInwardPolicy.InwOrgPremFc;
+                Dict["InwOrgPremLc"] = objfireInwardPolicy.InwOrgPremLc;
+                Dict["InwOrgInsName"] = objfireInwardPolicy.InwOrgInsName;
+                Dict["InwSharePerc"] = objfireInwardPolicy.InwSharePerc;
+                Dict["InwSiShareFc"] = objfireInwardPolicy.InwSiShareFc;
+                Dict["InwSiShareLc"] = objfireInwardPolicy.InwSiShareLc;
+                Dict["InwPremShareFc"] = objfireInwardPolicy.InwPremShareFc;
+                Dict["InwPremShareLc"] = objfireInwardPolicy.InwPremShareLc;
+                Dict["InwCommPerc"] = objfireInwardPolicy.InwCommPerc;
+                Dict["InwCommFcAmt"] = objfireInwardPolicy.InwCommFcAmt;
+                Dict["InwCommLcAmt"] = objfireInwardPolicy.InwCommLcAmt;
+                Dict["InwCrBy"] = objfireInwardPolicy.InwCrBy;
+                string query = "INSERT INTO FIRE_INW_POLICY   ( INW_UID, INW_POL_UID, INW_ORG_POL_NO, INW_CEDING_SOURCE, INW_RISK_CLASS, " +
+                    "INW_SI_CURR, INW_ORG_SI_FC, INW_ORG_SI_LC, INW_PREM_CURR, INW_ORG_PREM_FC, INW_ORG_PREM_LC, INW_ORG_INS_NAME, INW_SHARE_PERC, " +
+                    "INW_SI_SHARE_FC, INW_SI_SHARE_LC, INW_PREM_SHARE_FC, INW_PREM_SHARE_LC, INW_COMM_PERC, INW_COMM_FC_AMT, INW_COMM_LC_AMT, INW_CR_BY, " +
+                    "INW_CR_DT) VALUES (SEQ_INW_UID.NEXTVAL, :InwPolUid,:InwOrgPolNo,:InwCedingSource,:InwRiskClass,:InwSiCurr,:InwOrgSiFc," +
+                    ":InwOrgSiLc,:InwPremCurr,:InwOrgPremFc,:InwOrgPremLc,:InwOrgInsName,:InwSharePerc,:InwSiShareFc,:InwSiShareLc,:InwPremShareFc," +
+                    ":InwPremShareLc,:InwCommPerc,:InwCommFcAmt,:InwCommLcAmt,:InwCrBy,SYSDATE)";
+                int i = DBConnection.ExecuteQuery(Dict, query);
+                if (i == 1)
+                    return objfireInwardPolicy;
+                else
+                    return null;
+
+            }
+        }
     }
 }

@@ -129,9 +129,9 @@ namespace InwardPolicy.Core.Api.Controllers
                 ds.Tables.Add(dtcopy);
                 //CEDING SOURCE
                 dt.Clear();
-                dt = objCodesMasterManager.BindDropDown("CEDING SOURCE");
+                dt = objCodesMasterManager.BindDropDown("CEDINGSOURCE");
                 dtcopy = dt.Copy();
-                dtcopy.TableName = "CEDING SOURCE";
+                dtcopy.TableName = "CEDINGSOURCE";
                 ds.Tables.Add(dtcopy);
                 //Currency
                 dt.Clear();

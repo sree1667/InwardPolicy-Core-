@@ -135,45 +135,53 @@ namespace BusinessLayer
         }
         public FirePolicy FetchPolicyDetails(string polUid)
         {
-            Dictionary<string, object> Dict = new Dictionary<string, object>();
-            Dict["poluid"] = polUid;
-            string query = $"SELECT * FROM FIRE_POLICY WHERE POL_UID=:poluid";
-            string query2 = $"SELECT COUNT(INW_POL_UID) FROM FIRE_INW_POLICY WHERE INW_POL_UID={polUid}";
-            int InwCount = Convert.ToInt32(DBConnection.ExecuteScalar(query2));
-            DataRow dr = DBConnection.ExecuteQuerySelect(Dict, query).Tables[0].Rows[0];
-            FirePolicy objfirePolicy = new FirePolicy();
-            objfirePolicy.PolNo = dr["POL_NO"].ToString();
-            //Binding DateTime fields
-            string fmdt = Convert.ToDateTime(dr["POL_FM_DT"]).ToString("yyyy-MM-dd");
-            objfirePolicy.PolFmDt = fmdt != null ? Convert.ToDateTime(fmdt) : DateTime.MinValue;
-            objfirePolicy.PolToDt = dr["POL_TO_DT"] != DBNull.Value ? Convert.ToDateTime(dr["POL_TO_DT"]) : DateTime.MinValue;
-            objfirePolicy.PolIssDt = Convert.ToDateTime(dr["POL_ISS_DT"]);
-            objfirePolicy.PolAssrDob = dr["POL_ASSR_DOB"] != DBNull.Value ? Convert.ToDateTime(dr["POL_ASSR_DOB"]) : DateTime.MinValue;
-            // Binding string fields
-            objfirePolicy.PolProdCode = dr["POL_PROD_CODE"] != DBNull.Value ? dr["POL_PROD_CODE"].ToString() : string.Empty;
-            objfirePolicy.PolAssrName = dr["POL_ASSR_NAME"] != DBNull.Value ? dr["POL_ASSR_NAME"].ToString() : string.Empty;
-            objfirePolicy.PolAssrAddress = dr["POL_ASSR_ADDRESS"] != DBNull.Value ? dr["POL_ASSR_ADDRESS"].ToString() : string.Empty;
-            objfirePolicy.PolAssrMobile = dr["POL_ASSR_MOBILE"] != DBNull.Value ? dr["POL_ASSR_MOBILE"].ToString() : string.Empty;
-            objfirePolicy.PolAssrEmail = dr["POL_ASSR_EMAIL"] != DBNull.Value ? dr["POL_ASSR_EMAIL"].ToString() : string.Empty;
-            objfirePolicy.PolAssrOccupation = dr["POL_ASSR_OCCUPATION"] != DBNull.Value ? dr["POL_ASSR_OCCUPATION"].ToString() : string.Empty;
-            objfirePolicy.PolAssrType = dr["POL_ASSR_TYPE"] != DBNull.Value ? dr["POL_ASSR_TYPE"].ToString() : string.Empty;
-            objfirePolicy.PolAssrCivilId = dr["POL_ASSR_CIVIL_ID"] != DBNull.Value ? dr["POL_ASSR_CIVIL_ID"].ToString() : string.Empty;
-            // Binding currency fields
-            objfirePolicy.PolSICurrency = dr["POL_SI_CURRENCY"] != DBNull.Value ? dr["POL_SI_CURRENCY"].ToString() : string.Empty;
-            objfirePolicy.PolPremCurrency = dr["POL_PREM_CURRENCY"] != DBNull.Value ? dr["POL_PREM_CURRENCY"].ToString() : string.Empty;
-            objfirePolicy.PolSICurrencyRate = dr["POL_SI_CURR_RATE"] != DBNull.Value ? Convert.ToDouble(dr["POL_SI_CURR_RATE"]) : 0.00D;
-            objfirePolicy.PolPremCurrencyRate = dr["POL_PREM_CURR_RATE"] != DBNull.Value ? Convert.ToDouble(dr["POL_PREM_CURR_RATE"]) : 0.00D;
-            // Binding monetary fields with conditional checks for DBNull and formatting decimal
-            objfirePolicy.PolFcSi = dr["POL_FC_SI"] != DBNull.Value ? Convert.ToDouble(dr["POL_FC_SI"]) : 0.00;
-            objfirePolicy.PolLcSi = dr["POL_LC_SI"] != DBNull.Value ? Convert.ToDouble(dr["POL_LC_SI"]) : 0.00;
-            objfirePolicy.PolGrossFcPrem = dr["POL_GROSS_FC_PREM"] != DBNull.Value ? Convert.ToDouble(dr["POL_GROSS_FC_PREM"]) : 0.00;
-            objfirePolicy.PolGrossLcPrem = dr["POL_GROSS_LC_PREM"] != DBNull.Value ? Convert.ToDouble(dr["POL_GROSS_LC_PREM"]) : 0.00;
-            objfirePolicy.PolNetFcPrem = dr["POL_NET_FC_PREM"] != DBNull.Value ? Convert.ToDouble(dr["POL_NET_FC_PREM"]) : 0.00;
-            objfirePolicy.PolNetLcPrem = dr["POL_NET_LC_PREM"] != DBNull.Value ? Convert.ToDouble(dr["POL_NET_LC_PREM"]) : 0.00;
-            objfirePolicy.PolVatFcAmt = dr["POL_VAT_FC_AMT"] != DBNull.Value ? Convert.ToDouble(dr["POL_VAT_FC_AMT"]) : 0.00;
-            objfirePolicy.PolVatLcAmt = dr["POL_VAT_LC_AMT"] != DBNull.Value ? Convert.ToDouble(dr["POL_VAT_LC_AMT"]) : 0.00;
-            objfirePolicy.InwCount = InwCount;
-            return objfirePolicy;
+            try
+            {
+                Dictionary<string, object> Dict = new Dictionary<string, object>();
+                Dict["poluid"] = polUid;
+                string query = $"SELECT * FROM FIRE_POLICY WHERE POL_UID=:poluid";
+                string query2 = $"SELECT COUNT(INW_POL_UID) FROM FIRE_INW_POLICY WHERE INW_POL_UID={polUid}";
+                int InwCount = Convert.ToInt32(DBConnection.ExecuteScalar(query2));
+                DataRow dr = DBConnection.ExecuteQuerySelect(Dict, query).Tables[0].Rows[0];
+                FirePolicy objfirePolicy = new FirePolicy();
+                objfirePolicy.PolNo = dr["POL_NO"].ToString();
+                //Binding DateTime fields
+                //string fmdt = Convert.ToDateTime(dr["POL_FM_DT"]).ToString("yyyy-MM-dd");
+                objfirePolicy.PolFmDt = dr["POL_FM_DT"] != null ? Convert.ToDateTime(dr["POL_FM_DT"]) : DateTime.MinValue;
+                objfirePolicy.PolToDt = dr["POL_TO_DT"] != DBNull.Value ? Convert.ToDateTime(dr["POL_TO_DT"]) : DateTime.MinValue;
+                objfirePolicy.PolIssDt = Convert.ToDateTime(dr["POL_ISS_DT"]);
+                objfirePolicy.PolAssrDob = dr["POL_ASSR_DOB"] != DBNull.Value ? Convert.ToDateTime(dr["POL_ASSR_DOB"]) : DateTime.MinValue;
+                // Binding string fields
+                objfirePolicy.PolProdCode = dr["POL_PROD_CODE"] != DBNull.Value ? dr["POL_PROD_CODE"].ToString() : string.Empty;
+                objfirePolicy.PolAssrName = dr["POL_ASSR_NAME"] != DBNull.Value ? dr["POL_ASSR_NAME"].ToString() : string.Empty;
+                objfirePolicy.PolAssrAddress = dr["POL_ASSR_ADDRESS"] != DBNull.Value ? dr["POL_ASSR_ADDRESS"].ToString() : string.Empty;
+                objfirePolicy.PolAssrMobile = dr["POL_ASSR_MOBILE"] != DBNull.Value ? dr["POL_ASSR_MOBILE"].ToString() : string.Empty;
+                objfirePolicy.PolAssrEmail = dr["POL_ASSR_EMAIL"] != DBNull.Value ? dr["POL_ASSR_EMAIL"].ToString() : string.Empty;
+                objfirePolicy.PolAssrOccupation = dr["POL_ASSR_OCCUPATION"] != DBNull.Value ? dr["POL_ASSR_OCCUPATION"].ToString() : string.Empty;
+                objfirePolicy.PolAssrType = dr["POL_ASSR_TYPE"] != DBNull.Value ? dr["POL_ASSR_TYPE"].ToString() : string.Empty;
+                objfirePolicy.PolAssrCivilId = dr["POL_ASSR_CIVIL_ID"] != DBNull.Value ? dr["POL_ASSR_CIVIL_ID"].ToString() : string.Empty;
+                // Binding currency fields
+                objfirePolicy.PolSICurrency = dr["POL_SI_CURRENCY"] != DBNull.Value ? dr["POL_SI_CURRENCY"].ToString() : string.Empty;
+                objfirePolicy.PolPremCurrency = dr["POL_PREM_CURRENCY"] != DBNull.Value ? dr["POL_PREM_CURRENCY"].ToString() : string.Empty;
+                objfirePolicy.PolSICurrencyRate = dr["POL_SI_CURR_RATE"] != DBNull.Value ? Convert.ToDouble(dr["POL_SI_CURR_RATE"]) : 0.00D;
+                objfirePolicy.PolPremCurrencyRate = dr["POL_PREM_CURR_RATE"] != DBNull.Value ? Convert.ToDouble(dr["POL_PREM_CURR_RATE"]) : 0.00D;
+                // Binding monetary fields with conditional checks for DBNull and formatting decimal
+                objfirePolicy.PolFcSi = dr["POL_FC_SI"] != DBNull.Value ? Convert.ToDouble(dr["POL_FC_SI"]) : 0.00;
+                objfirePolicy.PolLcSi = dr["POL_LC_SI"] != DBNull.Value ? Convert.ToDouble(dr["POL_LC_SI"]) : 0.00;
+                objfirePolicy.PolGrossFcPrem = dr["POL_GROSS_FC_PREM"] != DBNull.Value ? Convert.ToDouble(dr["POL_GROSS_FC_PREM"]) : 0.00;
+                objfirePolicy.PolGrossLcPrem = dr["POL_GROSS_LC_PREM"] != DBNull.Value ? Convert.ToDouble(dr["POL_GROSS_LC_PREM"]) : 0.00;
+                objfirePolicy.PolNetFcPrem = dr["POL_NET_FC_PREM"] != DBNull.Value ? Convert.ToDouble(dr["POL_NET_FC_PREM"]) : 0.00;
+                objfirePolicy.PolNetLcPrem = dr["POL_NET_LC_PREM"] != DBNull.Value ? Convert.ToDouble(dr["POL_NET_LC_PREM"]) : 0.00;
+                objfirePolicy.PolVatFcAmt = dr["POL_VAT_FC_AMT"] != DBNull.Value ? Convert.ToDouble(dr["POL_VAT_FC_AMT"]) : 0.00;
+                objfirePolicy.PolVatLcAmt = dr["POL_VAT_LC_AMT"] != DBNull.Value ? Convert.ToDouble(dr["POL_VAT_LC_AMT"]) : 0.00;
+                objfirePolicy.InwCount = InwCount;
+                return objfirePolicy;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
 

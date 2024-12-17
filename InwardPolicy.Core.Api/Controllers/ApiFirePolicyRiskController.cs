@@ -49,6 +49,23 @@ namespace InwardPolicy.Core.Api.Controllers
                 throw ex;
             }
         }
+        [HttpDelete]
+        [Route("DeleteFirePolicyRisk/{riskUid?}/{polUid?}")]
+        public IActionResult DeleteFirePolicyRisk(string riskUid,string polUid)
+        {
+            try
+            {
+                FirePolicyRiskManager objFirePolicyManager = new FirePolicyRiskManager();
+                bool status= objFirePolicyManager.DeleteRisk(riskUid, polUid);
+                //string json = JsonConvert.SerializeObject(objFirePolicyRisk);
+                return Ok(status);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
         [HttpPost]
         [Route("AddRisk/{mode?}")]
         public IActionResult AddRisk (string mode,FirePolicyRisk objFirePolicyRisk)

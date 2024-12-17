@@ -49,5 +49,22 @@ namespace InwardPolicy.Core.Api.Controllers
                 throw ex;
             }
         }
+        [HttpGet]
+        [Route("AddFireInwardPolicy/{mode?}")]
+        public IActionResult AddFireInwardPolicy(string mode,FireInwardPolicy fireInwardPolicy)
+        {
+            try
+            {
+                FireInwardPolicyManager objFirePolicyManager = new FireInwardPolicyManager();
+                fireInwardPolicy = objFirePolicyManager.AddInward(fireInwardPolicy, mode);
+                string json = JsonConvert.SerializeObject(fireInwardPolicy);
+                return Ok(json);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

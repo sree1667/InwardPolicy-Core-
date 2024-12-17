@@ -13,6 +13,8 @@ namespace InwardPolicy.Transaction.Models
         public FireInwardPolicy FireInwardPolicy { get; set; }
 
         public string Mode { get; set; }
+        public string InwardMode { get; set; }
+        
         public string ApprStatus { get; set; }
         public List<SelectListItem> PolCurrencyList { get; set; }
         public List<SelectListItem> PolOccupationList { get; set; }
