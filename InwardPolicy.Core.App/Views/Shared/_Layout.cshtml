@@ -82,9 +82,9 @@
                     @*<asp:LinkButton type="button" CausesValidation="false" runat="server" ID="Logout" OnClick="Logout_Click" CssClass="btn btn-danger">
                             <i class="bi bi-box-arrow-left"></i> LogOut
                         </asp:LinkButton>*@
-                    <button ID="Logout" OnClick="Logout_Click" Class="btn btn-danger">
+                    <a ID="Logout" asp-action="Login" asp-controller="Login" Class="btn btn-danger">
                         <i class="bi bi-box-arrow-left"></i> LogOut
-                    </button>
+                    </a>
 
                 </div>
             </div>
@@ -103,6 +103,149 @@
     </div>
 
     <script>
+
+        $(document).ready(function () {
+            // Function to format a single textbox
+            function formatTextbox($textbox) {
+                let value = $textbox.val();
+
+                // Remove non-numeric characters except for "."
+                value = value.replace(/[^0-9.]/g, '');
+
+                // Split into integer and decimal parts
+                let parts = value.split('.');
+
+                // Format the integer part with commas
+                let integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+                // Ensure there are always two decimal places
+                if (parts[1]) {
+                    parts[1] = parts[1].substring(0, 2); // Limit to 2 decimal places
+                } else {
+                    parts[1] = '00'; // Add ".00" if there is no decimal part
+                }
+
+                // Combine the integer and decimal parts
+                let formattedValue = integerPart + '.' + parts[1];
+
+                // Update the textbox with the formatted value
+                $textbox.val(formattedValue);
+            }
+
+            // Apply formatting to all textboxes with the class "format-number" on page load
+            $('.format-number').each(function () {
+                formatTextbox($(this));
+            });
+
+            // Optional: If you want real-time formatting after data is loaded
+            //$('.format-number').on('input', function () {
+            //    formatTextbox($(this));
+            //});
+        });
+
+
+
+
+        function formatInput(event) {
+            let input = event.target.value;
+
+            // Remove non-numeric characters except for "."
+            input = input.replace(/[^0-9.]/g, '');
+
+            // Limit to one decimal point
+            let parts = input.split('.');
+            if (parts.length > 2) {
+                // If more than one decimal point, keep only the first
+                input = parts[0] + '.' + parts[1];
+                parts = input.split('.');
+            }
+
+            // Restrict decimal places to two
+            if (parts[1]) {
+                parts[1] = parts[1].substring(0, 2);
+            }
+
+            // Remove leading zeros in the integer part (except for "0.")
+            let integerPart = parts[0].replace(/^0+(?!$)/, ''); // Remove leading zeros, but keep a single "0" if the input is "0"
+
+            // Format the integer part with commas (only if not empty)
+            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+            // Recombine the integer and decimal parts
+            input = parts[1] !== undefined ? integerPart + '.' + parts[1] : integerPart;
+
+            // Allow input of "0." or similar by ensuring dot alone is preserved
+            if (input === '.' || input === '') {
+                input = '0.';
+            }
+
+            // Update the input field
+            event.target.value = input;
+        }
+        $(document).ready(function () {
+            // Function to format the input value
+            function formatInputToRange($textbox) {
+                let value = $textbox.val();
+
+                // Handle cases where the input is just a dot (".")
+                if (value === ".") {
+                    return; // Allow the user to enter the dot and wait for further input
+                }
+
+                // Remove non-numeric characters except "."
+                value = value.replace(/[^0-9.]/g, '');
+
+                // Split into integer and decimal parts
+                let parts = value.split('.');
+
+                // Prevent multiple decimal points
+                if (parts.length > 2) {
+                    value = parts[0] + '.' + parts[1]; // Keep only the first decimal point
+                }
+
+                // Ensure valid integer part
+                let integerPart = parts[0].replace(/^0+(?!$)/, '') || '0';
+
+                // Limit decimal places to two
+                let decimalPart = parts[1] ? parts[1].substring(0, 2) : '';
+
+                // Combine integer and decimal parts
+                value = decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
+
+                // Ensure value stays within the range 0-100
+                let numericValue = parseFloat(value);
+                if (!isNaN(numericValue)) {
+                    if (numericValue > 100) {
+                        value = '100';
+                    }
+                }
+
+                // Update the input field with the formatted value
+                $textbox.val(value);
+            }
+
+            // Apply formatting on input change
+            $('.range-limited').on('input', function () {
+                let $textbox = $(this);
+                let value = $textbox.val();
+
+                // Allow a single "." at the end without formatting immediately
+                if (value.endsWith('.') && value.split('.').length === 2) {
+                    return; // Allow intermediate input like "100."
+                }
+
+                formatInputToRange($textbox);
+            });
+
+            // Optional: Format inputs on page load if needed
+            $('.range-limited').each(function () {
+                formatInputToRange($(this));
+            });
+        });
+
+ 
+
+
         function isNumberKey(evt) {
             //alert("hi")
             var charCode = evt.which ? evt.which : evt.keyCode;
@@ -111,7 +254,6 @@
             }
             return true;
         }
-
         //to limit number to 9 digits including digits after decimal point
         function limitDigits(input) {
             //alert("hi")

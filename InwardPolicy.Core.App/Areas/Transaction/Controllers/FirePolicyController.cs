@@ -27,6 +27,7 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
             //ddl
             FirePolicyModel objFirePolicyModel = new FirePolicyModel();
             objFirePolicyModel.FirePolicy = new FirePolicy();
+            objFirePolicyModel.FireInwardPolicy = new FireInwardPolicy();
             using HttpResponseMessage httpResponseMessage = await client.GetAsync("Api/ApiCodesMaster/FetchDropdownList");
             //ddl fetch
             if (httpResponseMessage.IsSuccessStatusCode)
@@ -47,6 +48,12 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                 {
                     var result = await httpResponseMessage1.Content.ReadAsStringAsync();
                     objFirePolicyModel.FirePolicy = JsonConvert.DeserializeObject<FirePolicy>(result);
+                    
+                    if (objFirePolicyModel.FireInwardPolicy != null && objFirePolicyModel.FirePolicy != null)
+                    {
+                        objFirePolicyModel.FireInwardPolicy.InwPremCurr = objFirePolicyModel.FirePolicy.PolPremCurrency;
+                        objFirePolicyModel.FireInwardPolicy.InwSiCurr = objFirePolicyModel.FirePolicy.PolSICurrency;
+                    }
                     //check if there is any inward
                     if (objFirePolicyModel.FirePolicy.InwCount == 1)
                     {
@@ -65,14 +72,11 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                         objFirePolicyModel.InwardMode = "I";
                     }
                 }
+                objFirePolicyModel.FirePolicy.Poluid = Convert.ToInt32(id1);
             }
             else
             {
                 objFirePolicyModel.Mode = "I";
-                //objFirePolicyModel.FirePolicy.PolFmDt = null;
-                //objFirePolicyModel.FirePolicy.PolToDt = null;
-                //objFirePolicyModel.FirePolicy.PolAssrDob = null;
-
             }
                 
             if (id2=="A")
@@ -300,6 +304,9 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
             try
             {
                 
+                    objFirePolicyModel.FireInwardPolicy.InwPolUid = objFirePolicyModel.FirePolicy.Poluid.ToString();
+                
+                
                 HttpClient client = new HttpClient()
                 {
                     BaseAddress = new System.Uri("http://localhost:26317")
@@ -309,12 +316,17 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                 using HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync($"/Api/ApiFireInwardPolicy/AddFireInwardPolicy/{objFirePolicyModel.InwardMode}", objFirePolicyModel.FireInwardPolicy);
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
-                    TempData["SwalTitle"] = "Success!";
-                    TempData["SwalMessage"] = "Your operation was completed successfully.";
-                    TempData["SwalIcon"] = "success";
+                    
                     var result = await httpResponseMessage.Content.ReadAsStringAsync();
-                    string uid = JsonConvert.DeserializeObject<string>(result);
-                    return  RedirectToAction("FirePolicy", new { id1 = $"{uid}", id2 = "N" });
+                    objFirePolicyModel.FireInwardPolicy = JsonConvert.DeserializeObject<FireInwardPolicy>(result);
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        TempData["SwalTitle"] = "Success!";
+                        TempData["SwalMessage"] = "Your operation was completed successfully.";
+                        TempData["SwalIcon"] = "success";
+                    }
+
+                    return  RedirectToAction("FirePolicy", new { id1 = $"{objFirePolicyModel.FirePolicy.Poluid}", id2 = "N" });
                     
                 }
                 else

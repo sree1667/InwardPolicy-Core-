@@ -58,8 +58,7 @@ namespace BusinessLayer
             if (mode == "U")
             {
                 Dictionary<string, object> Dict = new Dictionary<string, object>();
-                Dict["PolFmDt"] = objFirePolicy.PolFmDt;
-                Dict["PolToDt"] = objFirePolicy.PolToDt;
+               
                 Dict["PolAssrName"] = objFirePolicy.PolAssrName;
                 Dict["PolAssrAddress"] = objFirePolicy.PolAssrAddress;
                 Dict["PolAssrMobile"] = objFirePolicy.PolAssrMobile;
@@ -70,7 +69,7 @@ namespace BusinessLayer
                 Dict["PolAssrCivilId"] = objFirePolicy.PolAssrCivilId;
                 Dict["UpBy"] = objFirePolicy.CrOrUpBy;
                 Dict["Poluid"] = objFirePolicy.Poluid;
-                string query = "UPDATE FIRE_POLICY SET  POL_FM_DT = :PolFmDt, POL_TO_DT = :PolToDt,  " +
+                string query = "UPDATE FIRE_POLICY SET   " +
                     "POL_ASSR_NAME = :PolAssrName, POL_ASSR_ADDRESS = :PolAssrAddress, POL_ASSR_MOBILE = :PolAssrMobile, POL_ASSR_EMAIL = :PolAssrEmail, " +
                     "POL_ASSR_DOB = :PolAssrDob, POL_ASSR_OCCUPATION = :PolAssrOccupation, POL_ASSR_TYPE = :PolAssrType, POL_ASSR_CIVIL_ID = :PolAssrCivilId, " +
                    " POL_UP_BY = :UpBy, POL_UP_DT = SYSDATE WHERE POL_UID = :Poluid";
@@ -147,7 +146,7 @@ namespace BusinessLayer
                 objfirePolicy.PolNo = dr["POL_NO"].ToString();
                 //Binding DateTime fields
                 //string fmdt = Convert.ToDateTime(dr["POL_FM_DT"]).ToString("yyyy-MM-dd");
-                objfirePolicy.PolFmDt = dr["POL_FM_DT"] != null ? Convert.ToDateTime(dr["POL_FM_DT"]) : DateTime.MinValue;
+                objfirePolicy.PolFmDt = dr["POL_FM_DT"] != DBNull.Value ? Convert.ToDateTime(dr["POL_FM_DT"]) : DateTime.MinValue;
                 objfirePolicy.PolToDt = dr["POL_TO_DT"] != DBNull.Value ? Convert.ToDateTime(dr["POL_TO_DT"]) : DateTime.MinValue;
                 objfirePolicy.PolIssDt = Convert.ToDateTime(dr["POL_ISS_DT"]);
                 objfirePolicy.PolAssrDob = dr["POL_ASSR_DOB"] != DBNull.Value ? Convert.ToDateTime(dr["POL_ASSR_DOB"]) : DateTime.MinValue;

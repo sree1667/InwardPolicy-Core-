@@ -49,7 +49,7 @@ namespace InwardPolicy.Core.Api.Controllers
                 throw ex;
             }
         }
-        [HttpGet]
+        [HttpPost]
         [Route("AddFireInwardPolicy/{mode?}")]
         public IActionResult AddFireInwardPolicy(string mode,FireInwardPolicy fireInwardPolicy)
         {
