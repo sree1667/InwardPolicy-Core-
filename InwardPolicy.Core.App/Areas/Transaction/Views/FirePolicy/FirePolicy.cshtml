@@ -302,6 +302,11 @@
                         <form method="post" asp-action="FireInwardPolicy" asp-controller="FirePolicy">
                             <div class="col">
                                 <div id="inwardDiv" class=" container h-auto p-4 border bg-light rounded shadow mt-2">
+                                    <div class="text-end">
+                                        <button type="button" onclick="DeleteInward()" class="btn btn-outline-danger">
+                                            Delete Inward
+                                        </button>
+                                    </div>
                                     <!-- Row 1 -->
                                     @Html.HiddenFor(m => m.InwardMode, new { @id = "hfInwardMode" })
                                     @Html.HiddenFor(m => m.FirePolicy.Poluid, new { @id = "hfuid" })
