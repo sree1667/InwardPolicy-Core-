@@ -61,7 +61,7 @@ namespace InwardPolicy.Core.App
                );
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Login}/{action=Login}/{id1?}/{id2?}/{id3?}");
+                    pattern: "{controller=Home}/{action=Home}/{id1?}/{id2?}/{id3?}");
             });
         }
     }

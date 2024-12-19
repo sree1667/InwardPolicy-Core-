@@ -19,6 +19,7 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Transaction\Data\" />
+    <Folder Include="Views\Test\" />
   </ItemGroup>
 
 </Project>

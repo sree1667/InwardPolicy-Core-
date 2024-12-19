@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace InwardPolicy.Core.App.Controllers
 {
-    public class HomePageController : Controller
+    public class NotFoundController : Controller
     {
-        public IActionResult HomePage()
+        public IActionResult NotFound()
         {
             return View();
         }

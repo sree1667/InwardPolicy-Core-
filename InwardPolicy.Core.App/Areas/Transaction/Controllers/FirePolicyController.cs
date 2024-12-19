@@ -17,13 +17,16 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
     [Area("Transaction")]
     public class FirePolicyController : Controller
     {
-        public async Task<IActionResult> FirePolicy(string id1,string id2)
+        public async Task<IActionResult> FirePolicy(string id1)
         {
             
             HttpClient client = new HttpClient()
             {
                 BaseAddress = new System.Uri("http://localhost:26317/")
             };
+            bool approvalstatus=false;
+            //check approvr status
+            
             //ddl
             FirePolicyModel objFirePolicyModel = new FirePolicyModel();
             objFirePolicyModel.FirePolicy = new FirePolicy();
@@ -40,6 +43,12 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
             //control data
             if (!string.IsNullOrEmpty(id1))
             {
+                using HttpResponseMessage apprstatus = await client.GetAsync($"Api/ApiFirepolicy/CheckApprovalStatus/{id1}");
+                if (apprstatus.IsSuccessStatusCode)
+                {
+                    var result = await apprstatus.Content.ReadAsStringAsync();
+                    approvalstatus = JsonConvert.DeserializeObject<bool>(result);
+                }
                 objFirePolicyModel.Mode = "U";
                 objFirePolicyModel.FirePolicy.Poluid = Convert.ToInt32(id1);
                 using HttpResponseMessage httpResponseMessage1 = await client.GetAsync($"Api/ApiFirePolicy/LoadControl/{id1}");
@@ -79,7 +88,7 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                 objFirePolicyModel.Mode = "I";
             }
                 
-            if (id2=="A")
+            if (approvalstatus)
             {
                 objFirePolicyModel.ApprStatus = "A";
             }
@@ -245,6 +254,62 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                     bool status = JsonConvert.DeserializeObject<bool>(result);
                     return Ok(status);
 
+                }
+                else
+                {
+                    return Ok();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> ApproveFirePolicy(string polUid)
+        {
+            try
+            {
+                HttpClient client = new HttpClient()
+                {
+                    BaseAddress = new System.Uri("http://localhost:26317/")
+                };
+                string apprBy= HttpContext.Session.GetString("UserId");
+                using HttpResponseMessage httpResponseMessage = await client.GetAsync($"Api/ApiFirePolicy/ApproveFirePolicy/{polUid}/{apprBy}");
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var result = await httpResponseMessage.Content.ReadAsStringAsync();
+                    int status = JsonConvert.DeserializeObject<int>(result);
+                    return Ok(status);
+                }
+                else
+                {
+                    return Ok();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> Copypolicy(string polUid)
+        {
+            try
+            {
+                HttpClient client = new HttpClient()
+                {
+                    BaseAddress = new System.Uri("http://localhost:26317/")
+                };
+                string createdBy = HttpContext.Session.GetString("UserId");
+                using HttpResponseMessage httpResponseMessage = await client.GetAsync($"Api/ApiFirePolicy/CopyPolicy/{polUid}/{createdBy}");
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var result = await httpResponseMessage.Content.ReadAsStringAsync();
+                    long status = JsonConvert.DeserializeObject<long>(result);
+                    return Ok(status);
                 }
                 else
                 {

@@ -91,6 +91,16 @@ div.ui-datepicker {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+::-webkit-scrollbar {
+    height: 8px;
+    background-color: #F5F5F5;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 7px 2px -4px rgba(0, 0, 0, 0.2);
+    background-color: #212529;
+    background: #87E0E0 !important;
+}
 
 .btn-danger {
     background-color: #dc3545;

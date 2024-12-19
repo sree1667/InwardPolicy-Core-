@@ -1,5 +1,6 @@
 ﻿using BusinessEntity;
 using DataAccessLayer;
+using InwardPolicy.BusinessLayer.Transaction;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -58,7 +59,7 @@ namespace BusinessLayer
             if (mode == "U")
             {
                 Dictionary<string, object> Dict = new Dictionary<string, object>();
-               
+
                 Dict["PolAssrName"] = objFirePolicy.PolAssrName;
                 Dict["PolAssrAddress"] = objFirePolicy.PolAssrAddress;
                 Dict["PolAssrMobile"] = objFirePolicy.PolAssrMobile;
@@ -113,6 +114,85 @@ namespace BusinessLayer
                 else
                     return null;
             }
+        }
+
+        public long CopyPolicy(string polUid, string createdBy)
+        {
+
+            try
+            {
+                int uid = Convert.ToInt32(polUid);
+                var returnvalue = DBConnection.ExecuteProc(uid, createdBy);
+                return returnvalue.Item1;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        public int ApprovePolicy(string polUid, string appBy)
+        {
+            DataRow dr = GetApprovalDetails(polUid);
+            int riskCount = Convert.ToInt32(dr["RISK_COUNT"]);
+            double policySi = Convert.ToDouble(dr["POL_LC_SI"]);
+            double inwSi = Convert.ToDouble(dr["INW_SI_SHARE_LC"]);
+            double policyPrem = Convert.ToDouble(dr["POL_NET_LC_PREM"]);
+            double inwPrem = Convert.ToDouble(dr["INW_PREM_SHARE_LC"]);
+            if (riskCount>0)
+            {       
+                if (policySi == inwSi)
+                {
+                    if (policyPrem == inwPrem)
+                    {
+                        Dictionary<string, object> Dict = new Dictionary<string, object>();
+                        Dict["appBy"] = appBy;
+                        Dict["Poluid"] = polUid;
+                        string query = "UPDATE FIRE_POLICY SET POL_APPR_STATUS='A' ,POL_APPR_BY=:appBy, POL_APPR_DT=SYSDATE WHERE POL_UID=:Poluid";
+                        int i = DBConnection.ExecuteQuery(Dict, query);
+                        if (i == 1)
+                            return 4;
+                        else
+                            return 5;                        
+                    }
+                    else
+                    {
+                        return 3;
+                    }
+                }
+                else
+                {
+                    return 2;
+                }
+            }
+            else
+            {
+                return 1;
+            }            
+        }
+
+        private DataRow GetApprovalDetails(string polUid)
+        {
+            string query = $"SELECT POL_NET_LC_PREM, POL_LC_SI," +
+                $"(SELECT COUNT(*) FROM FIRE_POLICY_RISK WHERE RISK_POL_UID ={polUid}) AS RISK_COUNT," +
+                $"(SELECT INW_SI_SHARE_LC FROM FIRE_INW_POLICY WHERE INW_POL_UID ={polUid}) AS INW_SI_SHARE_LC," +
+                $"(SELECT INW_PREM_SHARE_LC FROM FIRE_INW_POLICY WHERE INW_POL_UID = {polUid}) AS INW_PREM_SHARE_LC " +
+                $"FROM FIRE_POLICY WHERE POL_UID = {polUid}";
+            DataRow dr = DBConnection.ExecuteDataset(query).Rows[0];
+            return dr;
+
+        }
+
+        public bool CheckApprstatus(string uid)
+        {
+
+            string query = $"SELECT POL_APPR_STATUS FROM FIRE_POLICY WHERE POL_UID={uid}";
+            if (DBConnection.ExecuteScalar(query).ToString() == "A")
+                return true;
+            else
+                return false;
         }
 
         public string[] GetRate(string polUid)

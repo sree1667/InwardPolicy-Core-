@@ -11,7 +11,7 @@ namespace BusinessEntity
         public string PolNo { get; set; }
         public int InwCount { get; set; }
         public DateTime? PolFmDt { get; set; }
-        public DateTime? PolIssDt { get; set; }
+        public DateTime PolIssDt { get; set; }
         public DateTime? PolToDt { get; set; }
         public string PolProdCode { get; set; }
         public string PolAssrName { get; set; }

@@ -16,12 +16,20 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
     [Area("Transaction")]
     public class FirePolicyRiskController : Controller
     {
-        public async Task<IActionResult> FirePolicyRisk(string id1, string id2,string id3)
+        public async Task<IActionResult> FirePolicyRisk(string id1, string id2)
         {
             HttpClient client = new HttpClient()
             {
                 BaseAddress = new System.Uri("http://localhost:26317/")
             };
+            bool approvalstatus = false;
+            //check approvr status
+            using HttpResponseMessage apprstatus = await client.GetAsync($"Api/ApiFirepolicy/CheckApprovalStatus/{id1}");
+            if (apprstatus.IsSuccessStatusCode)
+            {
+                var result = await apprstatus.Content.ReadAsStringAsync();
+                approvalstatus = JsonConvert.DeserializeObject<bool>(result);
+            }
             //ddl
             FirePolicyRiskModel objFirePolicyRiskModel = new FirePolicyRiskModel();
             objFirePolicyRiskModel.FirePolicyRisk = new FirePolicyRisk();
@@ -51,7 +59,7 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                 objFirePolicyRiskModel.Mode = "I";
             }
 
-            if (id3 == "A")
+            if (approvalstatus)
             {
                 objFirePolicyRiskModel.ApprStatus = "A";
             }

@@ -50,6 +50,36 @@ namespace InwardPolicy.Core.Api.Controllers
             }
         }
         [HttpGet]
+        [Route("ApproveFirePolicy/{polUid?}/{apprBy?}")]
+        public IActionResult ApproveFirePolicy(string polUid,string apprBy)
+        {
+            try
+            {
+                FirePolicyManager objFirePolicyManager = new FirePolicyManager();
+                int status = objFirePolicyManager.ApprovePolicy(polUid, apprBy);
+                return Ok(status);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        [HttpGet]
+        [Route("CopyPolicy/{polUid?}/{createdBy?}")]
+        public IActionResult CopyPolicy(string polUid,string createdBy)
+        {
+            try
+            {
+                FirePolicyManager objFirePolicyManager = new FirePolicyManager();
+                long status = objFirePolicyManager.CopyPolicy(polUid, createdBy);
+                return Ok(status);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        [HttpGet]
         [Route("FirePolicyBind")]
         public IActionResult FirePolicyBind()
         {
@@ -76,6 +106,22 @@ namespace InwardPolicy.Core.Api.Controllers
                 FirePolicy objfirePolicy = objFirePolicyManager.FetchPolicyDetails(uid);
                 string json = JsonConvert.SerializeObject(objfirePolicy);
                 return Ok(json);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        [HttpGet]
+        [Route("CheckApprovalStatus/{uid?}")]
+        public IActionResult CheckApprovalStatus(string uid)
+        {
+            try
+            {
+                FirePolicyManager objFirePolicyManager = new FirePolicyManager();
+                bool apprStatus = objFirePolicyManager.CheckApprstatus(uid);
+                return Ok(apprStatus);
             }
             catch (Exception ex)
             {

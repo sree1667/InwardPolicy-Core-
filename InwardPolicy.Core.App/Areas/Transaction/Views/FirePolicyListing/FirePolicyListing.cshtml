@@ -85,9 +85,9 @@
 
                         render: function (data, type, row) {
                             if (row.CM_ACTIVE_YN === 'Y') {
-                                return "<a onclick=\"UpdatePolicy('" + row.POL_UID + "','" + row.POL_APPR_STATUS + "');\"><i class='bi bi-pencil'></i></a>";
+                                return "<a onclick=\"UpdatePolicy('" + row.POL_UID + "');\"><i class='bi bi-pencil'></i></a>";
                             } else {
-                                return "<a onclick=\"UpdatePolicy('" + row.POL_UID + "','" + row.POL_APPR_STATUS + "');\"><i class='bi bi-pencil'></i></a>"
+                                return "<a onclick=\"UpdatePolicy('" + row.POL_UID + "');\"><i class='bi bi-pencil'></i></a>"
                                     //+"<a onclick=\"DeleteCodesMaster('" + row.CM_CODE + "', '" + row.CM_TYPE + "');\"><i class='bi bi-trash'></i></a>";
                             }
                         }
@@ -99,7 +99,7 @@
             
             console.log(POL_UID);
 
-            window.location.href = '@Url.Action("FirePolicy", "FirePolicy", new { area = "Transaction" })' + '/' + POL_UID + '/' + APPR_STATUS;
+            window.location.href = '@Url.Action("FirePolicy", "FirePolicy", new { area = "Transaction" })' + '/' + POL_UID;
             
         }
     </script>
