@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.35425.106
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InwardPolicy.Core.App", "InwardPolicy.Core.App\InwardPolicy.Core.App.csproj", "{AAB31ADA-7AFD-41FF-8106-7CBB08A3100C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InwardPolicy.Core.App", "InwardPolicy.Core.App\InwardPolicy.Core.App.csproj", "{AAB31ADA-7AFD-41FF-8106-7CBB08A3100C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InwardPolicy.Core.Api", "InwardPolicy.Core.Api\InwardPolicy.Core.Api.csproj", "{A5845888-4485-4AD9-A6BA-4C51C3720EA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InwardPolicy.Core.Api", "InwardPolicy.Core.Api\InwardPolicy.Core.Api.csproj", "{A5845888-4485-4AD9-A6BA-4C51C3720EA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InwardPolicy.DataAccessLayer", "InwardPolicy.DataAccessLayer\InwardPolicy.DataAccessLayer.csproj", "{FE7C60B5-EB70-4D25-A833-6F9ECA3901CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InwardPolicy.DataAccessLayer", "InwardPolicy.DataAccessLayer\InwardPolicy.DataAccessLayer.csproj", "{FE7C60B5-EB70-4D25-A833-6F9ECA3901CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InwardPolicy.BusinessLayer", "InwardPolicy.BusinessLayer\InwardPolicy.BusinessLayer.csproj", "{CADD551F-7AEE-4289-B94A-A6C8035AC014}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InwardPolicy.BusinessLayer", "InwardPolicy.BusinessLayer\InwardPolicy.BusinessLayer.csproj", "{CADD551F-7AEE-4289-B94A-A6C8035AC014}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InwardPolicy.BusinessEntity", "InwardPolicy.BusinessEntity\InwardPolicy.BusinessEntity.csproj", "{06EA43D2-C5E5-4B5C-A337-5BB13DE4FDFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InwardPolicy.BusinessEntity", "InwardPolicy.BusinessEntity\InwardPolicy.BusinessEntity.csproj", "{06EA43D2-C5E5-4B5C-A337-5BB13DE4FDFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InwardPolicy.Helper", "InwardPolicy.Helper\InwardPolicy.Helper.csproj", "{82DF813D-0360-4BBF-B88E-3F44D3FB6713}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{06EA43D2-C5E5-4B5C-A337-5BB13DE4FDFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06EA43D2-C5E5-4B5C-A337-5BB13DE4FDFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06EA43D2-C5E5-4B5C-A337-5BB13DE4FDFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82DF813D-0360-4BBF-B88E-3F44D3FB6713}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82DF813D-0360-4BBF-B88E-3F44D3FB6713}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82DF813D-0360-4BBF-B88E-3F44D3FB6713}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82DF813D-0360-4BBF-B88E-3F44D3FB6713}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

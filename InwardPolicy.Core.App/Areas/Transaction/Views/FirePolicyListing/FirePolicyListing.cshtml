@@ -39,6 +39,18 @@
 </div>
 @section Scripts{
     <script>
+        $(document).ready(function () {
+            const Title = '@TempData["Title"]';
+            const Message = '@TempData["Message"]';
+            const Icon = '@TempData["Icon"]';
+            if (Message && Title && Icon) {
+                Swal.fire({
+                    title: Title,
+                    text: Message,
+                    icon: Icon
+                });
+            }
+        });
         //datatable
         $('#tblFirePolicy').DataTable({
 
@@ -63,7 +75,19 @@
                 columns: [
                     { data: "POL_NO", name: "USER_ID", autoWidth: true },
 
-                    { data: "POL_ISS_DT", name: "USER_NAME", autoWidth: true },
+                    {
+                        data: "POL_ISS_DT",
+                        name: "USER_NAME",
+                        autoWidth: true,
+                        render: function (data, type, row) {
+                            if (data) {
+                                // Format the date to remove the timestamp
+                                var date = new Date(data);
+                                return date.toLocaleDateString('en-US'); // Format as MM/DD/YYYY
+                            }
+                            return '';
+                        }
+                    },
                     { data: "POL_ASSR_NAME", name: "USER_NAME", autoWidth: true },
                     {
                         data: "POL_APPR_STATUS",
@@ -96,11 +120,11 @@
 
         });
         function UpdatePolicy(POL_UID,APPR_STATUS) {
-            
+
             console.log(POL_UID);
 
             window.location.href = '@Url.Action("FirePolicy", "FirePolicy", new { area = "Transaction" })' + '/' + POL_UID;
-            
+
         }
     </script>
 }

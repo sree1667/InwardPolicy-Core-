@@ -53,7 +53,7 @@
                             <a class="nav-link" asp-area="Admin" asp-controller="CodesMaster" asp-action="CodesMaster">Codes Master</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link">Error Code Master</a>
+                            <a asp-area="Admin" asp-controller="ErrorCodeMaster" asp-action="ErrorCodeMaster" class="nav-link">Error Code Master</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Admin" asp-controller="UserMaster" asp-action="UserMaster">User Master</a>
@@ -82,7 +82,7 @@
                     @*<asp:LinkButton type="button" CausesValidation="false" runat="server" ID="Logout" OnClick="Logout_Click" CssClass="btn btn-danger">
                             <i class="bi bi-box-arrow-left"></i> LogOut
                         </asp:LinkButton>*@
-                    <a ID="Logout" asp-action="Login" asp-controller="Login" Class="btn btn-danger">
+                    <a ID="Logout" asp-area="" asp-action="Login" asp-controller="Login" Class="btn btn-danger">
                         <i class="bi bi-box-arrow-left"></i> LogOut
                     </a>
 

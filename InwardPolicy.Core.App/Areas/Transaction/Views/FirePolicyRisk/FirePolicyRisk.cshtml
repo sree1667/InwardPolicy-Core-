@@ -13,113 +13,160 @@
                         <i class="bi bi-arrow-left-circle"></i> Back
                     </button>
                 </div>
-                <div class="text-end">
-                    <button class="btn btn-primary text-light">
-                        <i class="bi bi-plus-circle"></i> Add New
-                    </button>
-                </div>
+                <div id="fullPage">
 
 
-                <div class="row mb-3">
-                    @Html.HiddenFor(m => m.Mode, new { @id = "hfMode" })
-                    @*<label>@Model.Mode</label>*@
-                    <!-- RISK_CLASS -->
-                    <div class="col-md-4">
-                        @Html.LabelFor(m => m.FirePolicyRisk.RiskClass, "Risk Class", new { @class = "form-label" })
-                        <span class="text-danger required-asterisk">*</span>
-                        @Html.DropDownListFor(
-                                m => m.FirePolicyRisk.RiskClass,
-                                new SelectList(Model.RiskClass, "Value", "Text"),
-                                new { @id = "ddlRiskClass", @requred = "required", @onchange = "OnRiskChange()", @class = "form-select form-control" }
+                    <div class="text-end">
+                        <button id="btnAddNew" class="btn btn-primary text-light">
+                            <i class="bi bi-plus-circle"></i> Add New
+                        </button>
+                    </div>
+
+
+                    <div class="row mb-3">
+                        @Html.HiddenFor(m => m.Mode, new { @id = "hfMode" })
+                        @*<label>@Model.Mode</label>*@
+                        <!-- RISK_CLASS -->
+                        <div class="col-md-4">
+                            @Html.LabelFor(m => m.FirePolicyRisk.RiskClass, "Risk Class", new { @class = "form-label" })
+                            <span class="text-danger required-asterisk">*</span>
+                            @Html.DropDownListFor(
+                                    m => m.FirePolicyRisk.RiskClass,
+                                    new SelectList(Model.RiskClass, "Value", "Text"),
+                                    new { @id = "ddlRiskClass", @requred = "required", @onchange = "OnRiskChange()", @class = "form-select form-control" }
+                                )
+
+                        </div>
+
+                        <!-- RISK_DESC -->
+                        <div class="col-md-4">
+                            @Html.LabelFor(m => m.FirePolicyRisk.RiskDesc, "Risk Description", new { @class = "form-label" })
+                            <span class="text-danger required-asterisk">*</span>
+                            @Html.TextBoxFor(m => m.FirePolicyRisk.RiskDesc, new { @class = "form-control", @maxlength = "120" })
+                        </div>
+
+                        <!-- RISK_SICurr -->
+                        <div class="col-md-4">
+                            @Html.LabelFor(m => m.FirePolicyRisk.RiskSICurr, "Risk SI Currency", new { @class = "form-label" })
+                            <span class="text-danger required-asterisk">*</span>
+                            @Html.DropDownListFor(
+                                m => m.FirePolicyRisk.RiskSICurr,
+                                new SelectList(Model.RiskCurrency, "Value", "Text"),
+                                new { @id = "ddlRiskSICurr", @class = "form-control", @disabled = "disabled" }
                             )
 
+                        </div>
                     </div>
 
-                    <!-- RISK_DESC -->
-                    <div class="col-md-4">
-                        @Html.LabelFor(m => m.FirePolicyRisk.RiskDesc, "Risk Description", new { @class = "form-label" })
-                        <span class="text-danger required-asterisk">*</span>
-                        @Html.TextBoxFor(m => m.FirePolicyRisk.RiskDesc, new { @class = "form-control", @maxlength = "120" })
+                    <div class="row mb-3">
+                        <!-- RISK_FC_SI -->
+                        <div class="col-md-4">
+                            @Html.LabelFor(m => m.FirePolicyRisk.RiskFcSi, "Risk FC Sum Insured", new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.FirePolicyRisk.RiskFcSi, new { @id = "RiskFcSi", @class = "form-control text-end", @maxlength = "9", @onchange = "GetLC();", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
+
+                        </div>
+
+                        <!-- RISK_LC_SI -->
+                        <div class="col-md-4">
+                            @Html.LabelFor(m => m.FirePolicyRisk.RiskLcSi, "Risk LC Sum Insured", new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.FirePolicyRisk.RiskLcSi, new { @id = "RiskLcSi", @class = "form-control text-end", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
+                        </div>
+
+                        <!-- RISK_PREM_CURRENCY -->
+                        <div class="col-md-4">
+                            @Html.LabelFor(m => m.FirePolicyRisk.RiskPremCurr, "Risk Premium Currency", new { @class = "form-label" })
+                            @Html.DropDownListFor(
+                                m => m.FirePolicyRisk.RiskPremCurr,
+                                new SelectList(Model.RiskCurrency, "Value", "Text"),
+                                new { @id = "ddlRiskPremCurrency", @class = "form-control", @disabled = "disabled" }
+                            )
+                        </div>
                     </div>
 
-                    <!-- RISK_SICurr -->
-                    <div class="col-md-4">
-                        @Html.LabelFor(m => m.FirePolicyRisk.RiskSICurr, "Risk SI Currency", new { @class = "form-label" })
-                        <span class="text-danger required-asterisk">*</span>
-                        @Html.DropDownListFor(
-                            m => m.FirePolicyRisk.RiskSICurr,
-                            new SelectList(Model.RiskCurrency, "Value", "Text"),
-                            new { @id = "ddlRiskSICurr", @class = "form-control", @disabled = "disabled" }
-                        )
+                    <div class="row mb-3">
+                        <!-- RISK_PREM_RATE -->
+                        <div class="col-md-4">
+                            @Html.LabelFor(m => m.FirePolicyRisk.RiskPremRate, "Risk Premium Rate", new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.FirePolicyRisk.RiskPremRate, new { @id = "txtPremiumRate", @class = "form-control text-end", @onchange = "GetLC();", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
+                        </div>
 
-                    </div>
-                </div>
+                        <!-- RISK_FC_PREM -->
+                        <div class="col-md-4">
+                            @Html.LabelFor(m => m.FirePolicyRisk.RiskFcPrem, "Risk FC Premium", new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.FirePolicyRisk.RiskFcPrem, new { @id = "RiskFcPrem", @class = "form-control text-end", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
+                        </div>
 
-                <div class="row mb-3">
-                    <!-- RISK_FC_SI -->
-                    <div class="col-md-4">
-                        @Html.LabelFor(m => m.FirePolicyRisk.RiskFcSi, "Risk FC Sum Insured", new { @class = "form-label" })
-                        @Html.TextBoxFor(m => m.FirePolicyRisk.RiskFcSi, new { @id = "RiskFcSi", @class = "form-control text-end", @maxlength = "9", @onchange = "GetLC();", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
-
-                    </div>
-
-                    <!-- RISK_LC_SI -->
-                    <div class="col-md-4">
-                        @Html.LabelFor(m => m.FirePolicyRisk.RiskLcSi, "Risk LC Sum Insured", new { @class = "form-label" })
-                        @Html.TextBoxFor(m => m.FirePolicyRisk.RiskLcSi, new { @id = "RiskLcSi", @class = "form-control text-end", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
+                        <!-- RISK_LC_PREM -->
+                        <div class="col-md-4">
+                            @Html.LabelFor(m => m.FirePolicyRisk.RiskLcPrem, "Risk LC Premium", new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.FirePolicyRisk.RiskLcPrem, new { @id = "RiskLcPrem", @class = "form-control text-end", @onchange = "GetPremFc();", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
+                        </div>
                     </div>
 
-                    <!-- RISK_PREM_CURRENCY -->
-                    <div class="col-md-4">
-                        @Html.LabelFor(m => m.FirePolicyRisk.RiskPremCurr, "Risk Premium Currency", new { @class = "form-label" })
-                        @Html.DropDownListFor(
-                            m => m.FirePolicyRisk.RiskPremCurr,
-                            new SelectList(Model.RiskCurrency, "Value", "Text"),
-                            new { @id = "ddlRiskPremCurrency", @class = "form-control", @disabled = "disabled" }
-                        )
+                    <div class="mt-3 col-md-12">
+                        <center>
+                            <button type="submit" id="btnsave" class="btn btn-primary">Submit</button>
+                        </center>
                     </div>
-                </div>
-
-                <div class="row mb-3">
-                    <!-- RISK_PREM_RATE -->
-                    <div class="col-md-4">
-                        @Html.LabelFor(m => m.FirePolicyRisk.RiskPremRate, "Risk Premium Rate", new { @class = "form-label" })
-                        @Html.TextBoxFor(m => m.FirePolicyRisk.RiskPremRate, new { @id = "txtPremiumRate", @class = "form-control text-end", @onchange = "GetLC();", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
-                    </div>
-
-                    <!-- RISK_FC_PREM -->
-                    <div class="col-md-4">
-                        @Html.LabelFor(m => m.FirePolicyRisk.RiskFcPrem, "Risk FC Premium", new { @class = "form-label" })
-                        @Html.TextBoxFor(m => m.FirePolicyRisk.RiskFcPrem, new { @id = "RiskFcPrem", @class = "form-control text-end", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
-                    </div>
-
-                    <!-- RISK_LC_PREM -->
-                    <div class="col-md-4">
-                        @Html.LabelFor(m => m.FirePolicyRisk.RiskLcPrem, "Risk LC Premium", new { @class = "form-label" })
-                        @Html.TextBoxFor(m => m.FirePolicyRisk.RiskLcPrem, new { @id = "RiskLcPrem", @class = "form-control text-end", @onchange = "GetPremFc();", @onkeypress = "return isNumberKey(event);", @oninput = "limitDigits(this);" })
-                    </div>
-                </div>
-
-                <div class="mt-3 col-md-12">
-                    <center>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </center>
                 </div>
             </div>
         </form>
 
     </div>
 </div>
-@*@if (Model.Mode == "I") { 
+@*@if (Model.Mode == "I") {
+        <script>
+            $(document).ready(function () {
+                $("#ddlRiskSICurr").prop("disabled", false);
+                $("#ddlRiskPremCurrency").prop("disabled", false);
+
+            });
+        </script>
+    }*@
+@if (Model.ApprStatus == "A")
+{
     <script>
         $(document).ready(function () {
-            $("#ddlRiskSICurr").prop("disabled", false);
-            $("#ddlRiskPremCurrency").prop("disabled", false);
+            function disableFormElements() {
+                //$("#btnsave").prop('Visible', false);
+                $("#btnsave").hide();
+                $("#btnAddNew").hide();
+                var div = document.getElementById("fullPage");
+                var inputs = div.querySelectorAll('input, button, select, textarea');
+                inputs.forEach(function (input) {
+                    input.disabled = true;
 
+                });
+                var div = document.getElementById("inwardDiv");
+                var inputs = div.querySelectorAll('input, button, select, textarea');
+                inputs.forEach(function (input) {
+                    input.disabled = true;
+                });
+                $('#txtFromDate').datepicker("disable");
+                $('#txtDoB').datepicker("disable");
+                $(".ui-datepicker-trigger").prop('disabled', true);
+
+            }
+            disableFormElements();
         });
+
+
     </script>
-}*@
+}
 <script>
+    $(document).ready(function () {
+            const Title = '@TempData["Title"]';
+            const Message = '@TempData["Message"]';
+            const Icon = '@TempData["Icon"]';
+            if (Message && Title && Icon) {
+                Swal.fire({
+                    title: Title,
+                    text: Message,
+                    icon: Icon
+                });
+            }
+    });
+
     function BackBtnClick() {
         console.log(poluid);
         window.location.href = '@Url.Action("FirePolicy", "FirePolicy", new { area = "Transaction" })' + '/' + poluid + '/' + apprStatus ;
@@ -137,7 +184,7 @@
                     if (response > 100) {
                         alert("Percentage cannot be greater than 100.")
                         $('#txtPremiumRate').val(0);
-                        
+
                         return;
                     }
 

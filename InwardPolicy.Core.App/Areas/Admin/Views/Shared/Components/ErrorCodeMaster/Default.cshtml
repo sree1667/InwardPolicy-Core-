@@ -1,0 +1,53 @@
+﻿@model InwardPolicy.Models.ErrorCodeMasterModel
+
+<div class="container bg-light p-4 border rounded shadow mt-2">
+    @* Row 1 *@
+    <form id="frmUserMaster" method="post" asp-action="ErrorCodeMaster" asp-controller="ErrorCodeMaster" asp-area="Admin">
+        <div class="row mb-3">
+            @Html.HiddenFor(m => m.Mode, new { @id = "hfMode" })
+            <div class="col-md-4">
+                @Html.Label("txtCmType", "Type:", new { @class = "form-label" })
+               @*@Html.TextBoxFor(m => m.ErrorCodeMaster.Type, new { @id = "txtErrType", @class = "form-control", @maxlength = "12", onchange = "CheckCodesMaster()" })*@
+                @Html.DropDownListFor(m => m.ErrorCodeMaster.Type, new SelectList(Model.ErrTypeList, "Value", "Text"), new { @id = "ddlErrType", onChange = "CheckCodesMaster()", @class = "form-select form-control" })
+
+            </div>
+            <div class="col-md-4">
+                @Html.Label("txtCmCode", "Code:", new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.ErrorCodeMaster.Code, new { @id = "txtErrCode", @class = "form-control", @maxlength = "12", onchange = "CheckErrorCodeMaster()" })
+               
+            </div>
+            <div class="col-md-4">
+                @Html.Label("txtCmDesc", "Description:", new { @class = "form-label" })
+                @Html.TextAreaFor(m => m.ErrorCodeMaster.Desc, new { @id = "txtErrDesc", @class = "form-control", @maxlength = "240" })
+            </div>
+        </div>
+        
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <center>
+                    <button id="btnSubmit" class="btn btn-primary" type="submit">Submit</button>
+                    <button id="btnAddNew" class="btn btn-primary" type="button" style="display: none;">Add New</button>
+                </center>
+            </div>
+        </div>
+    </form>
+
+   
+    <script>
+
+        $(document).ready(function () {
+            const modeValue = $("#hfMode").val();
+            //alert(modeValue);
+            
+            if (modeValue === "U") {
+
+                $("#ddlErrType").prop("disabled", true);
+                $("#txtErrCode").prop("readonly", true);
+            } 
+        });
+
+        
+    </script>
+
+</div>
+

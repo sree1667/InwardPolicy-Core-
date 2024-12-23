@@ -1,0 +1,52 @@
+﻿@model InwardPolicy.Admin.Models.UserMasterModel
+<div class="container bg-light p-4 border rounded shadow mt-2">
+    @*Row1*@
+    <form id="frmUserMaster" method="post">
+        <div class="row mb-3">
+            @Html.HiddenFor(m => m.Mode, new { @id = "hfMode" })
+            @*@Html.HiddenFor(m => m.UserMaster.UserId, new { @id = "hfUserId" })*@
+            @*@Html.HiddenFor(m => m.UserMaster.Password, new { @id = "hfPassword" })*@
+            @*<label>@Model.UserMaster.Password</label>*@
+            <div class="col-md-3">
+                @Html.Label("txtUserId", "UserId:", new { @class = "form-label col-form-label mb-0" })<span class="text-danger required-asterisk">*</span>
+                @Html.TextBoxFor(m => m.UserMaster.UserId, new { @id = "txtUserId", @maxlength = "12", onchange = "CheckUserId()", @class = "form-control form-control", @required = "required" })
+            </div>
+            <div class="col-md-3">
+                @Html.Label("txtUserName", "Name:", new { @class = "form-label col-form-label mb-0" })<span class="text-danger required-asterisk">*</span>
+                @Html.TextBoxFor(m => m.UserMaster.UserName, new { @id = "txtUserName", @maxlength = "30", @class = "form-control form-control", @autocomplete = "new-name", @required = "required" })
+            </div>
+            <div class="col-md-3">
+                @Html.Label("txtPassword", "Password:", new { @class = "form-label col-form-label mb-0" })<span class="text-danger required-asterisk">*</span>
+                @Html.TextBoxFor(m => m.UserMaster.Password, new { @id = "txtPassword", @maxlength = "30", @class = "form-control form-control", @autocomplete = "new-password", @required = "required" })
+            </div>
+            <div class="col-md-3 form-check form-switch">
+                <br />
+                @* <input asp-for="" class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">*@
+                @Html.CheckBoxFor(m => m.UserMaster.IsActiveYN, new { @id = "flexSwitchCheckChecked", @class = "form-check-input" })
+                @*<input  class="form-check-input" type="checkbox" id="chkActive" role="switch" />*@
+                <label class="form-label col-form-label mb-0">Active</label>
+            </div>
+        </div>
+        <!-- Submit -->
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <center>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button id="btnAddNew" onclick="btnAddNewClick();" type="button" class="btn btn-primary" style="display: none;">
+                                <i class="bi bi-plus-circle"></i> Add New
+                            </button>
+                        </div>
+                        <div class="col-md-6 ">
+                            <button id="btnUpdate" type="submit" class="btn btn-outline-danger" style="display: none;">Update</button>
+                        </div>
+                    </div>
+                    <Button ID="btnSave" type="submit" Class="btn btn-primary"><i class="bi bi-floppy"></i> Save</Button>
+                </center>
+            </div>
+
+        </div>
+    </form>
+
+</div>
+

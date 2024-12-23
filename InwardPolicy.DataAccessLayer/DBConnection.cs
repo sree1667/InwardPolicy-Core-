@@ -1,9 +1,10 @@
-﻿using Oracle.ManagedDataAccess.Client;
+﻿//using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.OracleClient;
+//using System.Data.OracleClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,7 +62,7 @@ namespace DataAccessLayer
                 if (connection != null)
                     connection.Close();
             }
-            catch (OracleException sqlerr)
+            catch (System.Data.OracleClient.OracleException sqlerr)
             {
                 throw sqlerr;
 
@@ -227,12 +228,12 @@ namespace DataAccessLayer
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 // Input Parameters
-                cmd.Parameters.Add("P_POL_UID", OracleType.Long).Value = polUid;
-                cmd.Parameters.Add("P_CRBY", OracleDbType.Varchar2).Value = polCrBy;
+                cmd.Parameters.Add("P_POL_UID", OracleType.Int32).Value = polUid;
+                cmd.Parameters.Add("P_CRBY", OracleType.VarChar).Value = polCrBy;
 
                 // Output Parameters
-                cmd.Parameters.Add("M_NEW_POL_UID", OracleDbType.Long).Direction = ParameterDirection.Output;
-                cmd.Parameters.Add("M_ERROR_MESSAGE", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("M_NEW_POL_UID", OracleType.Int32).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("M_ERROR_MESSAGE", OracleType.VarChar, 4000).Direction = ParameterDirection.Output;
 
                 cmd.Connection = connection;
 

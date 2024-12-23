@@ -30,8 +30,8 @@
                     @if (Model.ApprStatus == "A")
                     {
                         <div class="text-center">
-                        <button title="Copy" onclick="CopyPolicy()" class="btn btn-sm btn-primary"><i class="bi bi-copy"></i></button>
-                        <button title="Print" class="btn btn-sm btn-danger"><i class="bi bi-printer"></i></button>
+                            <button title="Copy" type="button" onclick="CopyPolicy()" class="btn btn-sm btn-primary"><i class="bi bi-copy"></i></button>
+                            <button title="Print" type="button" class="btn btn-sm btn-danger"><i class="bi bi-printer"></i></button>
                         </div>
                     }
                     <div id="fullPage">
@@ -57,164 +57,165 @@
                                 <label id="lblPolIssDt">Issue Date: @Model.FirePolicy.PolIssDt.ToString("d")</label>
                             }
                         </div>
+
+
+                        <!-- Row 1 -->
+                        @Html.HiddenFor(m => m.Mode, new { @id = "hfMode" })
+                        @Html.HiddenFor(m => m.FirePolicy.Poluid, new { @id = "hfuid" })
+
+
+                        <div class="row mb-1">
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolNo, "Policy Number:", new { @class = "red form-label" })
+                                @Html.TextBoxFor(m => m.FirePolicy.PolNo, new { @class = "form-control", @disabled = "true" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolFmDt, "Policy From Date:", new { @class = "form-label" })
+                                <span class="text-danger required-asterisk">*</span>
+                                @Html.TextBoxFor(m => m.FirePolicy.PolFmDt, new { id = "txtFromDate", @onchange = "SetToDate()", @class = "form-control date", placeholder = "dd-mm-yyyy", @onfocus = "setMinDate()" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolToDt, "Policy To Date:", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.FirePolicy.PolToDt, new { @id = "txtToDate", @class = "form-control", placeholder = "dd-mm-yyyy", @readonly = "true" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolProdCode, "Product Code:", new { @class = "form-label" })
+                                <span class="text-danger required-asterisk">*</span>
+                                @Html.DropDownListFor(m => m.FirePolicy.PolProdCode, new SelectList(Model.PolProductCodeList, "Value", "Text"), new { @id = "ddlProdCode", @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <!-- Row 2 -->
+                        <div class="row mb-1">
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolAssrName, "Name:", new { @class = "form-label" })
+                                <span class="text-danger required-asterisk">*</span>
+                                @Html.TextBoxFor(m => m.FirePolicy.PolAssrName, new { @class = "form-control", @maxlength = "120" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolAssrAddress, "Address:", new { @class = "form-label" })
+                                <span class="text-danger required-asterisk">*</span>
+                                @Html.TextBoxFor(m => m.FirePolicy.PolAssrAddress, new { @class = "form-control", @maxlength = "240" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolAssrMobile, "Mobile:", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.FirePolicy.PolAssrMobile, new { @id = "txtMobile", @class = "form-control", @maxlength = "10" })
+                                <p id="mobileError" style="color: red;"></p>
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolAssrEmail, "Email:", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.FirePolicy.PolAssrEmail, new { @id = "txtEmail", @class = "form-control", TextMode = "Email", @maxlength = "120" })
+                                <p id="error" style="color: red;"></p>
+                            </div>
+                        </div>
+
+                        <!-- Row 3 -->
+                        <div class="row mb-1">
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolAssrDob, "Date of Birth:", new { @class = "form-label" })
+                                <span class="text-danger required-asterisk">*</span>
+                                @Html.TextBoxFor(m => m.FirePolicy.PolAssrDob, new { @id = "txtDoB", @class = "form-control date", placeholder = "dd-mm-yyyy", @onchange = "ValidateDoB()" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolAssrOccupation, "Occupation:", new { @class = "form-label" })
+                                @Html.DropDownListFor(m => m.FirePolicy.PolAssrOccupation, new SelectList(Model.PolOccupationList, "Value", "Text"), new { @class = "form-select form-control" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolAssrType, "Type:", new { @class = "form-label" })
+                                <span class="text-danger required-asterisk">*</span>
+                                @Html.DropDownListFor(m => m.FirePolicy.PolAssrType, new SelectList(Model.PolAssuredTypeList, "Value", "Text"), new { @class = "form-select form-control" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolAssrCivilId, "Civil ID:", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.FirePolicy.PolAssrCivilId, new { @class = "form-control", @maxlength = "30" })
+                            </div>
+                        </div>
+
+                        <!-- Row 4 -->
+                        <div class="row mb-1">
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolSICurrency, "SI Currency:", new { @class = "form-label" })
+                                <span class="text-danger required-asterisk">*</span>
+                                @Html.DropDownListFor(m => m.FirePolicy.PolSICurrency, new SelectList(Model.PolCurrencyList, "Value", "Text"), new { @id = "ddlPolSICurrency", onChange = "ddlPolSICurrency_SelectedIndexChanged()", @class = "form-select form-control" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolSICurrencyRate, "SI Currency Rate:", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.FirePolicy.PolSICurrencyRate, new { @id = "txtPolSICurrencyRate", @class = "form-control text-end" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolPremCurrency, "Premium Currency:", new { @class = "form-label" })
+                                <span class="text-danger required-asterisk">*</span>
+                                @Html.DropDownListFor(m => m.FirePolicy.PolPremCurrency, new SelectList(Model.PolCurrencyList, "Value", "Text"), new { @id = "ddlPolPremCurrency", onChange = "ddlPolPremCurrency_SelectedIndexChanged()", @class = "form-select form-control" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolPremCurrencyRate, "Premium Currency Rate:", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.FirePolicy.PolPremCurrencyRate, new { @class = "form-control text-end", @id = "txtPolPremCurrencyRate" })
+                            </div>
+                        </div>
+
+
+                        <!-- Row 5 -->
+                        <div class="row mb-1">
+                            <!-- FC SI -->
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolFcSi, "FC SI", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.FirePolicy.PolFcSi, new { @class = "format-number text-end form-control", @readonly = "true" })
+                            </div>
+                            <!-- LC SI -->
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolLcSi, "LC SI", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.FirePolicy.PolLcSi, new { @class = "format-number text-end form-control", @readonly = "true" })
+                            </div>
+                            <!-- Gross FC Premium -->
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolGrossFcPrem, "Gross FC Premium", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.FirePolicy.PolGrossFcPrem, new { @class = "format-number text-end form-control", @readonly = "true" })
+                            </div>
+                            <!-- Gross LC Premium -->
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolGrossLcPrem, "Gross LC Premium", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.FirePolicy.PolGrossLcPrem, new { @class = "format-number text-end form-control", @readonly = "true" })
+                            </div>
+                        </div>
+
+                        <!-- Row 6 -->
+                        <div class="row mb-1">
+                            <!-- VAT FC Amount -->
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolVatFcAmt, "VAT FC Amount", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.FirePolicy.PolVatFcAmt, new { @class = "format-number text-end form-control", @readonly = "true" })
+                            </div>
+                            <!-- VAT LC Amount -->
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolVatLcAmt, "VAT LC Amount", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.FirePolicy.PolVatLcAmt, new { @class = "format-number text-end form-control", @readonly = "true", @autopostback = "true" })
+                            </div>
+                            <!-- Net FC Premium -->
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolNetFcPrem, "Net FC Premium", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.FirePolicy.PolNetFcPrem, new { @class = "format-number text-end form-control", @readonly = "true" })
+                            </div>
+                            <!-- Net LC Premium -->
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirePolicy.PolNetLcPrem, "Net LC Premium", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.FirePolicy.PolNetLcPrem, new { @class = "format-number text-end form-control", @readonly = "true" })
+                            </div>
+                        </div>
+
+                        <!-- Submit -->
+                        @if (Model.Mode == "I" && Model.ApprStatus != "A")
+                        {
+                            <div class="text-center mt-3">
+                                <button id="btnsave" class="btn btn-primary">Save</button>
+                            </div>
+                        }
+                        @if (Model.Mode == "U" && Model.ApprStatus != "A")
+                        {
+                            <div class="text-center mt-3">
+                                <button id="btnsave" class="btn btn-danger">Update</button>
+                            </div>
+                        }
                     </div>
-
-                    <!-- Row 1 -->
-                    @Html.HiddenFor(m => m.Mode, new { @id = "hfMode" })
-                    @Html.HiddenFor(m => m.FirePolicy.Poluid, new { @id = "hfuid" })
-
-
-                    <div class="row mb-1">
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolNo, "Policy Number:", new { @class = "red form-label" })
-                            @Html.TextBoxFor(m => m.FirePolicy.PolNo, new { @class = "form-control", @disabled = "true" })
-                        </div>
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolFmDt, "Policy From Date:", new { @class = "form-label" })
-                            <span class="text-danger required-asterisk">*</span>
-                            @Html.TextBoxFor(m => m.FirePolicy.PolFmDt, new { id = "txtFromDate", @onchange = "SetToDate()", @class = "form-control date", placeholder = "dd-mm-yyyy", @onfocus = "setMinDate()" })
-                        </div>
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolToDt, "Policy To Date:", new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.FirePolicy.PolToDt, new { @id = "txtToDate", @class = "form-control", placeholder = "dd-mm-yyyy", @readonly = "true" })
-                        </div>
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolProdCode, "Product Code:", new { @class = "form-label" })
-                            <span class="text-danger required-asterisk">*</span>
-                            @Html.DropDownListFor(m => m.FirePolicy.PolProdCode, new SelectList(Model.PolProductCodeList, "Value", "Text"), new { @id = "ddlProdCode", @class = "form-control" })
-                        </div>
-                    </div>
-
-                    <!-- Row 2 -->
-                    <div class="row mb-1">
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolAssrName, "Name:", new { @class = "form-label" })
-                            <span class="text-danger required-asterisk">*</span>
-                            @Html.TextBoxFor(m => m.FirePolicy.PolAssrName, new { @class = "form-control", @maxlength = "120" })
-                        </div>
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolAssrAddress, "Address:", new { @class = "form-label" })
-                            <span class="text-danger required-asterisk">*</span>
-                            @Html.TextBoxFor(m => m.FirePolicy.PolAssrAddress, new { @class = "form-control", @maxlength = "240" })
-                        </div>
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolAssrMobile, "Mobile:", new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.FirePolicy.PolAssrMobile, new { @id = "txtMobile", @class = "form-control", @maxlength = "10" })
-                            <p id="mobileError" style="color: red;"></p>
-                        </div>
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolAssrEmail, "Email:", new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.FirePolicy.PolAssrEmail, new { @id = "txtEmail", @class = "form-control", TextMode = "Email", @maxlength = "120" })
-                            <p id="error" style="color: red;"></p>
-                        </div>
-                    </div>
-
-                    <!-- Row 3 -->
-                    <div class="row mb-1">
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolAssrDob, "Date of Birth:", new { @class = "form-label" })
-                            <span class="text-danger required-asterisk">*</span>
-                            @Html.TextBoxFor(m => m.FirePolicy.PolAssrDob, new { @id = "txtDoB", @class = "form-control date", placeholder = "dd-mm-yyyy", @onchange = "ValidateDoB()" })
-                        </div>
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolAssrOccupation, "Occupation:", new { @class = "form-label" })
-                            @Html.DropDownListFor(m => m.FirePolicy.PolAssrOccupation, new SelectList(Model.PolOccupationList, "Value", "Text"), new { @class = "form-select form-control" })
-                        </div>
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolAssrType, "Type:", new { @class = "form-label" })
-                            <span class="text-danger required-asterisk">*</span>
-                            @Html.DropDownListFor(m => m.FirePolicy.PolAssrType, new SelectList(Model.PolAssuredTypeList, "Value", "Text"), new { @class = "form-select form-control" })
-                        </div>
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolAssrCivilId, "Civil ID:", new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.FirePolicy.PolAssrCivilId, new { @class = "form-control", @maxlength = "30" })
-                        </div>
-                    </div>
-
-                    <!-- Row 4 -->
-                    <div class="row mb-1">
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolSICurrency, "SI Currency:", new { @class = "form-label" })
-                            <span class="text-danger required-asterisk">*</span>
-                            @Html.DropDownListFor(m => m.FirePolicy.PolSICurrency, new SelectList(Model.PolCurrencyList, "Value", "Text"), new { @id = "ddlPolSICurrency", onChange = "ddlPolSICurrency_SelectedIndexChanged()", @class = "form-select form-control" })
-                        </div>
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolSICurrencyRate, "SI Currency Rate:", new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.FirePolicy.PolSICurrencyRate, new { @id = "txtPolSICurrencyRate", @class = "form-control text-end" })
-                        </div>
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolPremCurrency, "Premium Currency:", new { @class = "form-label" })
-                            <span class="text-danger required-asterisk">*</span>
-                            @Html.DropDownListFor(m => m.FirePolicy.PolPremCurrency, new SelectList(Model.PolCurrencyList, "Value", "Text"), new { @id = "ddlPolPremCurrency", onChange = "ddlPolPremCurrency_SelectedIndexChanged()", @class = "form-select form-control" })
-                        </div>
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolPremCurrencyRate, "Premium Currency Rate:", new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.FirePolicy.PolPremCurrencyRate, new { @class = "form-control text-end", @id = "txtPolPremCurrencyRate" })
-                        </div>
-                    </div>
-
-
-                    <!-- Row 5 -->
-                    <div class="row mb-1">
-                        <!-- FC SI -->
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolFcSi, "FC SI", new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.FirePolicy.PolFcSi, new { @class = "format-number text-end form-control", @readonly = "true" })
-                        </div>
-                        <!-- LC SI -->
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolLcSi, "LC SI", new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.FirePolicy.PolLcSi, new { @class = "format-number text-end form-control", @readonly = "true" })
-                        </div>
-                        <!-- Gross FC Premium -->
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolGrossFcPrem, "Gross FC Premium", new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.FirePolicy.PolGrossFcPrem, new { @class = "format-number text-end form-control", @readonly = "true" })
-                        </div>
-                        <!-- Gross LC Premium -->
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolGrossLcPrem, "Gross LC Premium", new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.FirePolicy.PolGrossLcPrem, new { @class = "format-number text-end form-control", @readonly = "true" })
-                        </div>
-                    </div>
-
-                    <!-- Row 6 -->
-                    <div class="row mb-1">
-                        <!-- VAT FC Amount -->
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolVatFcAmt, "VAT FC Amount", new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.FirePolicy.PolVatFcAmt, new { @class = "format-number text-end form-control", @readonly = "true" })
-                        </div>
-                        <!-- VAT LC Amount -->
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolVatLcAmt, "VAT LC Amount", new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.FirePolicy.PolVatLcAmt, new { @class = "format-number text-end form-control", @readonly = "true", @autopostback = "true" })
-                        </div>
-                        <!-- Net FC Premium -->
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolNetFcPrem, "Net FC Premium", new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.FirePolicy.PolNetFcPrem, new { @class = "format-number text-end form-control", @readonly = "true" })
-                        </div>
-                        <!-- Net LC Premium -->
-                        <div class="col-md-3">
-                            @Html.LabelFor(m => m.FirePolicy.PolNetLcPrem, "Net LC Premium", new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.FirePolicy.PolNetLcPrem, new { @class = "format-number text-end form-control", @readonly = "true" })
-                        </div>
-                    </div>
-
-                    <!-- Submit -->
-                    @if (Model.Mode == "I" && Model.ApprStatus != "A")
-                    {
-                        <div class="text-center mt-3">
-                            <button id="btnsave" class="btn btn-primary">Save</button>
-                        </div>
-                    }
-                    @if (Model.Mode == "U" && Model.ApprStatus != "A")
-                    {
-                        <div class="text-center mt-3">
-                            <button id="btnsave" class="btn btn-danger">Update</button>
-                        </div>
-                    }
                 </div>
             </div>
         </form>
@@ -459,8 +460,8 @@
 {
     <script>
         $(document).ready(function () {
-            $('#txtFromDate').prop('disabled', true);
-            $('#txtToDate').prop('disabled', true);
+            //$('#txtFromDate').prop('disabled', true);
+            //$('#txtToDate').prop('disabled', true);
             $('#ddlProdCode').prop('disabled', true);
             $('#txtPolPremCurrencyRate').prop('disabled', true);
             $('#ddlPolPremCurrency').prop('disabled', true);
@@ -501,7 +502,7 @@
 }
 @if (Model.Mode == "U")
 {
-    <script>
+<script>
 
         $(document).ready(function () {
             var doB = $('#txtDoB').val();
@@ -549,43 +550,13 @@
                     data: {polUid: poluid},
                     dataType: "json",
                     success: function (response) {
-                        if (response === 1) {
+                        if (response) {
                             Swal.fire({
-                                icon: "error",
-                                title: "Oops...",
-                                text: "Add a risk!",
+                                title: response.title,
+                                text: response.message,
+                                icon: response.icon
                             });
                         }
-                        if (response === 2) {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Oops...",
-                                text: "The Sum Insured of Policy and Inward does not match!",
-                            });
-                        }
-                        if (response === 3) {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Oops...",
-                                text: "The Premium of Policy and Inward does not match!",
-                            });
-                        }
-                        if (response === 4) {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Oops...",
-                                text: "The Policy is Approved!",
-                            });
-                        }
-                        if (response === 5) {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Oops...",
-                                text: "Approval failed!",
-                            });
-                        }
-
-
                     },
                     error: function (response) {
                         console.log("Error: " + response);
@@ -611,7 +582,8 @@
                 data: { poluid: poluid }
                 },
 
-                processing: true,
+            processing: true,
+
                 //colReorder: true,
                 serverSide: true,
                 //ordering: true, // Enable ordering
@@ -633,9 +605,9 @@
                     {
 
                         render: function (data, type, row) {
-                            if (row.CM_ACTIVE_YN === 'Y') {
+                            if (row.POL_APPR_STATUS === 'A') {
                                 return "<a onclick=\"UpdateRisk('" + row.RISK_UID + "', poluid);\"><i class='bi bi-pencil'></i></a>";
-                                return "<a onclick=\"DeleteRisk('" + row.RISK_UID + "',poluid);\"><i class='bi bi-trash'></i></a>";
+                               // return "<a onclick=\"DeleteRisk('" + row.RISK_UID + "',poluid);\"><i class='bi bi-trash'></i></a>";
 
                             } else {
                                 return "<a onclick=\"UpdateRisk('" + row.RISK_UID + "', poluid);\"><i class='bi bi-pencil'></i></a>"+
@@ -750,29 +722,41 @@
             if (riskUid) {
                 console.log(riskUid);
                 console.log(polUid);
-                $.ajax({
-                    type: "POST",
-                    url: '@Url.Action("DeleteFirePolicyRisk","FirePolicy")',
-                    data: { riskUid: riskUid, polUid: polUid },
-                    dataType: "json",
-                    success: function (response) {
-                        console.log(response)
-                        if (response === true) {
-                            location.reload(true);
-
-                            //swal
-                        }
-                        else {
-                            //swal
-                        }
-
-                    },
-                    error: function (response) {
-                        console.log("Error: " + response);
+                Swal.fire({
+                    title: 'Are you sure you want to delete?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'No, cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("DeleteFirePolicyRisk","FirePolicy")',
+                            data: { riskUid: riskUid, polUid: polUid },
+                            dataType: "json",
+                            success: function (response) {
+                                console.log(response)
+                                Swal.fire({
+                                    title: response.title,
+                                    text: response.message,
+                                    icon: response.icon
+                                });
+                                $('#tblFirePolicyRisk').DataTable().ajax.reload();
+                            },
+                            error: function (response) {
+                                console.log("Error: " + response);
+                            }
+                        });
                     }
+
+
                 });
             }
-        }
+            }
         function formatCurrency(value) {
             // Ensure the value is a valid number and round to two decimal places
             var formattedValue = parseFloat(value).toFixed(2);
@@ -862,7 +846,6 @@
                     { data: "INW_UID", name: "USER_ID", autoWidth: true, visible: false },
 
                     {
-
                         render: function (data, type, row) {
                             if (row.CM_ACTIVE_YN === 'Y') {
                                 return "<a onclick=\"UpdatePolicy('" + row.POL_UID + "');\"><i class='bi bi-pencil'></i></a>";
@@ -878,7 +861,7 @@
 
 
 
-    </script>
+</script>
 }
 
 @*<img src="~/images/calenderIcon.png" />*@
@@ -886,39 +869,52 @@
 @section Scripts{
     <script>
         $(document).ready(function () {
-            const swalTitle = '@TempData["SwalTitle"]';
-            const swalMessage = '@TempData["SwalMessage"]';
-            const swalIcon = '@TempData["SwalIcon"]';
-            if (swalTitle && swalMessage && swalIcon) {
+            const Title = '@TempData["Title"]';
+            const Message = '@TempData["Message"]';
+            const Icon = '@TempData["Icon"]';
+            if (Message && Title && Icon) {
                 Swal.fire({
-                    title: swalTitle,
-                    text: swalMessage,
-                    icon: swalIcon
+                    title: Title,
+                    text: Message,
+                    icon: Icon
                 });
             }
         });
-        var path = window.location.pathname;
-        var segments = path.split('/');
-        var poluid = segments[4];
+
         function CopyPolicy() {
+
             $.ajax({
                     type: "GET",
                     url: '@Url.Action("Copypolicy","FirePolicy")',
                     data: { poluid: poluid },
                     dataType: "json",
                 success: function (response) {
-                    var newPolUid = response;
-                    window.location.href = '@Url.Action("FirePolicyRisk", "FirePolicyRisk", new { area = "Transaction" })' + '/' + newPolUid;
-                    },
+                    if (response.status) {
+                        Swal.fire({
+                            title: response.title,
+                            text: response.message,
+                            icon: response.icon,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Only execute the redirect after the "OK" (confirm) button is clicked
+                                window.location.href = "/Transaction/FirePolicy/FirePolicy/" + response.status;
+                            }
+                        });
+
+                    }
+                    else {
+                        Swal.fire({
+                            title: "Error",
+                            text: "An unexpected error occurred.",
+                            icon: "error"
+                        });
+                    }
+                },
                 error: function (response) {
                     console.log("Error: " + response);
                     }
-                });
+            });
         }
-        //console.log("ID1:", id1);
-
-
-
 
         //to date
         function ddlPolSICurrency_SelectedIndexChanged() {

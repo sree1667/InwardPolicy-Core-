@@ -1,5 +1,6 @@
 ﻿using BusinessEntity;
 using InwardPolicy.Transaction.Models;
+using InwardPolicyHelper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -252,7 +253,11 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                 {
                     var result = await httpResponseMessage.Content.ReadAsStringAsync();
                     bool status = JsonConvert.DeserializeObject<bool>(result);
-                    return Ok(status);
+                    var message = ECMHelper.GetErrorMessage(status ? "204" : "101").Result;
+                    var title = status ? "Success" : "Error";
+                    var icon = status ? "success" : "error";
+
+                    return Json(new { message, title, icon });
 
                 }
                 else
@@ -281,7 +286,42 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                 {
                     var result = await httpResponseMessage.Content.ReadAsStringAsync();
                     int status = JsonConvert.DeserializeObject<int>(result);
-                    return Ok(status);
+                    if (status == 1)
+                    {
+                        var message = ECMHelper.GetErrorMessage("302").Result;
+                        var title = "Warning";
+                        var icon = "warning";
+                        return Json(new { message, title, icon });
+                    }
+                    else if (status == 2)
+                    {
+                        var message = ECMHelper.GetErrorMessage("303").Result;
+                        var title = "Warning";
+                        var icon = "warning";
+                        return Json(new { message, title, icon });
+                    }
+                    else if (status == 3)
+                    {
+                        var message = ECMHelper.GetErrorMessage("307").Result;
+                        var title = "Warning";
+                        var icon = "warning";
+                        return Json(new { message, title, icon });
+                    }
+                    else if (status == 4)
+                    {
+                        var message = ECMHelper.GetErrorMessage("201").Result;
+                        var title = "Warning";
+                        var icon = "warning";
+                        return Json(new { message, title, icon });
+                    }
+                    else
+                    {
+                        var message = ECMHelper.GetErrorMessage("110").Result;
+                        var title = "Warning";
+                        var icon = "warning";
+                        return Json(new { message, title, icon });
+                    }
+                    
                 }
                 else
                 {
@@ -309,7 +349,10 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                 {
                     var result = await httpResponseMessage.Content.ReadAsStringAsync();
                     long status = JsonConvert.DeserializeObject<long>(result);
-                    return Ok(status);
+                    var message = ECMHelper.GetErrorMessage(status > 0 ? "205" : "106").Result;
+                    var title = status > 0 ? "Success" : "Error";
+                    var icon = status > 0 ? "success" : "error";
+                    return Json(new { status, message, title, icon });
                 }
                 else
                 {
@@ -341,12 +384,25 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
                 using HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync($"/Api/ApiFirePolicy/AddFirePolicy/{objFirePolicyModel.Mode}", objFirePolicyModel.FirePolicy);
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
-                    TempData["SwalTitle"] = "Success!";
-                    TempData["SwalMessage"] = "Your operation was completed successfully.";
-                    TempData["SwalIcon"] = "success";
+                    
                     var result = await httpResponseMessage.Content.ReadAsStringAsync();
                     string uid = JsonConvert.DeserializeObject<string>(result);
-                    return  RedirectToAction("FirePolicy", new { id1 = $"{uid}", id2 = "N" });
+                    if (!string.IsNullOrEmpty(uid))
+                    {
+                        string message = await ECMHelper.GetErrorMessage(objFirePolicyModel.Mode == "U" ? "203" : "202");
+                        TempData["Message"] = message;
+                        TempData["Title"] = "Success";
+                        TempData["Icon"] = "success";
+                        return RedirectToAction("FirePolicy", new { id1 = $"{uid}" });
+                    }
+                    else
+                    {
+                        TempData["Message"] = await ECMHelper.GetErrorMessage(objFirePolicyModel.Mode == "U" ? "105" : "102");
+                        TempData["Title"] = "Error";
+                        TempData["Icon"] = "error";
+                        return RedirectToAction("FirePolicy", new { id1 = $"{id1}" });
+                    }
+                    
                     
                 }
                 else

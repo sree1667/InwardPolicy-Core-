@@ -1,5 +1,6 @@
 ﻿using BusinessEntity;
 using InwardPolicy.Admin.Models;
+using InwardPolicyHelper;
 using InwardPolicy_ViewComponent;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,8 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
     [Area("Admin")]
     public class CodesMasterController : Controller
     {
+
+
         public IActionResult CodesMaster()
         {
             return View();
@@ -58,8 +61,8 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
                     if (!string.IsNullOrEmpty(searchValue))
                     {
                         data = data.Where(u =>
-                        (u.USER_NAME != null && u.USER_NAME.Contains(searchValue, StringComparison.OrdinalIgnoreCase)) ||
-                        (u.USER_ID != null && u.USER_ID.ToString().Contains(searchValue))).ToList();
+                        (u.CM_CODE != null && u.CM_CODE.Contains(searchValue, StringComparison.OrdinalIgnoreCase)) ||
+                        (u.CM_TYPE != null && u.CM_TYPE.ToString().Contains(searchValue, StringComparison.OrdinalIgnoreCase))).ToList();
 
                     }
 
@@ -108,14 +111,18 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
                 {
                     var result = await httpResponseMessage.Content.ReadAsStringAsync();
                     bool status = JsonConvert.DeserializeObject<bool>(result);
-                    TempData["Title"] = "success";
-                    TempData["Message"] = "deleted";
-                    TempData["Icon"] = "success";
-                    return Ok(true);
+                    //swal
+                    var message = ECMHelper.GetErrorMessage(status ? "204" : "101").Result;
+                    var title = status ? "Success" : "Error";
+                    var icon = status ? "success" : "error";
+                    return Json(new { message, title, icon });
+
+
                 }
                 else
                 {
-                    return NotFound(false);
+                    
+                    return Ok(false);
                 }
             }
             catch (Exception ex)
@@ -185,7 +192,11 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
                 {
                     var result = await httpResponseMessage.Content.ReadAsStringAsync();
                     bool status = JsonConvert.DeserializeObject<bool>(result);
-                    return Ok(status);
+                    var message = ECMHelper.GetErrorMessage("304").Result;
+                    var title = "Error";
+                    var icon = "error";
+
+                    return Json(new { message, title, icon });
                 }
                 else
                 {
@@ -216,13 +227,17 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
                     bool status = JsonConvert.DeserializeObject<bool>(result);
                     if (status)
                     {
-                        TempData["SwalTitle"] = "Success!";
-                        TempData["SwalMessage"] = "Your operation was completed successfully.";
-                        TempData["SwalIcon"] = "success";
+                        string message = await ECMHelper.GetErrorMessage(objCodesMasterModel.Mode == "U" ? "203" : "202");
+                        TempData["Message"] = message;
+                        TempData["Title"] = "Success";
+                        TempData["Icon"] = "success";
                         return View("CodesMaster", objCodesMasterModel);
                     }
                     else
                     {
+                        TempData["Message"] = await ECMHelper.GetErrorMessage(objCodesMasterModel.Mode == "U" ? "105" : "102");
+                        TempData["Title"] = "Error";
+                        TempData["Icon"] = "error";
                         return View("CodesMaster", objCodesMasterModel);
                     }
                 }

@@ -88,7 +88,7 @@ namespace InwardPolicy.Core.Api.Controllers
         }
         [HttpPost]
         [Route("CodesMasterInsert/{mode?}")]
-        public IActionResult UserMasterInsert(CodesMaster objCodesMaster, string mode)
+        public IActionResult CodesMasterInsert(CodesMaster objCodesMaster, string mode)
         {
             CodesMasterManager objCodesMasterManager = new CodesMasterManager();
             bool InsertStatus = objCodesMasterManager.InsertUserMaster(objCodesMaster, mode);
@@ -147,6 +147,28 @@ namespace InwardPolicy.Core.Api.Controllers
                 throw ex;
             }
         }
+        [HttpGet]
+        [Route("FetchErrorDropdownList")]
+        public IActionResult FetchErrorDropdownList()
+        {
+            try
+            {
+                CodesMasterManager objCodesMasterManager = new CodesMasterManager();
+                DataSet ds = new DataSet();
+                DataTable dtcopy = new DataTable();
+               
+                DataTable dt = objCodesMasterManager.BindDropDown("ERROR TYPE");
+                dtcopy = dt.Copy();
+                dtcopy.TableName = "ERROR TYPE";
+                ds.Tables.Add(dtcopy);
+                return Ok(JsonConvert.SerializeObject(ds));
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
         
 
         [HttpGet]
@@ -166,7 +188,7 @@ namespace InwardPolicy.Core.Api.Controllers
                 ds.Tables.Add(dtcopy);
 
                 dt.Clear();
-                dt = objCodesMasterManager.BindRiskClass(polUid);
+                dt = objCodesMasterManager.BindDropDown("RISK CLASS");
                 dtcopy = dt.Copy();
                 dtcopy.TableName = "RISK CLASS";
                 ds.Tables.Add(dtcopy);

@@ -86,24 +86,8 @@ namespace BusinessLayer
             try
             {
                 
-                if (mode == "I")
-                {
-                    Dictionary<string, Object> Dict = new Dictionary<string, object>();
-                    
-                    Dict["UserId"] = objUserMaster.UserId.ToUpper().Trim();
-                    Dict["UserName"] = objUserMaster.UserName;
-                    Dict["Password"] = objUserMaster.Password;
-                    Dict["CrBy"] = objUserMaster.UpOrCrBy;
-                    Dict["Active"] = objUserMaster.Active;
-                  
-                    string query = "INSERT INTO USER_MASTER (USER_ID, USER_NAME, USER_PASSWORD, USER_CR_BY, USER_CR_DT, USER_ACTIVE_YN) VALUES(:UserId,:UserName, :Password, :CrBy, SYSDATE,:Active) ";
-                    int i = DBConnection.ExecuteQuery(Dict, query);
-                    if (i == 1)
-                        return true;
-                    else
-                        return false;
-                }
-                else if (mode == "U")
+                
+                if (mode == "U")
                 {
                     Dictionary<string, Object> Dict = new Dictionary<string, object>();
                    
@@ -121,9 +105,22 @@ namespace BusinessLayer
                 }
                 else
                 {
-                    return false;
+                    Dictionary<string, Object> Dict = new Dictionary<string, object>();
+
+                    Dict["UserId"] = objUserMaster.UserId.ToUpper().Trim();
+                    Dict["UserName"] = objUserMaster.UserName;
+                    Dict["Password"] = objUserMaster.Password;
+                    Dict["CrBy"] = objUserMaster.UpOrCrBy;
+                    Dict["Active"] = objUserMaster.Active;
+
+                    string query = "INSERT INTO USER_MASTER (USER_ID, USER_NAME, USER_PASSWORD, USER_CR_BY, USER_CR_DT, USER_ACTIVE_YN) VALUES(:UserId,:UserName, :Password, :CrBy, SYSDATE,:Active) ";
+                    int i = DBConnection.ExecuteQuery(Dict, query);
+                    if (i == 1)
+                        return true;
+                    else
+                        return false;
                 }
-                
+
             }
             catch (Exception ex)
             {

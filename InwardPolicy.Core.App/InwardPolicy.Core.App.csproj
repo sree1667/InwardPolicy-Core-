@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\InwardPolicy.BusinessEntity\InwardPolicy.BusinessEntity.csproj" />
+    <ProjectReference Include="..\InwardPolicy.Helper\InwardPolicy.Helper.csproj" />
   </ItemGroup>
 
   <ItemGroup>

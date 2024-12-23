@@ -1,5 +1,7 @@
 ﻿using BusinessEntity;
 using InwardPolicy.Admin.Models;
+using InwardPolicy_ViewComponent;
+using InwardPolicyHelper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -25,7 +27,20 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
             return View(model);
         }
 
-        
+        [HttpGet]
+        public async Task<IActionResult> ShowModal(string? userId)
+        {
+            try
+            {
+                await Task.CompletedTask;
+                return ViewComponent(typeof(UserMasterViewComponent));
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> UserMasterBind()
@@ -64,7 +79,8 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
                     {
                         data = data.Where(u =>
                         (u.USER_NAME != null && u.USER_NAME.Contains(searchValue, StringComparison.OrdinalIgnoreCase)) ||
-                        (u.USER_ID != null && u.USER_ID.ToString().Contains(searchValue))).ToList();
+                        (u.USER_DESC != null && u.USER_DESC.Contains(searchValue, StringComparison.OrdinalIgnoreCase)) ||
+                        (u.USER_ID != null && u.USER_ID.ToString().Contains(searchValue, StringComparison.OrdinalIgnoreCase))).ToList();
 
                     }
 
@@ -115,20 +131,18 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
                     bool status = JsonConvert.DeserializeObject<bool>(result);
                     if (status)
                     {
-                        if(objUserMasterModel.Mode == "U")
-                        {
-                            objUserMasterModel.Mode = "U";
-                            return View("UserMaster", objUserMasterModel);
-                        }
-                        else
-                        {
-                            return RedirectToAction("UserMaster", "UserMaster", objUserMasterModel.Mode);
-                        }
-                        
+                        string message = await ECMHelper.GetErrorMessage(objUserMasterModel.Mode == "U" ? "203" : "202");
+                        TempData["Message"] = message;
+                        TempData["Title"] = "Success";
+                        TempData["Icon"] = "success";
+                        return View("UserMaster");
                     }
                     else
                     {
-                        return View("UserMaster", objUserMasterModel);
+                        TempData["Message"] = await ECMHelper.GetErrorMessage(objUserMasterModel.Mode == "U" ? "105" : "102");
+                        TempData["Title"] = "Error";
+                        TempData["Icon"] = "error";
+                        return View("UserMaster");
                     }
                 }
                 else
@@ -158,14 +172,16 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
                 {
                     var result = await httpResponseMessage.Content.ReadAsStringAsync();
                     bool status = JsonConvert.DeserializeObject<bool>(result);
-                    TempData["Title"] = "success";
-                    TempData["Message"] ="deleted" ;
-                    TempData["Icon"] = "success";
-                    return View("UserMaster");
+
+                    var message = ECMHelper.GetErrorMessage(status ? "204" : "101").Result;
+                    var title = status ? "Success" : "Error";
+                    var icon = status ? "success" : "error";
+
+                    return Json(new { message, title, icon });
                 }
                 else
                 {
-                    return View("Login");
+                    return View("UserMaster");
                 }
             }
             catch (Exception ex)
@@ -189,9 +205,13 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
                     var result = await httpResponseMessage.Content.ReadAsStringAsync();
-                    //using HttpResponseMessage httpResponseErrorMessage = await client.GetAsync($"/Api/ApiErrorCodeMaster/GetErrorMessage/{errCode}");
+                    bool status = JsonConvert.DeserializeObject<bool>(result);
 
-                    return Ok(result);
+                    var message = ECMHelper.GetErrorMessage("306").Result;
+                    var title =  "Error";
+                    var icon =  "error";
+
+                    return Json(new { message, title, icon });
                 }
                 else
                 {
@@ -210,40 +230,31 @@ namespace InwardPolicy.Core.App.Areas.Admin.Controllers
         {
             try
             {
-                UserMasterModel objUserMasterModel = new UserMasterModel();
-                objUserMasterModel.UserMaster = new UserMaster();
-                HttpClient client = new HttpClient()
+                try
                 {
-                    BaseAddress = new System.Uri("http://localhost:26317/")
-                };
-                using HttpResponseMessage httpResponseMessage = await client.GetAsync($"/Api/ApiUserMaster/GetUserMasterDetails/{userId}");
-                if (httpResponseMessage.IsSuccessStatusCode)
-                {
-                    var result = await httpResponseMessage.Content.ReadAsStringAsync();
-                    DataTable dt = JsonConvert.DeserializeObject<DataTable>(result);
-                    //if (dt.Rows.Count > 0)
-                    //{
-
-                    //objUserMasterModel.UserMaster.UserId = dt.Rows[0]["USER_ID"] != DBNull.Value ? dt.Rows[0]["USER_ID"].ToString() : string.Empty;
-                    //objUserMasterModel.UserMaster.UserName = dt.Rows[0]["USER_NAME"] != DBNull.Value ? dt.Rows[0]["USER_NAME"].ToString() : string.Empty;
-                    //objUserMasterModel.UserMaster.Password = dt.Rows[0]["USER_PASSWORD"] != DBNull.Value ? dt.Rows[0]["USER_PASSWORD"].ToString() : string.Empty;
-                    //if (dt.Rows[0]["USER_ACTIVE_YN"].ToString() == "Y")
-                    //{
-                    //    objUserMasterModel.UserMaster.IsActiveYN = true;
-                    //}
-                    //else
-                    //{
-                    //    objUserMasterModel.UserMaster.IsActiveYN = false;
-                    //}
-                    //}
-
-                    //return View("UserMaster", objUserMasterModel);
-                    var json = JsonConvert.SerializeObject(dt);
-                    return Ok(json);
+                    UserMasterModel objUserMasterModel = new UserMasterModel();
+                    objUserMasterModel.UserMaster = new UserMaster();
+                    HttpClient client = new HttpClient()
+                    {
+                        BaseAddress = new System.Uri("http://localhost:26317/")
+                    };
+                    using HttpResponseMessage httpResponseMessage = await client.GetAsync($"/Api/ApiUserMaster/GetUserMasterDetails/{userId}");
+                    if (httpResponseMessage.IsSuccessStatusCode)
+                    {
+                        var result = await httpResponseMessage.Content.ReadAsStringAsync();
+                        objUserMasterModel.UserMaster = JsonConvert.DeserializeObject<UserMaster>(result);
+                        objUserMasterModel.Mode = "U";
+                        return ViewComponent(typeof(UserMasterViewComponent), objUserMasterModel);
+                    }
+                    else
+                    {
+                        return View("Login");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    return View("Login");
+
+                    throw ex;
                 }
             }
             catch (Exception ex)

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Http;
+using InwardPolicyHelper;
 
 namespace InwardPolicy.Core.App.Controllers
 {
@@ -40,6 +41,9 @@ namespace InwardPolicy.Core.App.Controllers
                     }
                     else
                     {
+                        TempData["Message"] = await ECMHelper.GetErrorMessage("103");
+                        TempData["Title"] = "Login Failed";
+                        TempData["Icon"] = "error";
                         return View("Login");
                     }
                 }

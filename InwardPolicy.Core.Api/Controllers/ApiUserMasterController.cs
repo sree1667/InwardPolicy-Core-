@@ -32,7 +32,7 @@ namespace InwardPolicy.Core.Api.Controllers
         }
 
         [HttpPost]
-        [Route("UserMasterInsert/{mode}")]
+        [Route("UserMasterInsert/{mode?}")]
         public IActionResult UserMasterInsert(UserMaster objUserMaster,string mode)
         {
             UserMasterManager objUserMasterManager = new UserMasterManager();
@@ -83,8 +83,12 @@ namespace InwardPolicy.Core.Api.Controllers
             {
                 UserMasterManager objUserMasterManager = new UserMasterManager();
                 DataTable dt = objUserMasterManager.GetUserDetails(userId);
-                string json = JsonConvert.SerializeObject(dt);
-                return Ok(json);
+                UserMaster objUserMaster = new UserMaster();
+                objUserMaster.UserId = dt.Rows[0]["USER_ID"].ToString();
+                objUserMaster.Password = dt.Rows[0]["USER_PASSWORD"].ToString();              
+                objUserMaster.UserName =dt.Rows[0]["USER_NAME"].ToString();
+                objUserMaster.Active = dt.Rows[0]["USER_ACTIVE_YN"].ToString();
+                return Ok(objUserMaster);
             }
             catch (Exception ex)
             {

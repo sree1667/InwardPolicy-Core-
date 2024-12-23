@@ -15,7 +15,10 @@ namespace InwardPolicy.BusinessLayer.Transaction
         {
             Dictionary<string, Object> Dict = new Dictionary<string, Object>();
             Dict["PolUid"] = PolUid;
-            string query = "SELECT ROWNUM AS RISK_ID, RISK_UID,RISK_DESC,RISK_LC_SI,RISK_FC_SI,RISK_LC_PREM,RISK_FC_PREM,(SELECT CM_DESC FROM CODES_MASTER WHERE CM_CODE=RISK_CLASS AND CM_TYPE='RISK CLASS') AS RISK_CLASS FROM FIRE_POLICY_RISK WHERE RISK_POL_UID=:PolUid ORDER BY RISK_ID ";
+            string query = "SELECT ROWNUM AS RISK_ID,(SELECT POL_APPR_STATUS FROM FIRE_POLICY WHERE POL_UID=RISK_POL_UID) AS POL_APPR_STATUS, " +
+                                "RISK_UID,RISK_DESC,RISK_LC_SI,RISK_FC_SI,RISK_LC_PREM,RISK_FC_PREM," +
+                                "(SELECT CM_DESC FROM CODES_MASTER WHERE CM_CODE=RISK_CLASS AND CM_TYPE='RISK CLASS') AS RISK_CLASS " +
+                           "FROM FIRE_POLICY_RISK WHERE RISK_POL_UID=:PolUid ORDER BY RISK_ID ";
             return DBConnection.ExecuteQuerySelect(Dict, query).Tables[0];
         }
 
@@ -44,6 +47,16 @@ namespace InwardPolicy.BusinessLayer.Transaction
             return objFirePolicyRisk;
         }
 
+        public FirePolicyRisk GetRiskCurrency(string polUid)
+        {
+            string query = $"SELECT POL_PREM_CURRENCY,POL_SI_CURRENCY FROM FIRE_POLICY WHERE POL_UID={polUid}";
+            DataRow dr= DBConnection.ExecuteDataset(query).Rows[0];
+            FirePolicyRisk firePolicyRisk = new FirePolicyRisk();
+            firePolicyRisk.RiskPremCurr = dr["POL_PREM_CURRENCY"].ToString();
+            firePolicyRisk.RiskSICurr = dr["POL_SI_CURRENCY"].ToString();
+            return firePolicyRisk;
+        }
+
         public bool DeleteRisk(string riskUid,string polUid)
         {
             Dictionary<string, Object> Dict = new Dictionary<string, Object>();
@@ -66,6 +79,7 @@ namespace InwardPolicy.BusinessLayer.Transaction
                 {
                     Dictionary<string, Object> Dict = new Dictionary<string, Object>();
                     Dict["RiskClass"] = objFirePolicyRisk.RiskClass;
+                    Dict["RiskPremRate"] = objFirePolicyRisk.RiskPremRate;
                     Dict["RiskDesc"] = objFirePolicyRisk.RiskDesc;
                     Dict["RiskFcSi"] = objFirePolicyRisk.RiskFcSi;
                     Dict["RiskLcSi"] = objFirePolicyRisk.RiskLcSi;
@@ -73,7 +87,7 @@ namespace InwardPolicy.BusinessLayer.Transaction
                     Dict["RiskLcPrem"] = objFirePolicyRisk.RiskLcPrem;
                     Dict["RiskUpBy"] = objFirePolicyRisk.RiskUpBy;
                     Dict["RiskUid"] = Convert.ToInt32(objFirePolicyRisk.RiskUid);
-                    string query = "UPDATE FIRE_POLICY_RISK SET RISK_CLASS = :RiskClass, RISK_DESC = :RiskDesc,  " +
+                    string query = "UPDATE FIRE_POLICY_RISK SET RISK_CLASS = :RiskClass,RISK_PREM_RATE=:RiskPremRate, RISK_DESC = :RiskDesc,  " +
                                        "RISK_FC_SI = :RiskFcSi, RISK_LC_SI = :RiskLcSi, RISK_FC_PREM = :RiskFcPrem, RISK_LC_PREM = :RiskLcPrem, " +
                                        "RISK_UP_BY = :RiskUpBy, RISK_UP_DT = SYSDATE " +
                                    "WHERE RISK_UID = :RiskUid";

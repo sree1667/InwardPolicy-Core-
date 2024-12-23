@@ -2,83 +2,32 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div class="container mt-2">
-    <h1>User Master</h1><br />
-    <div class="row justify-content-center mb-3">
-        @*@if (TempData["Message"] != null)
-            {
-                <script>
+<style>
+    .modal-header {
+        background-color: #87E0E0;
+    }
 
-                    Swal.fire({
-                    icon: 'success',
-                     title: '@TempData["Message"]',
-                     showConfirmButton: true,
-                     timer: 00
-                     });
-                </script>
-            }*@
+    #modalHeading {
+        font-size: 50px;
+    }
+</style>
 
-        @*<div class="col">*@
-        <div class="container bg-light p-4 border rounded shadow mt-2">
-            @*Row1*@
-            <form id="frmUserMaster" method="post">
-                <div class="row mb-3">
-                    @Html.HiddenFor(m => m.Mode, new { @id = "hfMode" })
-                    @*@Html.HiddenFor(m => m.UserMaster.UserId, new { @id = "hfUserId" })*@
-                    @*@Html.HiddenFor(m => m.UserMaster.Password, new { @id = "hfPassword" })*@
-                    @*<label>@Model.UserMaster.Password</label>*@
-                    <div class="col-md-3">
-                        @Html.Label("txtUserId", "UserId:", new { @class = "form-label col-form-label mb-0" })<span class="text-danger required-asterisk">*</span>
-                        @Html.TextBoxFor(m => m.UserMaster.UserId, new { @id = "txtUserId", @maxlength = "12", onchange = "CheckUserId()", @class = "form-control form-control", @required = "required" })
-                    </div>
-                    <div class="col-md-3">
-                        @Html.Label("txtUserName", "Name:", new { @class = "form-label col-form-label mb-0" })<span class="text-danger required-asterisk">*</span>
-                        @Html.TextBoxFor(m => m.UserMaster.UserName, new { @id = "txtUserName", @maxlength = "30", @class = "form-control form-control", @autocomplete = "new-name", @required = "required" })
-                    </div>
-                    <div class="col-md-3">
-                        @Html.Label("txtPassword", "Password:", new { @class = "form-label col-form-label mb-0" })<span class="text-danger required-asterisk">*</span>
-                        @Html.TextBoxFor(m => m.UserMaster.Password, new { @id = "txtPassword", @maxlength = "30", @class = "form-control form-control", @autocomplete = "new-password", @required = "required" })
-                    </div>
-                    <div class="col-md-3 form-check form-switch">
-                        <br />
-                        @* <input asp-for="" class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">*@
-                        @Html.CheckBoxFor(m => m.UserMaster.IsActiveYN, new { @id = "flexSwitchCheckChecked", @class = "form-check-input" })
-                        @*<input  class="form-check-input" type="checkbox" id="chkActive" role="switch" />*@
-                        <label class="form-label col-form-label mb-0">Active</label>
-                    </div>
-                </div>
-                <!-- Submit -->
-                <div class="row mb-3">
-                    <div class="col-md-12">
-                        <center>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <button id="btnAddNew" onclick="btnAddNewClick();" type="button" class="btn btn-primary" style="display: none;">
-                                        <i class="bi bi-plus-circle"></i> Add New
-                                    </button>
-                                </div>
-                                <div class="col-md-6 ">
-                                    <button id="btnUpdate" type="submit" class="btn btn-outline-danger" style="display: none;">Update</button>
-                                </div>
-                            </div>
-                            <Button ID="btnSave" type="submit" Class="btn btn-primary"><i class="bi bi-floppy"></i> Save</Button>
-                        </center>
-                    </div>
+<div class="container bg-light p-4 border rounded shadow mt-2">
+    @*Row1*@
 
-                </div>
-            </form>
-
-        </div>
-        @*</div>*@
+    <div class=" text-end justify-content-center mb-3">
+        <button id="btnAddNew" type="button" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Add New
+        </button>
     </div>
-    <div class="row justify-content-center mb-3">
-        <div class="container bg-light p-4 border rounded shadow mt-2">
-
+    <form id="frmUserMaster" method="post">
+        <div class="row justify-content-center mb-3">
+            @*<div class="container bg-light p-4 border rounded shadow mt-2">*@
             <table class="table table-hover" id="tblUserMaster">
                 <thead>
                     <tr class="table-info">
-                        <th scope="col">User Id</th>
-                        <th scope="col">Name</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Code</th>
                         <th scope="col">Active</th>
                         <th scope="col">Action</th>
                     </tr>
@@ -86,21 +35,45 @@
                 <tbody>
                 </tbody>
             </table>
+            @*</div>*@
+        </div>
+    </form>
+</div>
+
+@* Modal *@
+
+<div class="modal rounded fade" id="modalCodesMaster" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content rounded">
+            <div class="modal-header text-lg-center text-white">
+                <h5 id="modalHeading">Codes Master</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalCodesMasterBody">
+                ViewComponent content will be loaded here dynamically
+            </div>
         </div>
     </div>
 </div>
 
 @section Scripts{
     <script>
-
-
-
         $(document).ready(function () {
+        // Get TempData values from Razor
+            var message = '@TempData["Message"]';
+            var title = '@TempData["Title"]';
+            var icon = '@TempData["Icon"]';
 
-           
-
-
-
+            // Check if a message exists
+            if (message) {
+                Swal.fire({
+                    title: title,
+                    text: message,
+                    icon: icon
+                });
+            }
+        });
+        $(document).ready(function () {
             $("#txtPassword").attr("type", "password");
             var mode = $("#hfMode").val();
             ////var Password = $("#hfPassword").val();
@@ -114,6 +87,29 @@
                 document.getElementById("btnSave").style.display = "none";
                 $("#txtUserId").val();
             }
+
+
+            //add new
+            $(function () {
+                $('#btnAddNew').click(function () {
+                    var CodeMasterViewModel = null;
+                    $.ajax({
+                        url: "@Url.Action("ShowModal", "UserMaster",new { area = "Admin" })",
+                        type: 'GET',
+                        contentType: 'application/json',
+                        data: JSON.stringify(CodeMasterViewModel),
+                        success: function (UserMasterViewComponent) {
+                            $("#modalCodesMasterBody").html(UserMasterViewComponent);
+                            $("#modalCodesMaster").modal("show");
+                            //$("#txtcode").prop("readonly", false);
+                            //$("#txttype").prop("readonly", false);
+                        },
+                        error: function (xhr, status, error) {
+                            console.log('Error: ' + error);
+                        }
+                    });
+                });
+        })
 
             $('#tblUserMaster').DataTable({
                 //dom: 'Bfrtip', // Define layout for plugins
@@ -138,50 +134,68 @@
                     { data: "USER_NAME", name: "USER_NAME", autoWidth: true },
                     { data: "USER_ACTIVE_YN", name: "USER_ACTIVE_YN", autoWidth: true },
                     {
-
                         render: function (data, type, row) {
                             if (row.CM_ACTIVE_YN === 'Y') {
                                 return "<a onclick=UpdateUserMaster('" + row.USER_ID + "'); ><i class='bi bi-pencil'></i></a>";
                             } else {
                                 return "<a onclick=UpdateUserMaster('" + row.USER_ID + "');><i class='bi bi-pencil'></i></a>" +
                                     "<a onclick=DeleteUserMaster('" + row.USER_ID + "');><i class='bi bi-trash'></i></a>";
-
                             }
                         }
-
                     }
                 ],
-
             });
         });
 
         function DeleteUserMaster(UserId) {
-            //console.log("Deleting user with ID:", UserId);
-            $.ajax({
-                type: "DELETE",
-                url: '@Url.Action("DeleteUserMaster", "UserMaster")',
-                data: { userId: UserId },
-                success: function (response) {
-                    console.log("AJAX request was successful. Response:", response);
-                    if (response) {
-                         var message = "@ViewBag.Message";
-                         var title = "@ViewBag.Title";
-                        var icon = "@ViewBag.Icon";
-                        console.log(message);
-                        console.log(title);
-                        console.log(icon);
-                    }
-                    else {
+            Swal.fire({
+                title: 'Are you sure you want to delete?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel'  
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "DELETE",
+                        url: '@Url.Action("DeleteUserMaster", "UserMaster")',
+                        data: { userId: UserId },
+                        success: function (response) {
+                            if (response) {
+                                Swal.fire({
+                                    title: response.title ,
+                                    text: response.message ,
+                                    icon: response.icon
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: "An unexpected error occurred.",
+                                    icon: "error"
+                                });
+                            }
+                            $('#tblUserMaster').DataTable().ajax.reload(); // Refresh the DataTable
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error occurred during deletion:", error);
+                            console.log("Server response:", xhr.responseText);
 
-                    }
-                    $('#tblUserMaster').DataTable().ajax.reload();
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error occurred during deletion:", error);
-                    console.log("Server response:", xhr.responseText);
+                            Swal.fire({
+                                title: "Error",
+                                text: "Failed to delete the user. Please try again.",
+                                icon: "error"
+                            });
+                        }
+                    });
                 }
             });
         }
+
+
+
 
         function UpdateUserMaster(UserId) {
            console.log("Updating user with ID:", UserId);
@@ -189,46 +203,9 @@
             type: "GET",
             url: '@Url.Action("GetUserMasterDetails", "UserMaster")',
             data: { userId: UserId },
-                success: function (response) {
-                    //console.log(response);
-                    //const dataTableData = response;
-                    //console.log(typeof dataTableData);
-                    //const parsedData = JSON.parse(dataTableData);
-                    //console.log(typeof parsedData);
-                    //parsedData.forEach(item => {
-                    //    $("#txtUserId").val(item.CM_CODE);
-                    //    $("#hfUserId").val(item.USER_ID);
-                    //    $("#txtUserId").attr("readonly", true);
-                    //    $("#txtUserName").val(item.USER_NAME);
-                    //    $("#txtPassword").val(item.USER_PASSWORD);
-                    //    if (item.USER_ACTIVE_YN == 'Y') {
-                    //        console.log("true");
-                    //        $("#flexSwitchCheckChecked").prop("checked", true);
-                    //    }
-                    //    else {
-                    //        $("#flexSwitchCheckChecked").prop("checked", false);
-                    //    }
-                    //    $('#hfMode').val('U');
-                    //    document.getElementById("btnUpdate").style.display = "block"; // to show the button
-                    //    document.getElementById("btnAddNew").style.display = "block"; // to show the button
-                    //    document.getElementById("btnSave").style.display = "none"; // to hide the button
-                    //    //$("#btnSave").prop("visible", false);
-                    //    //$("#btnAddnew").prop("visible", true);
-
-                    //    //console
-                    //    console.log("USER_NAME:", item.CM_CODE);
-                    //    console.log("USER_PASSWORD:", item.USER_PASSWORD);
-                    //    console.log("USER_CR_BY:", item.USER_CR_BY);
-                    //    console.log("USER_CR_DT:", item.USER_CR_DT);
-                    //    console.log("USER_UP_BY:", item.USER_UP_BY);
-                    //    console.log("USER_UP_DT:", item.USER_UP_DT);
-                    //    console.log("USER_ACTIVE_YN:", item.USER_ACTIVE_YN);
-                    //});
-
-
-
-
-
+                success: function (UserMasterViewComponent) {
+                    $("#modalCodesMasterBody").html(UserMasterViewComponent);
+                    $("#modalCodesMaster").modal("show");
             },
             error: function (xhr, status, error) {
                 console.error("Error occurred during deletion:", error);
@@ -239,20 +216,20 @@
         //document.getElementById("btnUpdate").addEventListener("click", function () {
         //    console.log("Update button clicked");
         //});
-        function btnAddNewClick() {
-            console.log("Update add new clicked");
-            $("#txtUserId").val('');
-            $("#txtUserId").prop("readonly", false);
+        //function btnAddNewClick() {
+        //    console.log("Update add new clicked");
+        //    $("#txtUserId").val('');
+        //    $("#txtUserId").prop("readonly", false);
 
-            $("#txtUserName").val('');
-            $("#txtPassword").val('');
-            $("#flexSwitchCheckChecked").prop("checked", true);
-            $('#hfMode').val('I');
-            document.getElementById("btnUpdate").style.display = "none"; // to show the button
-            document.getElementById("btnAddNew").style.display = "none"; // to show the button
-            document.getElementById("btnSave").style.display = "block"; // to hide the button
+        //    $("#txtUserName").val('');
+        //    $("#txtPassword").val('');
+        //    $("#flexSwitchCheckChecked").prop("checked", true);
+        //    $('#hfMode').val('I');
+        //    document.getElementById("btnUpdate").style.display = "none"; // to show the button
+        //    document.getElementById("btnAddNew").style.display = "none"; // to show the button
+        //    document.getElementById("btnSave").style.display = "block"; // to hide the button
 
-        }
+        //}
 
         //duplication check
         function CheckUserId() {
@@ -261,22 +238,23 @@
             type: "POST",
             url: '@Url.Action("CheckUserId", "UserMaster")',
             data: { userId: userId },
-                success: function (response) {
-                    if (response) {
+            success: function (response) {
+                    console.log(response);
+                    if (response.status === true) {
+                        //console.log("clear");
                         Swal.fire({
-                            title: 'Error!',
-                            text: 'UserId already exists',
-                            icon: 'error',
-                            confirmButtonText: 'Ok'
+                            title: response.title || "Error",
+                            text: response.message || "User already exixt.",
+                            icon: response.icon || "error"
                         });
-                        $("#txtUserId").val('');
+                            $("#txtUserId").val('');
                     }
             },
             error: function (xhr, status, error) {
                 console.error("Error occurred during deletion:", error);
                 console.log("Server response:", xhr.responseText);
             }
-        });
+            });
         }
 
 

@@ -1,5 +1,6 @@
 ﻿using BusinessEntity;
 using InwardPolicy.Models;
+using InwardPolicyHelper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -22,6 +23,7 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
             {
                 BaseAddress = new System.Uri("http://localhost:26317/")
             };
+            
             bool approvalstatus = false;
             //check approvr status
             using HttpResponseMessage apprstatus = await client.GetAsync($"Api/ApiFirepolicy/CheckApprovalStatus/{id1}");
@@ -33,6 +35,18 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
             //ddl
             FirePolicyRiskModel objFirePolicyRiskModel = new FirePolicyRiskModel();
             objFirePolicyRiskModel.FirePolicyRisk = new FirePolicyRisk();
+
+            //curency load
+            using HttpResponseMessage currencyMessage = await client.GetAsync($"Api/ApiFirePolicyRisk/FetchPolRiskDetails/{id1}");
+            if (currencyMessage.IsSuccessStatusCode)
+            {
+                var result = await currencyMessage.Content.ReadAsStringAsync();
+                objFirePolicyRiskModel.FirePolicyRisk = JsonConvert.DeserializeObject<FirePolicyRisk>(result);
+            }
+
+
+
+
             using HttpResponseMessage httpResponseMessage = await client.GetAsync($"Api/ApiCodesMaster/FetchPolicyRiskDropdownList/{id1}");
 
             if (httpResponseMessage.IsSuccessStatusCode)
@@ -89,6 +103,21 @@ namespace InwardPolicy.Core.App.Areas.Transaction.Controllers
             {
                 var result = await httpResponseMessage.Content.ReadAsStringAsync();
                 objFirePolicyRiskModel.FirePolicyRisk = JsonConvert.DeserializeObject<FirePolicyRisk>(result);
+                if (!string.IsNullOrEmpty(objFirePolicyRiskModel.FirePolicyRisk.RiskUid))
+                {
+                    string message = await ECMHelper.GetErrorMessage(objFirePolicyRiskModel.Mode == "U" ? "203" : "202");
+                    TempData["Message"] = message;
+                    TempData["Title"] = "Success";
+                    TempData["Icon"] = "success";
+                    
+                }
+                else
+                {
+                    TempData["Message"] = await ECMHelper.GetErrorMessage(objFirePolicyRiskModel.Mode == "U" ? "105" : "102");
+                    TempData["Title"] = "Error";
+                    TempData["Icon"] = "error";
+                    
+                }
                 return RedirectToAction("FirePolicyRisk", new { id2 = objFirePolicyRiskModel.FirePolicyRisk.RiskUid });
 
             }
