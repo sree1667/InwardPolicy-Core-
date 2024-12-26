@@ -8,6 +8,8 @@ namespace InwardPolicy.Models
 {
     public class DashboardModel
     {
-        public FirePolicy FirePolicy { get; set; }
+        public string ApprovedPolicy { get; set; }
+        public string TotalPolicy { get; set; }
+        public string TotalAmount { get; set; }
     }
 }

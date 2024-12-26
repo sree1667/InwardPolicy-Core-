@@ -1,0 +1,73 @@
+﻿@model InwardPolicy.Admin.Models.CodesMasterModel
+
+<div class="container bg-light p-4 border rounded shadow mt-2">
+    @* Row 1 *@
+    <form id="frmUserMaster" method="post" asp-action="CodesMaster" asp-controller="CodesMaster" asp-area="Admin">
+        <div class="row mb-3">
+            @Html.HiddenFor(m => m.Mode, new { @id = "hfMode" })
+            <div class="col-md-4">
+                @Html.Label("txtCmType", "Type:", new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.CodesMaster.Type, new { @id = "txtCmType", @class = "form-control", @maxlength = "12",onchange= "CheckCodesMaster()" })
+                
+            </div>
+            <div class="col-md-4">
+                @Html.Label("txtCmCode", "Code:", new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.CodesMaster.Code, new { @id = "txtCmCode", @class = "form-control", @maxlength = "12", onchange = "CheckCodesMaster()" })
+               
+            </div>
+            <div class="col-md-4">
+                @Html.Label("txtCmValue", "Value:", new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.CodesMaster.Value, new
+                {
+                    @id = "txtCmValue",
+                    @class = "numeric-input text-end form-control",
+                    @maxlength = "9",
+                    @onkeypress = "return isNumberKey(event);",
+                    @oninput = "limitDigits(this); formatWithCommas(event);"
+                })
+                @Html.ValidationMessageFor(m => m.CodesMaster.Value, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        @* Description *@
+        <div class="row mb-3">
+            <div class="col-md-8">
+                @Html.Label("txtCmDesc", "Description:", new { @class = "form-label" })
+                @Html.TextAreaFor(m => m.CodesMaster.Description, new { @id = "txtCmDesc", @class = "form-control", @maxlength = "240" })
+                @Html.ValidationMessageFor(m => m.CodesMaster.Description, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-4 form-check form-switch">
+                <br />
+                <br />
+                @Html.CheckBoxFor(m => m.CodesMaster.IsActiveYN, new { @class = "form-check-input", @id = "chkActive" })
+                @Html.Label("chkActive", "Active YN", new { @class = "form-check-label ms-2" })
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <center>
+                    <button id="btnSubmit" class="btn btn-primary" type="submit">Submit</button>
+                    <button id="btnAddNew" class="btn btn-primary" type="button" style="display: none;">Add New</button>
+                </center>
+            </div>
+        </div>
+    </form>
+
+   
+    <script>
+
+        $(document).ready(function () {
+            const modeValue = $("#hfMode").val();
+
+            
+            if (modeValue === "U") {
+
+                $("#txtCmCode").prop("readonly", true);
+                $("#txtCmType").prop("readonly", true);
+            } 
+        });
+
+        
+    </script>
+
+</div>
+

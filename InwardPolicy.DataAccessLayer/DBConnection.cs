@@ -215,36 +215,86 @@ namespace DataAccessLayer
 
         }
 
-        public static (int, string) ExecuteProc(int polUid, string polCrBy)
+        public static (long, string) ExecuteProc(int polUid, string polCrBy)
         {
             OracleCommand cmd = new OracleCommand();
             OracleConnection connection = null;
             try
             {
+                string msg = string.Empty;
                 connection = OpenConnection();
                 cmd.CommandText = "DPRC_COPY";
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add("P_POL_UID", OracleDbType.Int64).Value = polUid;
+
+                // Input Parameters
+                cmd.Parameters.Add("P_POL_UID", OracleType.Long).Value = polUid;
                 cmd.Parameters.Add("P_CRBY", OracleDbType.Varchar2).Value = polCrBy;
-                cmd.Parameters.Add("M_NEW_POL_UID", OracleDbType.Int64).Direction = ParameterDirection.Output;
-                cmd.Parameters.Add("M_ERROR_MESSAGE", OracleDbType.Varchar2, 240).Direction = ParameterDirection.Output;
+
+                // Output Parameters
+                cmd.Parameters.Add("M_NEW_POL_UID", OracleDbType.Long).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("M_ERROR_MESSAGE", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
+
                 cmd.Connection = connection;
+
+                // Execute the Procedure
                 cmd.ExecuteNonQuery();
-                return (Convert.ToInt32(cmd.Parameters["M_NEW_POL_UID"].Value), Convert.ToString(cmd.Parameters["M_ERROR_MESSAGE"].Value));
+
+                // Retrieve Output Parameters
+                long newPolUid = Convert.ToInt64(cmd.Parameters["M_NEW_POL_UID"].Value);
+                msg = cmd.Parameters["M_ERROR_MESSAGE"].Value?.ToString();
+
+                return (newPolUid, msg);
             }
             catch (OracleException sqlerr)
             {
-                throw sqlerr;
+                throw new Exception($"Database error: {sqlerr.Message}", sqlerr);
             }
             catch (Exception err)
             {
-                throw err;
+                throw new Exception($"Unhandled error: {err.Message}", err);
             }
             finally
             {
-                if (connection != null && connection.State == ConnectionState.Open) CloseConnection(connection);
+                if (connection != null && connection.State == ConnectionState.Open)
+                    CloseConnection(connection);
             }
         }
+
+        //public static (long, string) ExecuteProc(int polUid, string polCrBy)
+        //{
+        //    OracleCommand cmd = new OracleCommand();
+        //    OracleConnection connection = null;
+        //    try
+        //    {
+        //        string msg = string.Empty;
+        //        connection = OpenConnection();
+        //        cmd.CommandText = "DPRC_COPY";
+        //        cmd.CommandType = CommandType.StoredProcedure;
+        //        cmd.Parameters.Add("P_POL_UID", OracleDbType.Long).Value = polUid;
+        //        cmd.Parameters.Add("P_CRBY", OracleDbType.Varchar2).Value = polCrBy;
+        //        cmd.Parameters.Add("M_NEW_POL_UID", OracleDbType.Long).Direction = ParameterDirection.Output;
+        //        cmd.Parameters.Add("M_ERROR_MESSAGE", OracleDbType.Varchar2, 400000).Direction = ParameterDirection.Output;
+        //        cmd.Connection = connection;
+        //        cmd.ExecuteNonQuery();
+        //        object poluid = cmd.Parameters["M_NEW_POL_UID"].Value;
+        //        //var msg= cmd.Parameters["M_ERROR_MESSAGE"].Value);
+        //        int pPolUid = Convert.ToInt32(poluid);
+        //        long a = Convert.ToInt64(pPolUid);
+        //        return (a, msg);
+        //    }
+        //    catch (OracleException sqlerr)
+        //    {
+        //        throw sqlerr;
+        //    }
+        //    catch (Exception err)
+        //    {
+        //        throw err;
+        //    }
+        //    finally
+        //    {
+        //        if (connection != null && connection.State == ConnectionState.Open) CloseConnection(connection);
+        //    }
+        //}
 
         public static DataSet ExecuteQuerySelect(Dictionary<string, object> paramValues, string query)
         {

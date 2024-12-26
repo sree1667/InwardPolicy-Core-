@@ -1,0 +1,548 @@
+﻿/*.logingrid {
+    height: 100vh;
+    width: 100%;
+    align-content: center;
+}
+
+body {
+    font-family: 'Oswald', sans-serif;*/
+    /*background-color: #87E0E0;*/
+    /*background-color: #ff0000;
+}
+
+.card {
+    border-radius: 10px;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+h3 {
+    font-weight: bold;
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        transition: background-color 0.3s;
+    }
+
+#Heading {
+    margin-bottom: 10%;
+    background-color: #87E0E0;
+    padding: 20px;
+    transition: transform 0.3s;
+}
+
+    #Heading:hover {
+        transform: scale(1.05);
+    }
+
+
+.login {
+    overflow: hidden;
+    margin-top:50%;
+    background-color: white;
+    padding: 40px 30px 30px 30px;
+    border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    transform: translate(-50%, -50%);
+    transition: transform 300ms, box-shadow 300ms;
+    box-shadow: 5px 10px 10px rgba(2, 128, 144, 0.2);
+}
+
+    .login::before,
+    .login::after {
+        content: '';
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        border-top-left-radius: 40%;
+        border-top-right-radius: 45%;
+        border-bottom-left-radius: 35%;
+        border-bottom-right-radius: 40%;
+        z-index: -1;
+    }
+
+    .login::before {
+        left: 40%;
+        bottom: -130%;
+        background-color: rgba(69, 105, 144, 0.15);
+        animation: wawes 6s infinite linear;
+    }
+
+    .login::after {
+        left: 35%;
+        bottom: -125%;
+        background-color: rgba(2, 128, 144, 0.2);
+        animation: wawes 7s infinite;
+    }
+
+    .login > input {
+        font-family: 'Asap', sans-serif;
+        display: block;
+        border-radius: 5px;
+        font-size: 16px;
+        background: white;
+        width: 100%;
+        border: 0;
+        padding: 10px 10px;
+        margin: 15px -10px;
+    }
+
+    .login > button {
+        font-family: 'Asap', sans-serif;
+        cursor: pointer;
+        color: #fff;
+        font-size: 16px;
+        text-transform: uppercase;
+        width: 80px;
+        border: 0;
+        padding: 10px 0;
+        margin-top: 10px;
+        margin-left: -5px;
+        border-radius: 5px;
+        background-color: rgba(244, 91, 105, 1);
+        transition: background-color 300ms;
+    }
+
+        .login > button:hover {
+            background-color: #e03d47;
+        }
+
+a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.6);
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    font-size: 12px;
+}
+
+@keyframes wawes {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }*/
+}*/
+
+/*--------------------------------*/
+
+
+/*body {
+    position: relative;*/
+    /*background: #87E0E0;*/
+    /*background: #000;
+}
+
+.lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    margin: auto;
+    width: 99.9%;
+}
+
+    .lines .line {
+        position: absolute;
+        width: 1px;
+        height: 100%;
+        top: 0;
+        left: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+    }
+
+        .lines .line::after {
+            content: "";
+            display: block;
+            position: absolute;
+            height: 15vh;
+            width: 100%;
+            top: -50%;
+            left: 0;
+            background: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0)), color-stop(75%, #ffffff), to(#ffffff));
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 75%, #ffffff 100%);
+            -webkit-animation: run 7s 0s infinite;
+            animation: run 7s 0s infinite;
+            -webkit-animation-fill-mode: forwards;
+            animation-fill-mode: forwards;
+            -webkit-animation-timing-function: cubic-bezier(0.4, 0.26, 0, 0.97);
+            animation-timing-function: cubic-bezier(0.4, 0.26, 0, 0.97);
+        }
+
+        .lines .line:nth-child(1) {
+            margin-left: -10%;
+        }
+
+        .lines .line:nth-child(2) {
+            margin-left: -20%;
+        }
+
+        .lines .line:nth-child(3) {
+            margin-left: -30%;
+        }
+
+        .lines .line:nth-child(4) {
+            margin-left: -40%;
+        }
+
+        .lines .line:nth-child(5) {
+            margin-left: -50%;
+        }
+
+        .lines .line:nth-child(6) {
+            margin-left: 10%;
+        }
+
+        .lines .line:nth-child(7) {
+            margin-left: 20%;
+        }
+
+        .lines .line:nth-child(8) {
+            margin-left: 30%;
+        }
+
+        .lines .line:nth-child(9) {
+            margin-left: 40%;
+        }
+
+        .lines .line:nth-child(10) {
+            margin-left: 49.9%;
+        }
+
+        .lines .line:nth-child(1)::after {
+            -webkit-animation-delay: 1.5s;
+            animation-delay: 1.5s;
+        }
+
+        .lines .line:nth-child(2)::after {
+            -webkit-animation-delay: 2s;
+            animation-delay: 2s;
+        }
+
+        .lines .line:nth-child(3)::after {
+            -webkit-animation-delay: 1.8s;
+            animation-delay: 1.8s;
+        }
+
+        .lines .line:nth-child(4)::after {
+            -webkit-animation-delay: 2.5s;
+            animation-delay: 2.5s;
+        }
+
+        .lines .line:nth-child(5)::after {
+            -webkit-animation-delay: 2.1s;
+            animation-delay: 2.1s;
+        }
+
+        .lines .line:nth-child(6)::after {
+            -webkit-animation-delay: 2.8s;
+            animation-delay: 2.8s;
+        }
+
+        .lines .line:nth-child(7)::after {
+            -webkit-animation-delay: 1.3s;
+            animation-delay: 1.3s;
+        }
+
+        .lines .line:nth-child(8)::after {
+            -webkit-animation-delay: 2.9s;
+            animation-delay: 2.9s;
+        }
+
+        .lines .line:nth-child(9)::after {
+            -webkit-animation-delay: 2.4s;
+            animation-delay: 2.4s;
+        }
+
+        .lines .line:nth-child(10)::after {
+            -webkit-animation-delay: 3.1s;
+            animation-delay: 3.1s;
+        }
+
+
+
+@-webkit-keyframes run {
+    0% {
+        top: -50%;
+    }
+
+    100% {
+        top: 110%;
+    }
+}
+
+@keyframes run {
+    0% {
+        top: -50%;
+    }
+
+    100% {
+        top: 110%;
+    }
+}*/
+
+
+
+/* Global Styles */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Oswald', sans-serif;
+    position: relative; /* For absolute positioning of falling lines */
+    overflow: hidden; /* Prevent scrollbars */
+}
+
+body {
+    background-color: #87E0E0; /* Set background color for body */
+}
+.card {
+    background-color: #87E0E0;
+}
+
+/* Falling Lines Styles */
+.lines {
+    position: absolute;
+    top: 0;
+    overflow: hidden;
+    left: 0;
+    right: 0;
+    background-color: #87E0E0;
+    height: 100%;
+    width: 100%; /* Full viewport width */
+    pointer-events: none; /* Prevent the lines from interfering with other elements */
+    z-index: -1; /* Ensure lines are behind the login form */
+}
+
+    .lines .line {
+        position: absolute;
+        width: 2px;
+        height: 100%;
+        top: 0;
+        left: 50%;
+        background-color: #87E0E0;
+        /*background: rgba(255, 255, 255, 0.1);*/
+        overflow: hidden;
+    }
+
+        .lines .line::after {
+            content: "";
+            display: block;
+            position: absolute;
+            height: 15vh;
+            width: 100%;
+            top: -50%;
+            left: 0;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 75%, #ffffff 100%);
+            animation: run 7s 0s infinite;
+            animation-timing-function: cubic-bezier(0.4, 0.26, 0, 0.97);
+            animation-fill-mode: forwards;
+        }
+
+        /* Add custom animation delay for each line */
+        .lines .line:nth-child(1) {
+            margin-left: -10%;
+        }
+
+        .lines .line:nth-child(2) {
+            margin-left: -20%;
+        }
+
+        .lines .line:nth-child(3) {
+            margin-left: -30%;
+        }
+
+        .lines .line:nth-child(4) {
+            margin-left: -40%;
+        }
+
+        .lines .line:nth-child(5) {
+            margin-left: -50%;
+        }
+
+        .lines .line:nth-child(6) {
+            margin-left: 10%;
+        }
+
+        .lines .line:nth-child(7) {
+            margin-left: 20%;
+        }
+
+        .lines .line:nth-child(8) {
+            margin-left: 30%;
+        }
+
+        .lines .line:nth-child(9) {
+            margin-left: 40%;
+        }
+
+        .lines .line:nth-child(10) {
+            margin-left: 49.9%;
+        }
+
+        /* Animation delay for each line */
+        .lines .line:nth-child(1)::after {
+            animation-delay: 1.5s;
+        }
+
+        .lines .line:nth-child(2)::after {
+            animation-delay: 2s;
+        }
+
+        .lines .line:nth-child(3)::after {
+            animation-delay: 1.8s;
+        }
+
+        .lines .line:nth-child(4)::after {
+            animation-delay: 2.5s;
+        }
+
+        .lines .line:nth-child(5)::after {
+            animation-delay: 2.1s;
+        }
+
+        .lines .line:nth-child(6)::after {
+            animation-delay: 2.8s;
+        }
+
+        .lines .line:nth-child(7)::after {
+            animation-delay: 1.3s;
+        }
+
+        .lines .line:nth-child(8)::after {
+            animation-delay: 2.9s;
+        }
+
+        .lines .line:nth-child(9)::after {
+            animation-delay: 2.4s;
+        }
+
+        .lines .line:nth-child(10)::after {
+            animation-delay: 3.1s;
+        }
+
+/* Keyframe for line animation */
+@keyframes run {
+    0% {
+        top: -50%;
+    }
+
+    100% {
+        top: 110%;
+    }
+}
+
+/* Login Form Styles */
+.login {
+    overflow: hidden;
+    margin-top: 90%;
+    background-color: white;
+    padding: 40px 30px 30px 30px;
+    border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    transform: translate(-50%, -50%);
+    transition: transform 300ms, box-shadow 300ms;
+    box-shadow: 5px 10px 10px rgba(2, 128, 144, 0.2);
+    z-index: 1; /* Make sure the form is above the falling lines */
+}
+
+    .login::before,
+    .login::after {
+        content: '';
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        border-top-left-radius: 40%;
+        border-top-right-radius: 45%;
+        border-bottom-left-radius: 35%;
+        border-bottom-right-radius: 40%;
+        z-index: -1;
+    }
+
+    .login::before {
+        left: 40%;
+        bottom: -130%;
+        background-color: rgba(69, 105, 144, 0.15);
+        animation: wawes 6s infinite linear;
+    }
+
+    .login::after {
+        left: 35%;
+        bottom: -125%;
+        background-color: rgba(2, 128, 144, 0.2);
+        animation: wawes 7s infinite;
+    }
+
+    .login > input {
+        font-family: 'Asap', sans-serif;
+        display: block;
+        border-radius: 5px;
+        font-size: 16px;
+        background: white;
+        width: 100%;
+        border: 0;
+        padding: 10px 10px;
+        margin: 15px -10px;
+    }
+
+    .login > button {
+        font-family: 'Asap', sans-serif;
+        cursor: pointer;
+        color: #fff;
+        font-size: 16px;
+        text-transform: uppercase;
+        width: 80px;
+        border: 0;
+        padding: 10px 0;
+        margin-top: 10px;
+        margin-left: -5px;
+        border-radius: 5px;
+        background-color: rgba(244, 91, 105, 1);
+        transition: background-color 300ms;
+    }
+
+        .login > button:hover {
+            background-color: #e03d47;
+        }
+
+a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.6);
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    font-size: 12px;
+}
+
+@keyframes wawes {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+

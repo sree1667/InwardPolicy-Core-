@@ -22,6 +22,11 @@ namespace InwardPolicy.Core.App
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //session
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(10);
+            });
             services.AddControllersWithViews();
         }
 
@@ -37,6 +42,8 @@ namespace InwardPolicy.Core.App
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseStaticFiles();
+            //session
+            app.UseSession();
 
             app.UseRouting();
 
@@ -45,8 +52,16 @@ namespace InwardPolicy.Core.App
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                  name: "Admin",
+                  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id1?}/{id2?}/{id3?}"
+                );
+                endpoints.MapControllerRoute(
+                 name: "Taransaction",
+                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id1?}/{id2?}/{id3?}"
+               );
+                endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Login}/{action=Login}/{id?}");
+                    pattern: "{controller=Home}/{action=Home}/{id1?}/{id2?}/{id3?}");
             });
         }
     }

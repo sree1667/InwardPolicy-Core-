@@ -3,50 +3,269 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - InwardPolicy.Core.App</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>InwardPolicy</title>
+    <link rel="icon" type="image/x-icon" href="https://img.icons8.com/?size=100&id=QiwSMfboPt2R&format=png&color=000000">
+    <!-- CSS -->
+    <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/v/ju/dt-2.1.8/datatables.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/lib/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
-    @*<link href="~/fonts/Oswald-VariableFont_wght.ttf" rel="stylesheet">*@
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet" />
+    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    <link href="~/css/Layout.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+    <!-- JS -->
+    <script src="~/lib/jquery/jquery.min.js"></script> <!-- jQuery -->
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script> <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js -->
+    <script src="https://cdn.datatables.net/v/ju/dt-2.1.8/datatables.min.js"></script> <!-- DataTables -->
+    <script src="https://cdn.datatables.net/colreorder/1.6.2/js/dataTables.colReorder.min.js"></script> <!-- ColReorder for DataTables -->
+    <script src="~/lib/sweetalert2/sweetalert2.all.min.js"></script>
+    @*<script src="~/lib/sweetalert2/sweetalert2.min.js"></script>*@
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script> <!-- Custom JavaScript -->
+
+
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">InwardPolicy.Core.App</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+<body style="width: 100vw; overflow-x:hidden;">
+    
+
+    <!-- Full height container -->
+    <div class="container-fluid fulldiv vh-100 m-0 p-0" style="overflow-y: auto; overflow-x: hidden; max-height: 100vh; ">
+        <div class="row h-100 g-0">
+            <!-- Sidebar Column -->
+            <div class="col-md-2 col-sm-2 sidebar  text-white p-3 h-100">
+                <h1>
+                    <a asp-controller="Dashboard" asp-action="Dashboard" asp-area="" class="text-decoration-none text-reset">IPES</a>
+                </h1>
+                <br />
+
+                <h4 class="text-bg-info p-2 w-auto text-start">Master </h4>
+
+                <div style="min-height: 120px;">
+                    <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="Admin" asp-controller="CodesMaster" asp-action="CodesMaster">Codes Master</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link">Error Code Master</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Admin" asp-controller="UserMaster" asp-action="UserMaster">User Master</a>
+                        </li>
+
                     </ul>
                 </div>
+
+                <br />
+                <h4 class=" text-bg-info p-2 w-auto text-start">Transaction </h4>
+
+                <div style="min-height: 120px;">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-action="FirePolicyListing"  asp-controller="FirePolicyListing" asp-area="Transaction">Fire Policy</a>
+                        </li>
+
+                    </ul>
+
+                </div>
+                @*<div class="rounded bg-primary p-3 mb-0" style="position: absolute; bottom: 9%; width: 15%; ">
+                        <img src="../Assets/Image/user.png" class="bg-light rounded-5" style="width:25%;" />
+                        <asp:Label runat="server" ID="lblUserName"></asp:Label>
+                    </div>*@
+                <div class="logout" style="position: absolute; bottom: 1%; width: 100%;">
+                    @*<asp:LinkButton type="button" CausesValidation="false" runat="server" ID="Logout" OnClick="Logout_Click" CssClass="btn btn-danger">
+                            <i class="bi bi-box-arrow-left"></i> LogOut
+                        </asp:LinkButton>*@
+                    <a ID="Logout" asp-action="Login" asp-controller="Login" Class="btn btn-danger">
+                        <i class="bi bi-box-arrow-left"></i> LogOut
+                    </a>
+
+                </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+            @*<footer class="border-top footer text-muted">
+                    <div class="container">
+                        &copy; 2024 - InwardPolicy.Core.App - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </div>
+                </footer>*@
+            <!-- Main Content Column -->
+            <div class="col-md-10 p-3" style="overflow-y: auto; max-height: 97vh;">
+                @RenderBody()
+            </div>
+
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - InwardPolicy.Core.App - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+
+        $(document).ready(function () {
+            // Function to format a single textbox
+            function formatTextbox($textbox) {
+                let value = $textbox.val();
+
+                // Remove non-numeric characters except for "."
+                value = value.replace(/[^0-9.]/g, '');
+
+                // Split into integer and decimal parts
+                let parts = value.split('.');
+
+                // Format the integer part with commas
+                let integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+                // Ensure there are always two decimal places
+                if (parts[1]) {
+                    parts[1] = parts[1].substring(0, 2); // Limit to 2 decimal places
+                } else {
+                    parts[1] = '00'; // Add ".00" if there is no decimal part
+                }
+
+                // Combine the integer and decimal parts
+                let formattedValue = integerPart + '.' + parts[1];
+
+                // Update the textbox with the formatted value
+                $textbox.val(formattedValue);
+            }
+
+            // Apply formatting to all textboxes with the class "format-number" on page load
+            $('.format-number').each(function () {
+                formatTextbox($(this));
+            });
+
+            // Optional: If you want real-time formatting after data is loaded
+            //$('.format-number').on('input', function () {
+            //    formatTextbox($(this));
+            //});
+        });
+
+
+
+
+        function formatInput(event) {
+            let input = event.target.value;
+
+            // Remove non-numeric characters except for "."
+            input = input.replace(/[^0-9.]/g, '');
+
+            // Limit to one decimal point
+            let parts = input.split('.');
+            if (parts.length > 2) {
+                // If more than one decimal point, keep only the first
+                input = parts[0] + '.' + parts[1];
+                parts = input.split('.');
+            }
+
+            // Restrict decimal places to two
+            if (parts[1]) {
+                parts[1] = parts[1].substring(0, 2);
+            }
+
+            // Remove leading zeros in the integer part (except for "0.")
+            let integerPart = parts[0].replace(/^0+(?!$)/, ''); // Remove leading zeros, but keep a single "0" if the input is "0"
+
+            // Format the integer part with commas (only if not empty)
+            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+            // Recombine the integer and decimal parts
+            input = parts[1] !== undefined ? integerPart + '.' + parts[1] : integerPart;
+
+            // Allow input of "0." or similar by ensuring dot alone is preserved
+            if (input === '.' || input === '') {
+                input = '0.';
+            }
+
+            // Update the input field
+            event.target.value = input;
+        }
+        $(document).ready(function () {
+            // Function to format the input value
+            function formatInputToRange($textbox) {
+                let value = $textbox.val();
+
+                // Handle cases where the input is just a dot (".")
+                if (value === ".") {
+                    return; // Allow the user to enter the dot and wait for further input
+                }
+
+                // Remove non-numeric characters except "."
+                value = value.replace(/[^0-9.]/g, '');
+
+                // Split into integer and decimal parts
+                let parts = value.split('.');
+
+                // Prevent multiple decimal points
+                if (parts.length > 2) {
+                    value = parts[0] + '.' + parts[1]; // Keep only the first decimal point
+                }
+
+                // Ensure valid integer part
+                let integerPart = parts[0].replace(/^0+(?!$)/, '') || '0';
+
+                // Limit decimal places to two
+                let decimalPart = parts[1] ? parts[1].substring(0, 2) : '';
+
+                // Combine integer and decimal parts
+                value = decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
+
+                // Ensure value stays within the range 0-100
+                let numericValue = parseFloat(value);
+                if (!isNaN(numericValue)) {
+                    if (numericValue > 100) {
+                        value = '100';
+                    }
+                }
+
+                // Update the input field with the formatted value
+                $textbox.val(value);
+            }
+
+            // Apply formatting on input change
+            $('.range-limited').on('input', function () {
+                let $textbox = $(this);
+                let value = $textbox.val();
+
+                // Allow a single "." at the end without formatting immediately
+                if (value.endsWith('.') && value.split('.').length === 2) {
+                    return; // Allow intermediate input like "100."
+                }
+
+                formatInputToRange($textbox);
+            });
+
+            // Optional: Format inputs on page load if needed
+            $('.range-limited').each(function () {
+                formatInputToRange($(this));
+            });
+        });
+
+ 
+
+
+        function isNumberKey(evt) {
+            //alert("hi")
+            var charCode = evt.which ? evt.which : evt.keyCode;
+            if (charCode != 46 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+        //to limit number to 9 digits including digits after decimal point
+        function limitDigits(input) {
+            //alert("hi")
+            var numericValue = input.value.replace(/[^0-9]/g, '');
+
+            if (numericValue.length > 8) {
+                input.value = input.value.slice(0, input.value.length - 1);
+            }
+        }
+    </script>
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

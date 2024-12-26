@@ -9,8 +9,10 @@ namespace BusinessEntity
     public class FirePolicy
     {
         public string PolNo { get; set; }
+        public int InwCount { get; set; }
         public DateTime? PolFmDt { get; set; }
-        public DateTime PolToDt { get; set; }
+        public DateTime PolIssDt { get; set; }
+        public DateTime? PolToDt { get; set; }
         public string PolProdCode { get; set; }
         public string PolAssrName { get; set; }
         public string PolAssrAddress { get; set; }
@@ -36,5 +38,6 @@ namespace BusinessEntity
         public string PolApprStatus { get; set; }
         public string CrBy { get; set; }
         public string UpBy { get; set; }
+        public string CrOrUpBy { get; set; }
     }
 }

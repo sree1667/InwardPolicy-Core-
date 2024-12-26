@@ -1,5 +1,22 @@
 {
   "version": "1.0",
   "defaultProvider": "cdnjs",
-  "libraries": []
+  "libraries": [
+    {
+      "library": "jquery@3.7.1",
+      "destination": "wwwroot/lib/jquery/"
+    },
+    {
+      "library": "datatables.net-dt@2.1.8",
+      "destination": "wwwroot/lib/datatables.net-dt/"
+    },
+    {
+      "library": "bootstrap@5.3.3",
+      "destination": "wwwroot/lib/bootstrap/"
+    },
+    {
+      "library": "sweetalert2@11.14.5",
+      "destination": "wwwroot/lib/sweetalert2/"
+    }
+  ]
 }
